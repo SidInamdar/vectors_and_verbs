@@ -42,6 +42,4 @@ Previously, I spent several years developing high-impact AI solutions for global
 ---
 
 ## Let's Connect
-I am always open to discussing the future of AI, autonomous agents, and scalable data architecture.
-
-* **LinkedIn:** [Connect with me](https://www.linkedin.com/in/siddhesh-inamdar-24634694/)
+I am always open to discussing the future of AI, autonomous agents, and scalable data architecture. So do contact me on my social handles!
