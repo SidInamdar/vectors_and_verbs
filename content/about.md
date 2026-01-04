@@ -7,11 +7,6 @@ summary: "Lead Data Scientist specializing in AI-driven optimization, anomaly de
 # Siddhesh Inamdar
 **Lead Data Scientist | M.Tech, IIT Madras | BITS Goa**
 
-I am a Lead Data Scientist with a focus on bridging the gap between complex mathematical modeling and scalable, cloud-native production environments. My career is defined by building end-to-end data technologies—from **Time-series Optimization** and **Natural Language Processing (NLP)** to **Anomaly Detection** and **Reinforcement Learning**.
-
----
-
-## Technical Philosophy
 I believe the most powerful data-driven solutions aren't just calculated—they’re crafted. To me, the magic happens at the intersection of algorithmic precision and creative intuition. I dedicate my time to deconstructing frameworks and exploring models, not just for their logic, but for the unique ingenuity they bring to the table. This is where I share my perspective on the technologies that are truly redefining our field.
 
 ### Expertise & Domains
