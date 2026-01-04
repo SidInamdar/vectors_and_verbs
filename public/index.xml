@@ -6,8 +6,16 @@
     <description>Recent content on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jan 2026 09:00:00 +0530</lastBuildDate>
+    <lastBuildDate>Mon, 05 Jan 2026 00:23:31 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts</title>
+      <link>http://localhost:1313/posts/the-dna-of-language/</link>
+      <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
+      <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
+      <description>&lt;p&gt;Imagine you have to build a house. You cannot build a stable house only with massive boulders as walls (too big) or one cannot build a house only with tiny pebbles (too small). We need exactly the right sized bricks. Same analogy applies for linguistics. We need to figure out strategies to break down petabytes of data into usable atomic chunks.&lt;/p&gt;
+&lt;p&gt;The the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to view a sizable amount of fluid language data into discrete mathematical language which machines can process. It is the invisible filter in the heart of LLMs where every prompt is passed and every response is born. Let&amp;rsquo;s dive into the most popular tokenization strategies used in LLMs.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>My First Post</title>
       <link>http://localhost:1313/posts/first-post/</link>

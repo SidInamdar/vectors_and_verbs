@@ -92,3 +92,36 @@ h2 {
 .post-entry:first-of-type {
     margin-top: 0 !important;
 }
+
+/* Custom Tooltip for Draft Icon */
+.entry-hint {
+    position: relative;
+    z-index: 2;
+    /* Ensure it sits above the .entry-link overlay */
+    cursor: help;
+}
+
+.entry-hint:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary);
+    color: var(--theme);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 1;
+    /* Show nicely */
+    pointer-events: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Justify text for all post content */
+.post-content p {
+    text-align: justify;
+    text-justify: inter-word;
+    /* Improved spacing for justified text */
+}

@@ -6,8 +6,16 @@
     <description>Recent content in Posts on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 04 Jan 2026 09:00:00 +0530</lastBuildDate>
+    <lastBuildDate>Mon, 05 Jan 2026 00:23:31 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The DNA of Language: A Deep Dive into LLM Tokenization</title>
+      <link>http://localhost:1313/posts/the-dna-of-language/</link>
+      <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
+      <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
+      <description>&lt;h2 id=&#34;the-dna-of-language-a-deep-dive-into-popular-llm-tokenization-concepts&#34;&gt;The DNA of Language: A Deep Dive into popular LLM Tokenization concepts&lt;/h2&gt;
+&lt;p&gt;Imagine you have to build a house. You cannot build a stable house only with massive boulders as walls (too big) or one cannot build a house only with tiny pebbles (too small). We need exactly the right sized bricks. Same analogy applies for linguistics. We need to figure out strategies to break down petabytes of data into usable atomic chunks.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>My First Post</title>
       <link>http://localhost:1313/posts/first-post/</link>
