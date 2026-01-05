@@ -6,12 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
 <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts | Vectors &amp; Verbs</title>
-<meta name="keywords" content="nlp, llm, tokenization">
-<meta name="description" content="Imagine you have to build a house. You cannot build a stable house only with massive boulders as walls (too big) or one cannot build a house only with tiny pebbles (too small). We need exactly the right sized bricks. Same analogy applies for linguistics. We need to figure out strategies to break down petabytes of data into usable atomic chunks.
-The the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to view a sizable amount of fluid language data into discrete mathematical language which machines can process. It is the invisible filter in the heart of LLMs where every prompt is passed and every response is born. Let&rsquo;s dive into the most popular tokenization strategies used in LLMs.">
+<meta name="keywords" content="artificial-intelligence, large-language-models, tokenization, sentencepiece, byte-pair-encoding, wordpiece, unigram">
+<meta name="description" content="Imagine you have to build a house. You cannot build a stable house using only massive boulders as walls (too big), nor can you build one using only tiny pebbles (too small). You need exactly the right-sized bricks.
+The same analogy applies to linguistics. We need to find strategies to break down petabytes of language data into usable, atomic chunks. In the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to transform a sizable amount of fluid language data into a discrete mathematical language that machines can process. It is the invisible filter at the heart of LLMs through which every prompt is passed and every response is born.">
 <meta name="author" content="">
 <link rel="canonical" href="http://localhost:1313/posts/the-dna-of-language/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.c4fd39b64651cb8747853fce2444aeacec8451026830f17251d9c5253c54359c.css" integrity="sha256-xP05tkZRy4dHhT/OJESurOyEUQJoMPFyUdnFJTxUNZw=" rel="preload stylesheet" as="style">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.0e1be17f86bee29752f66d877be16f24c078f32dc01bf3eae336c2901d6c9c8e.css" integrity="sha256-Dhvhf4a&#43;4pdS9m2He&#43;FvJMB48y3AG/Pq4zbCkB1snI4=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
@@ -72,6 +72,21 @@ The the context of Large Language Models (LLMs), these bricks are called tokens.
     }
 
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
 </head>
 <body id="top">
     <header class="header">
@@ -127,46 +142,90 @@ The the context of Large Language Models (LLMs), these bricks are called tokens.
     <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       The DNA of Language: A Deep Dive into LLM Tokenization concepts
-      <span class="entry-hint" title="Draft">
-        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
-          <path
-            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
-        </svg>
-      </span>
     </h1>
-    <div class="post-meta"><span title='2026-01-05 00:23:31 +0530 IST'>January 5, 2026</span>&nbsp;·&nbsp;<span>2 min</span>
+    <div class="post-meta"><span title='2026-01-05 00:23:31 +0530 IST'>January 5, 2026</span>&nbsp;·&nbsp;<span>8 min</span>
 
 </div>
   </header> 
-  <div class="post-content"><p>Imagine you have to build a house. You cannot build a stable house only with massive boulders as walls (too big) or one cannot build a house only with tiny pebbles (too small). We need exactly the right sized bricks. Same analogy applies for linguistics. We need to figure out strategies to break down petabytes of data into usable atomic chunks.</p>
-<p>The the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to view a sizable amount of fluid language data into discrete mathematical language which machines can process. It is the invisible filter in the heart of LLMs where every prompt is passed and every response is born. Let&rsquo;s dive into the most popular tokenization strategies used in LLMs.</p>
+  <div class="post-content"><p>Imagine you have to build a house. You cannot build a stable house using only massive boulders as walls (too big), nor can you build one using only tiny pebbles (too small). You need exactly the right-sized bricks.</p>
+<p>The same analogy applies to linguistics. We need to find strategies to break down petabytes of language data into usable, atomic chunks. In the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to transform a sizable amount of fluid language data into a discrete mathematical language that machines can process. It is the invisible filter at the heart of LLMs through which every prompt is passed and every response is born.</p>
+<p>Let&rsquo;s dive into the most popular tokenization strategies used in LLMs today.</p>
 <h3 id="1-byte-pair-encoding-bpe">1. Byte Pair Encoding (BPE)<a hidden class="anchor" aria-hidden="true" href="#1-byte-pair-encoding-bpe">#</a></h3>
-<p>It is the most popular tokenization strategy used in LLMs mostly because it made the engineers worry less about confronting the problem of missing tokens. It recieved massive popularity after the release of GPT-2, GPT-3 and Llama and most important, it is a simple bottoms up frequency based strategy.</p>
-<h3 id="how-does-it-work">How does it work?<a hidden class="anchor" aria-hidden="true" href="#how-does-it-work">#</a></h3>
-<p>BPE starts with a vocabulary of single characters and then iteratively merges the most frequent pairs of characters until it reaches the desired vocabulary size. This creates a tree like subword joining structure.
-By favouring frequent sequences, BPE ensures that the most common words and phrases are represented by a single token, while rarer words and phrases are represented by a combination of tokens. This makes BPE a powerful tool for representing natural language data in a compact and efficient way.</p>
-<p>The Byte level BPE goes even further to start the process with the UTF-8 byte as a character. This ensures that the tokenization process is language agnostic and can handle any language, even those languages that use non-latin scripts or cannot be split by spaces.</p>
+<p>Early Natural Language Processing (NLP) models used to split text into words to form a corpus. During inference (i.e., when we want to generate text), any unknown word would be assigned an &ldquo;out of vocabulary&rdquo; token (<code>&lt;UNK&gt;</code>). Rare words like &ldquo;uninstagrammable&rdquo; were the usual victims of this process.</p>
+<p>BPE is the most popular tokenization strategy used in LLMs, largely because it allows engineers to worry less about the problem of missing tokens. It received massive popularity after the release of GPT-2, GPT-3, and Llama. Most importantly, it is a simple, bottom-up, frequency-based strategy.</p>
+<p>BPE starts with a vocabulary of single characters and then iteratively merges the most frequent pairs of characters until it reaches the desired vocabulary size. This creates a tree-like subword joining structure. By favoring frequent sequences, BPE ensures that the most common words and phrases are represented by a single token, while rarer words are represented by a combination of tokens. This makes BPE a powerful tool for representing natural language data in a compact and efficient way.</p>
+<p>Modern <strong>Byte-level BPE</strong> goes even further by starting the process with the UTF-8 byte as a character. This ensures that the tokenization process is language-agnostic and can handle any language—even those that use non-Latin scripts or cannot be split by spaces, such as Japanese or Korean. While Unicode contains over 150,000 characters, using UTF bytes allows the vocabulary to start with only 256 tokens. The caveat is that the more fragmented the tokens, the higher the number of tokens required to represent a word, which increases the computational cost of tokenization.</p>
 <p><img alt="BPE Merge Process Diagram" loading="lazy" src="/images/bpe-merge-process.png"></p>
+<p>The tokenization operates in 4 steps:</p>
+<ol>
+<li><strong>Initialization:</strong> The process starts with a vocabulary of single characters.</li>
+<li><strong>Pair Counting:</strong> The process counts the frequency of each pair of characters.</li>
+<li><strong>Merge:</strong> The process merges the most frequent pairs of characters.</li>
+<li><strong>Iteration:</strong> The process repeats thousands of times until the desired vocabulary size is reached (roughly 100000).</li>
+</ol>
+<p><strong>The &ldquo;SolidGoldMagikarp&rdquo; 🐟 phenomenon:</strong>
+This is a famous instance of &ldquo;glitch tokens&rdquo; in BPE. Since BPE is a frequency-based heuristic, One of the most bizarre side effects of BPE is the existence of &ldquo;glitch tokens.&rdquo; In GPT-2 and GPT-3, specific strings like &ldquo;SolidGoldMagikarp&rdquo; (a Reddit username) or &ldquo;StreamerBot&rdquo; cause the model to hallucinate or break down.</p>
+<p>GPT 4 improved the BPE tokenization by adding Regex updates. For example, you generally don&rsquo;t want to merge a word with the punctuation following it (e.g., &ldquo;dog&rdquo; and &ldquo;.&rdquo; becoming &ldquo;dog.&rdquo;).</p>
 <h3 id="2-wordpiece">2. WordPiece<a hidden class="anchor" aria-hidden="true" href="#2-wordpiece">#</a></h3>
-<p><em>To be continued&hellip;</em></p>
+<p>WordPiece was developed by Google and gained widespread attention for its use in the BERT model and its derivatives. The WordPiece strategy addresses some of the limitations of BPE. Rather than relying solely on the raw frequency of subword tokens, it uses a maximum likelihood strategy to identify a meaningful vocabulary.</p>
+<p>Superficially, WordPiece resembles BPE: it starts with a small vocabulary of single characters and iteratively merges them. However, WordPiece uses a statistical approach where scores are assigned to individual tokens in the training data. The score for a potential merge of two terms, $A$ and $B$, is:
+$$
+\text{Score} = \frac{\text{Frequency}(AB)}{\text{Frequency}(A) \times \text{Frequency}(B)}
+$$
+This formula ensures that common individual parts are penalized if they do not frequently appear together. This semantic cohesion guarantees that words appearing together are given more importance (a higher score) than parts that occur independently.
+The algorithm wrorks in two phases:<br>
+<strong>Training:</strong> The algorithm starts with base characters and then starts the merge process. For the part of the word that is in continuation it adds a special prefix &lsquo;##&rsquo; so that the parts which start the word are distinct from those which trail in a word.<br>
+<strong>Inference:</strong> Unlike BPE, which memorizes merge rules, WordPiece operates by finding the longest possible subword match (a &ldquo;greedy longest-match-first&rdquo; strategy).
+Given a word like &ldquo;hugs&rdquo;, it checks if the full word is in the vocabulary.<br>
+• If not, it looks for the longest prefix that is in the vocabulary (e.g., &ldquo;hug&rdquo;).<br>
+• It then attempts to tokenize the remainder (&ldquo;s&rdquo;) using the ## prefix (e.g., &ldquo;##s&rdquo;).<br>
+• If a subword cannot be found in the vocabulary, the entire word is replaced with the [UNK] (Unknown) token.</p>
+<p>The model has certain pitfalls. The  <code>&lt;UNK&gt;</code> token acts as a &ldquo;hard cliff,&rdquo; making it impossible to resolve very rare words. Recent research indicates that most tokens in WordPiece are start tokens (~70%), while only ~30% are continuation tokens. Furthermore, the model does not capture semantic links between words; for example, &ldquo;advice&rdquo; and &ldquo;advises&rdquo; are tokenized entirely differently.</p>
+<h3 id="3-unigram-chipping-away-unwanted-tokens">3. Unigram: Chipping away unwanted tokens<a hidden class="anchor" aria-hidden="true" href="#3-unigram-chipping-away-unwanted-tokens">#</a></h3>
+<p>Unigram follows the reverse strategy of learning tokens from data than BPE or WordPiece. It starts with a large vocabulary and then removes the least frequent tokens and it does this by selecting tokens based on the fundamental question: <strong>&lsquo;Which breakdown of the text will maximizes the likelihood of the data?&rsquo;</strong></p>
+<p>A single word can be tokenized in multiple ways. For example <code>hugs</code> can be tokenized as:</p>
+<ul>
+<li><code>[hug, s]</code></li>
+<li><code>[h, ug, s]</code></li>
+<li><code>[h, u, g, s]</code></li>
+</ul>
+<p>Each of these tokenizations will be assigned a probability score and the one with the maximum is selected as the likely winner. The mechanism uses Expectation - Maximization algorithm as follows:</p>
+<p><strong>1. Initialization:</strong> The model starts with the entire vocabulary and all the possible substrings in the corpus. Initial size is much bigger than the desired vocabulary.<br>
+<strong>2. Expectation (calculating Loss):</strong> The model calculates the loss for each tokenization by using the negative log-likelihood of the data given the tokenization. Essentially, it measures how well the current tokens can &ldquo;explain&rdquo; the training text.<br>
+<strong>3. Maximization (pruning):</strong> For every possible token in the vocabulary, the model calculates: &lsquo;How much will the overall loss change if we remove this token?&rsquo;. If the loss spikes on token removal (means that the token was important in compressing the vocabulary), it is kept. If the loss does not spike (token contributed very little to compression), it is removed.<br>
+<strong>4. Selection:</strong> The model discards bottom 10 to 20 % of the original vocabulary and the cycle repeats till desired vocabulary size is reached.</p>
+<p>Because Unigram allows multiple segmentations for the same text, it relies on a dynamic programming method called the <strong>Viterbi algorithm</strong> during inference. When tokenizing a word, the algorithm builds a graph where nodes are characters and edges are possible subwords, then unrolls the path with the highest score. This ensures the tokenization is mathematically optimal rather than just a result of greedy merging.</p>
+<p>Unigram is the default tokenization strategy used in SentencePiece. The model can use subword regularization during training to create a more robust tokenization. It means not picking the &lsquo;best&rsquo; tokenization always but sometimes a &lsquo;good enough&rsquo; tokenization. Also the model can use sampled segmentation which gives different optimal paths to tokenization of the same word, something chatbot applications really like. Unigram also gravitates toward tokens that compress the text most efficiently.</p>
+<p>Recent comparative studies have shown that tokenization strategies affect languages differently. While BPE tends to perform better for Germanic languages (like English and German), Unigram (via SentencePiece) has been shown to be more effective for Romance languages (like Spanish) and Indic languages (like Hindi). This suggests that Unigram&rsquo;s probabilistic approach may better capture the morphological nuances of certain language families.</p>
+<h3 id="4-sentencepiece-the-universal-adapter">4. SentencePiece: The Universal Adapter<a hidden class="anchor" aria-hidden="true" href="#4-sentencepiece-the-universal-adapter">#</a></h3>
+<p>Bold claim of sentences is that words are not separated by spaces, which is central logic to split token for many traditional tokenization strategies including BERT Tokenizers. The model treats whitespaces as part of the word. For example: &lsquo;Hello World&rsquo; becomes _Hello _World.</p>
+<p><strong>Lossless Reconstruction:</strong> The model is lossless, meaning it can perfectly reconstruct the original text from the tokenized version. This is because it treats whitespaces as part of the word. The original text can be recreated by simply concatenating the words.</p>
+<p>It is a common misconception that SentencePiece is a tokenization algorithm in the same vein as BPE. In reality, SentencePiece is a library and a strategy that can implement different segmentation algorithms, most notably BPE and Unigram.
+Unigram Integration: Models like ALBRET, T5, mBART, and XLNet utilize SentencePiece configured with the Unigram algorithm. This approach starts with a massive vocabulary and probabilistically trims it down, optimizing for the best segmentation of the raw input stream.
+• BPE Integration: Conversely, models like Llama 2 utilize SentencePiece configured with Byte-Pair Encoding (BPE). This allows them to benefit from BPE&rsquo;s merge-based efficiency while retaining SentencePiece&rsquo;s language-agnostic handling of Unicode.</p>
+<p><strong>Handling unknowns:</strong> The model provides an option called <code>byte fallback</code>, so whenever the model identifies a token as unknown, instead of adding it as <code>&lt;UNK&gt;</code>, the model can split the word into UTF-8 bytes and represent them as individual tokens. This is a more efficient way of handling unknown tokens and is used in models like Llama 2. It is a more efficient way of tokenization and is lossless.</p>
+<p>SentencePiece standardized the NLP pipelines in ways that models consume text, by treating text as a continuous stream of characters and modelling whitespaces it can enable multilingual models like T5 and mBART.</p>
 
 
   </div>
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/nlp/">Nlp</a></li>
-      <li><a href="http://localhost:1313/tags/llm/">Llm</a></li>
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/large-language-models/">Large-Language-Models</a></li>
       <li><a href="http://localhost:1313/tags/tokenization/">Tokenization</a></li>
+      <li><a href="http://localhost:1313/tags/sentencepiece/">Sentencepiece</a></li>
+      <li><a href="http://localhost:1313/tags/byte-pair-encoding/">Byte-Pair-Encoding</a></li>
+      <li><a href="http://localhost:1313/tags/wordpiece/">Wordpiece</a></li>
+      <li><a href="http://localhost:1313/tags/unigram/">Unigram</a></li>
     </ul>
 <nav class="paginav">
-  <a class="next" href="http://localhost:1313/posts/first-post/">
-    <span class="title">Next »</span>
-    <br>
-    <span>My First Post</span>
-  </a>
+    <a class="prev" href="http://localhost:1313/posts/first-post/">
+        <span class="title">« Prev</span>
+        <br>
+        <span>My First Post</span>
+    </a>
 </nav>
-
 
     <div class="social-icons" align="left">
     <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
