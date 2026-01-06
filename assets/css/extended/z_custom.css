@@ -1,0 +1,240 @@
+:root {
+    --heading-color: #47944b;
+
+    /* GitHub Light Default Variables */
+    --gh-bg: #FFFFFF;
+    --gh-text: #1F2328;
+    --gh-keyword: #CF222E;
+    --gh-string: #0A3069;
+    --gh-comment: #6E7781;
+    --gh-function: #8250DF;
+    --gh-number: #0550AE;
+    --gh-constant: #0550AE;
+
+    --code-block-bg: var(--gh-bg);
+    /* Integrating with PaperMod variable */
+}
+
+:root[data-theme="dark"] {
+    /* GitHub Dark Default Variables */
+    --gh-bg: #0D1117;
+    --gh-text: #E6EDF3;
+    --gh-keyword: #FF7B72;
+    --gh-string: #A5D6FF;
+    --gh-comment: #8B949E;
+    --gh-function: #D2A8FF;
+    --gh-number: #79C0FF;
+    --gh-constant: #79C0FF;
+
+    --code-block-bg: var(--gh-bg);
+    /* Integrating with PaperMod variable */
+}
+
+/* 1. Main Blog Title (Navbar) */
+.logo a,
+.logo a:visited {
+    color: var(--heading-color);
+}
+
+/* 2. Post Titles (in List View and Single Page) */
+.entry-title {
+    color: var(--heading-color);
+}
+
+.page-title {
+    color: var(--heading-color);
+}
+
+/* 3. Section/Content Headings */
+h1,
+h2 {
+    color: var(--heading-color);
+}
+
+/* --- GitHub Theme Implementation --- */
+
+/* Base Code Text */
+body pre,
+body code,
+/* Generic Names & Variables */
+body .chroma .n,
+body .chroma .nx,
+body .chroma .na,
+body .chroma .nv,
+body .chroma .vc,
+body .chroma .vg,
+body .chroma .vi,
+body .chroma .vm,
+/* Operators & Punctuation */
+body .chroma .o,
+body .chroma .p,
+/* Line Numbers */
+body .chroma .lnt,
+body .chroma .ln,
+/* Generic Output */
+body .chroma .go {
+    color: var(--gh-text) !important;
+}
+
+/* Keywords */
+body .chroma .k,
+body .chroma .kd,
+body .chroma .kn,
+body .chroma .kp,
+body .chroma .kr,
+body .chroma .kt {
+    color: var(--gh-keyword) !important;
+}
+
+/* Strings */
+body .chroma .s,
+body .chroma .sa,
+body .chroma .sb,
+body .chroma .sc,
+body .chroma .dl,
+body .chroma .sd,
+body .chroma .s2,
+body .chroma .se,
+body .chroma .sh,
+body .chroma .si,
+body .chroma .sx,
+body .chroma .sr,
+body .chroma .s1,
+body .chroma .ss {
+    color: var(--gh-string) !important;
+}
+
+/* Comments */
+body .chroma .c,
+body .chroma .ch,
+body .chroma .cm,
+body .chroma .c1,
+body .chroma .cs,
+body .chroma .cp,
+body .chroma .cpf {
+    color: var(--gh-comment) !important;
+    font-style: italic;
+}
+
+/* Functions */
+body .chroma .nf,
+body .chroma .fm {
+    color: var(--gh-function) !important;
+}
+
+/* Numbers, Booleans, Constants */
+body .chroma .m,
+body .chroma .mb,
+body .chroma .mf,
+body .chroma .mh,
+body .chroma .mi,
+body .chroma .il,
+body .chroma .mo,
+body .chroma .kc,
+/* KeywordConstant (often bools) */
+body .chroma .no,
+/* NameConstant */
+body .chroma .nd {
+    /* Decorators often look good in function or const color, sticking to const/function logic. Let's use function color for decorators as is common */
+    color: var(--gh-number) !important;
+}
+
+/* Special Case: Decorators - GitHub often treats them like functions or keywords. 
+   In the user's list, Decorator isn't explicit, but Functions are purple. 
+   Let's use the Function color for Decorators (.nd) */
+body .chroma .nd {
+    color: var(--gh-function) !important;
+}
+
+/* Ensure background is robust */
+.highlight,
+.highlight pre,
+.highlight .chroma {
+    background-color: var(--gh-bg) !important;
+}
+
+/* Add a subtle border for light mode readability on white bg */
+:root:not([data-theme="dark"]) .highlight {
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+}
+
+
+
+/* --- Existing Custom Styles Preserved Below --- */
+
+/* Social Icons - Specific Colors */
+.social-icons a:hover svg {
+    fill: var(--primary);
+}
+
+/* Home Info Styling */
+.home-info .entry-content {
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.home-info .entry-header h1 {
+    margin-bottom: 5px !important;
+}
+
+.home-author {
+    font-size: 1.3rem !important;
+    font-weight: 500 !important;
+    color: var(--primary) !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    margin-left: 0.4em !important;
+    margin-bottom: 0 !important;
+    vertical-align: baseline !important;
+}
+
+/* Compact Global Spacing */
+.home-info {
+    margin-bottom: 10px !important;
+}
+
+.social-icons {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+}
+
+.post-entry:first-of-type {
+    margin-top: 0 !important;
+}
+
+/* Custom Tooltip for Draft Icon */
+.entry-hint {
+    position: relative;
+    z-index: 2;
+    cursor: help;
+}
+
+.entry-hint:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary);
+    color: var(--theme);
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 1;
+    pointer-events: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Justify text for all post content */
+.post-content p {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+/* Match Home Title Font Size to Post Title (40px) */
+.first-entry .entry-header h1 {
+    font-size: 40px;
+    line-height: 1.3;
+}

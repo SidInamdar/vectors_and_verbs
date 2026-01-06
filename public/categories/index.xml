@@ -36,12 +36,5 @@
       <guid>http://localhost:1313/categories/tech/</guid>
       <description></description>
     </item>
-    <item>
-      <title>Deep-Learning</title>
-      <link>http://localhost:1313/categories/deep-learning/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/categories/deep-learning/</guid>
-      <description></description>
-    </item>
   </channel>
 </rss>

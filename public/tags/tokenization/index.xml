@@ -13,8 +13,8 @@
       <link>http://localhost:1313/posts/the-dna-of-language/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
       <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
-      <description>&lt;p&gt;Imagine you have to build a house. You cannot build a stable house only with massive boulders as walls (too big) or one cannot build a house only with tiny pebbles (too small). We need exactly the right sized bricks. Same analogy applies for linguistics. We need to figure out strategies to break down petabytes of data into usable atomic chunks.&lt;/p&gt;
-&lt;p&gt;The the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to view a sizable amount of fluid language data into discrete mathematical language which machines can process. It is the invisible filter in the heart of LLMs where every prompt is passed and every response is born. Let&amp;rsquo;s dive into the most popular tokenization strategies used in LLMs.&lt;/p&gt;</description>
+      <description>&lt;p&gt;Imagine you have to build a house. You cannot build a stable house using only massive boulders as walls (too big), nor can you build one using only tiny pebbles (too small). You need exactly the right-sized bricks.&lt;/p&gt;
+&lt;p&gt;The same analogy applies to linguistics. We need to find strategies to break down petabytes of language data into usable, atomic chunks. In the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to transform a sizable amount of fluid language data into a discrete mathematical language that machines can process. It is the invisible filter at the heart of LLMs through which every prompt is passed and every response is born.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>
