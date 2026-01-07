@@ -3,30 +3,54 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/categories/artificial-intelligence/</loc>
-    <lastmod>2026-01-05T00:23:31+05:30</lastmod>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/artificial-intelligence/</loc>
-    <lastmod>2026-01-05T00:23:31+05:30</lastmod>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/embeddings/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/fasttext/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/glove/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/large-language-models/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/large-language-models/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/word-embeddings/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/static-embeddings/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/word-embeddings/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/word2vec/</loc>
+    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/byte-pair-encoding/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2026-01-05T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/large-language-models/</loc>
-    <lastmod>2026-01-05T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/large-language-models/</loc>
-    <lastmod>2026-01-05T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2026-01-05T00:23:31+05:30</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/sentencepiece/</loc>
-    <lastmod>2026-01-05T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/the-dna-of-language/</loc>
@@ -39,9 +63,6 @@
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/unigram/</loc>
-    <lastmod>2026-01-05T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/wordpiece/</loc>

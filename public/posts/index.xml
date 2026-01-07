@@ -6,8 +6,26 @@
     <description>Recent content in Posts on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 05 Jan 2026 00:23:31 +0530</lastBuildDate>
+    <lastBuildDate>Wed, 07 Jan 2026 00:23:31 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Semantic Alchemists: SkipGram and Continuous Bag Of Words (CBOW)</title>
+      <link>http://localhost:1313/posts/word-embeddings/</link>
+      <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
+      <guid>http://localhost:1313/posts/word-embeddings/</guid>
+      <description>&lt;p&gt;&lt;img alt=&#34;SkipGram and CBOW Process Diagram&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/embedding-concept-process-flow.png&#34;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Lnaguage models require vector representations of words to capture semantic relationships.&lt;/li&gt;
+&lt;li&gt;Earlier than 2010s, models used word count based vector representations that captured only the frequency of words. For Example, one-hot encoding.
+THe problems:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol&gt;
+&lt;li&gt;The Curse of Dimensionality&lt;/li&gt;
+&lt;li&gt;Lack of meaning&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;In 2011, At Google, Mikolov et al. introduced Word2Vec, which used a shallow neural network to learn vector representations of words. The best part was that it could create much denser relationships between words than prior models and it was unsupervised. The training (prediction) is fake but the weight matrices we get on the side are gold mine of fine-grained semantic relationships.
+There are two popular variants of Word2Vec:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts</title>
       <link>http://localhost:1313/posts/the-dna-of-language/</link>

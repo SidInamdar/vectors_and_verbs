@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram | Vectors &amp; Verbs</title>
+<meta name="keywords" content="artificial-intelligence, large-language-models, word-embeddings, static-embeddings, Word2Vec, GloVe, FastText">
+<meta name="description" content="
+Before we had Large Language Models writing poetry, we had to teach computers that &ldquo;king&rdquo; and &ldquo;queen&rdquo; are related not just by spelling, but by meaning. This is the story of that breakthrough. It’s the moment we stopped counting words and started mapping their souls—turning raw text into a mathematical landscape where math can solve analogies. Welcome to the world of Word2Vec. 🔮
+
+Language models require vector representations of words to capture semantic relationships.
+Before the 2010s, models used word count-based vector representations that captured only the frequency of words (e.g., One-Hot Encoding).
+
+The Problems: 🚧">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/word-embeddings/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.14a7ead402632a772e68778eea12ddb843694b8b766e740f5ac4f97d1d3fbabe.css" integrity="sha256-FKfq1AJjKncuaHeO6hLduENpS4t2bnQPWsT5fR0/ur4=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/word-embeddings/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram
+    </h1>
+    <div class="post-meta"><span title='2026-01-07 00:23:31 +0530 IST'>January 7, 2026</span>&nbsp;·&nbsp;<span>12 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><img alt="SkipGram and CBOW Process Diagram" loading="lazy" src="/images/embedding-concept-process-flow.png">
+Before we had Large Language Models writing poetry, we had to teach computers that &ldquo;king&rdquo; and &ldquo;queen&rdquo; are related not just by spelling, but by <em>meaning</em>. This is the story of that breakthrough. It’s the moment we stopped counting words and started mapping their souls—turning raw text into a mathematical landscape where math can solve analogies. Welcome to the world of <strong>Word2Vec</strong>. 🔮</p>
+<ul>
+<li><strong>Language models</strong> require vector representations of words to capture semantic relationships.</li>
+<li>Before the 2010s, models used word count-based vector representations that captured only the frequency of words (e.g., One-Hot Encoding).</li>
+</ul>
+<p><strong>The Problems:</strong> 🚧</p>
+<ol>
+<li><strong>The Curse of Dimensionality</strong></li>
+<li><strong>Lack of meaning</strong> (Synonyms were treated as mathematically unrelated).</li>
+</ol>
+<p>In 2011, <strong>Mikolov et al.</strong> at Google introduced <strong>Word2Vec</strong>, which used a shallow neural network to learn vector representations of words. The best part? It could create much denser relationships between words than prior models, and it was <strong>unsupervised</strong>.</p>
+<p>The training (prediction) is essentially &ldquo;fake&rdquo;—a pretext task. But the weight matrices we get on the side are a <strong>gold mine</strong> of fine-grained semantic relationships. ⛏️</p>
+<p>There are two popular variants of Word2Vec:</p>
+<ol>
+<li><strong>SkipGram</strong></li>
+<li><strong>Continuous Bag Of Words (CBOW)</strong></li>
+</ol>
+<h3 id="1-continuous-bag-of-words-cbow-">1. Continuous Bag of Words (CBOW) 🧩<a hidden class="anchor" aria-hidden="true" href="#1-continuous-bag-of-words-cbow-">#</a></h3>
+<p>CBOW is a simple <strong>&lsquo;fill in the blanks&rsquo;</strong> machine. It takes the surrounding words as inputs and tries to predict the center word.</p>
+<ul>
+<li>
+<p><strong>&ldquo;Continuous&rdquo;:</strong> It operates in continuous vector space (unlike the discrete space of n-gram models).</p>
+</li>
+<li>
+<p><strong>&ldquo;Bag of words&rdquo;:</strong> The order of the context does not matter. <em>&ldquo;The cat sat on the mat&rdquo;</em> and <em>&ldquo;The mat sat on the cat&rdquo;</em> are the same for CBOW. They produce exactly the same predictions.</p>
+</li>
+</ul>
+<p><strong>Objective:</strong> Maximize the probability of the target word $w_t$ given its context $w_{t-C}, \dots, w_{t+C}$.</p>
+<h4 id="2-training">2. Training<a hidden class="anchor" aria-hidden="true" href="#2-training">#</a></h4>
+<p><strong>Defining Dimensions:</strong></p>
+<ul>
+<li>$V$: Vocabulary size (number of unique words in the corpus, e.g., 10,000)</li>
+<li>$N$: Dimension of the embedding space (e.g., 100)</li>
+<li>$C$: Number of context words (e.g., 2 words on left of target and 2 words on right)</li>
+</ul>
+<p><strong>Step 1: Input Lookup &amp; One-Hot Encoding</strong></p>
+<p>Mathematically, we represent each context word as a one-hot vector $x^{(c)}$.
+We have an Input Matrix $W_{in}$ of size $V \times N$.
+For each context word (e.g., &ldquo;The&rdquo;, &ldquo;cat&rdquo;, &ldquo;on&rdquo;, &ldquo;mat&rdquo;), we select its corresponding row from $W_{in}$.</p>
+<p>$$
+v_c = W_{in}^T x^{(c)}
+$$</p>
+<p>Where $v_c$ is the $N$-dimensional vector for context word $c$.</p>
+<p><strong>Step 2: Projection (The &ldquo;Mixing&rdquo;)</strong></p>
+<p>We combine the context vectors. In standard CBOW, we simply <strong>average</strong> them. This creates the hidden layer vector $h$.</p>
+<p>$$
+h = \frac{1}{2C} \sum_{c=1}^{2C} v_c
+$$</p>
+<p>$h$ is a single vector of size $N \times 1$.
+<em>Note: This operation is linear and contains no activation function (like ReLU or Sigmoid).</em></p>
+<p><strong>Step 3: Output Scoring (The &ldquo;Dot Product&rdquo;)</strong></p>
+<p>We have a second matrix, the <strong>Output Matrix</strong> $W_{out}$ of size $N \times V$.
+We compute the raw score (logit) $u_j$ for every word $j$ in the vocabulary by taking the dot product of the hidden vector $h$ and the output vector $v&rsquo;_j$.</p>
+<p>$$
+u_j = {v&rsquo;_j}^T h
+$$</p>
+<p>Or in matrix form:</p>
+<p>$$
+u = W_{out}^T h
+$$</p>
+<p>Result $u$ is a vector of size $V \times 1$.</p>
+<p><strong>Step 4: Probability Conversion (Softmax)</strong></p>
+<p>We convert the raw scores $u$ into probabilities using the <strong>Softmax</strong> function. This tells us the probability that word $w_j$ is the center word.</p>
+<p>$$
+y_j = P(w_j | \text{context}) = \frac{\exp(u_j)}{\sum_{k=1}^V \exp(u_k)}
+$$</p>
+<p><strong>Step 5: Loss Calculation (Cross-Entropy)</strong></p>
+<p>We compare the predicted distribution $y$ with the actual ground truth $t$ (a one-hot vector where the index of the true word is 1).
+The loss function $E$ is:</p>
+<p>$$
+E = - \sum_{j=1}^V t_j \log(y_j)
+$$</p>
+<p>Since $t_j$ is 0 for all words except the target word (let&rsquo;s call the target index $j^*$), this simplifies to:</p>
+<p>$$
+E = - \log(y_{j^*})
+$$</p>
+<h3 id="3-backpropagation-details">3. Backpropagation Details<a hidden class="anchor" aria-hidden="true" href="#3-backpropagation-details">#</a></h3>
+<p>We need to update the weights to minimize $E$. We use the <strong>Chain Rule</strong>.</p>
+<p><strong>A. Gradient w.r.t. Output Matrix (</strong>$W_{out}$<strong>)</strong></p>
+<p>We want to know how the error changes with respect to the raw score $u_j$.</p>
+<p>$$
+\frac{\partial E}{\partial u_j} = y_j - t_j
+$$</p>
+<p>Let&rsquo;s call this error term $e_j$.</p>
+<ul>
+<li>If $j$ is the target word: $e_j = y_j - 1$ (Result is negative; we boost the score).</li>
+<li>If $j$ is not target: $e_j = y_j - 0$ (Result is positive; we suppress the score).</li>
+</ul>
+<p>The update rule for the output vector $v&rsquo;_j$ becomes:</p>
+<div>
+$$
+v'_{j}(\text{new}) = v'_{j}(\text{old}) - \eta \cdot e_j \cdot h
+$$
+</div>
+<p>($\eta$ is the learning rate)</p>
+<p><strong>B. Gradient w.r.t. Hidden Layer (</strong>$h$<strong>)</strong></p>
+<p>We backpropagate the error from the output layer to the hidden layer.</p>
+<p>$$
+EH = \sum_{j=1}^V e_j \cdot v&rsquo;_j
+$$</p>
+<p>$EH$ is an $N$-dimensional vector representing the aggregate error passed back to the projection layer.</p>
+<p><strong>C. Gradient w.r.t. Input Matrix (</strong>$W_{in}$<strong>)</strong></p>
+<p>Since $h$ was just an average of the input vectors, the error $EH$ is distributed to each context word&rsquo;s input vector.
+For every word $w_c$ in the context:</p>
+<p>$$
+v_{w_c}(\text{new}) = v_{w_c}(\text{old}) - \eta \cdot \frac{1}{2C} \cdot EH
+$$</p>
+<p>Let&rsquo;s build a single pass through the network for a given context.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch</span> 
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span> 
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span> 
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Define a simple Continuous Bag of Words (CBOW) style model</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">CBOWModel</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">(</span><span class="n">CBOWModel</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># The embedding layer stores the word vectors we want to learn</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># The linear layer maps the averaged embedding back to the vocabulary size to predict the target word</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">linear</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">embedding_dim</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># inputs: tensor of word indices for the context</span>
+</span></span><span class="line"><span class="cl">        <span class="n">embeds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Aggregate context by calculating the mean of the word embeddings</span>
+</span></span><span class="line"><span class="cl">        <span class="n">h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">embeds</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Produce logits (raw scores) for each word in the vocabulary</span>
+</span></span><span class="line"><span class="cl">        <span class="n">logits</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">linear</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">logits</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Setup vocabulary and mappings</span>
+</span></span><span class="line"><span class="cl"><span class="n">word_to_ix</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&#34;the&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&#34;quick&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&#34;brown&#34;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&#34;fox&#34;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&#34;jumps&#34;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&#34;over&#34;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&#34;lazy&#34;</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&#34;dog&#34;</span><span class="p">:</span> <span class="mi">7</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="n">ix_to_word</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">word_to_ix</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Configuration constants</span>
+</span></span><span class="line"><span class="cl"><span class="n">EMBEDDING_DIM</span> <span class="o">=</span> <span class="mi">5</span> 
+</span></span><span class="line"><span class="cl"><span class="n">VOCAB_SIZE</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">word_to_ix</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">LEARNING_RATE</span> <span class="o">=</span> <span class="mf">0.01</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Initialize the model, loss function, and optimizer</span>
+</span></span><span class="line"><span class="cl"><span class="n">model</span> <span class="o">=</span> <span class="n">CBOWModel</span><span class="p">(</span><span class="n">VOCAB_SIZE</span><span class="p">,</span> <span class="n">EMBEDDING_DIM</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">loss_function</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">LEARNING_RATE</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Prepare dummy training data: context words and the target word</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Context: [&#34;quick&#34;, &#34;brown&#34;, &#34;jumps&#34;, &#34;over&#34;] -&gt; Target: &#34;fox&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">context_idxs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">target_idxs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Perform a single optimization step</span>
+</span></span><span class="line"><span class="cl"><span class="n">model</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Forward pass: we reshape context to (1, -1) to simulate a batch of size 1</span>
+</span></span><span class="line"><span class="cl"><span class="n">logits</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">context_idxs</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Calculate loss against the target word index</span>
+</span></span><span class="line"><span class="cl"><span class="n">loss</span> <span class="o">=</span> <span class="n">loss_function</span><span class="p">(</span><span class="n">logits</span><span class="p">,</span> <span class="n">target_idxs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Backpropagate and update weights</span>
+</span></span><span class="line"><span class="cl"><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Output results for the blog post</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;=== Model Training Snapshot ===&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Calculated Loss: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">=== Learned Vector for &#39;jumps&#39; ===&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">word_vec</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">word_to_ix</span><span class="p">[</span><span class="s1">&#39;jumps&#39;</span><span class="p">]]))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">word_vec</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">=== Embedding Matrix (Weights) ===&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">embeddings</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">=== Linear Layer Weights ===&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">linear</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+</span></span></code></pre></div><p>Output shows single pass loss and learned vector for &lsquo;jumps&rsquo; word. This is a single training sample result but after multiple such passes both Embedding and linear weights should be very similar.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="o">===</span> Model Training <span class="nv">Snapshot</span> <span class="o">===</span>
+</span></span><span class="line"><span class="cl">Calculated Loss: 1.989656
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">===</span> Learned Vector <span class="k">for</span> <span class="s1">&#39;jumps&#39;</span> <span class="o">===</span>
+</span></span><span class="line"><span class="cl"><span class="o">[[</span>-1.5040519  -0.5602162  -0.11328011 -0.67929274 -0.84375775<span class="o">]]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">===</span> Embedding Matrix <span class="o">(</span>Weights<span class="o">)</span> <span class="o">===</span>
+</span></span><span class="line"><span class="cl"><span class="o">[[</span> 1.66039    -0.11371879  0.6246518   0.35860053 -1.2504417 <span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>-2.1847186  -0.77199775 -0.17050214 -0.38411248 -0.03913084<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span> 0.11852697  0.90073633  0.8847807   0.7404524   0.900149  <span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span> 0.07440972 -0.40259898  2.6246994  -0.08851447  0.02660969<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>-1.5040519  -0.5602162  -0.11328011 -0.67929274 -0.84375775<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>-0.9245572  -0.5545908   0.9083091  -1.0755049   0.84047747<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>-1.0237687   0.59466314  0.05621134 -0.6202532   1.3664424 <span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span> 0.60998917 -1.0549186   1.6103884   0.8724912  -1.2486908 <span class="o">]]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">===</span> Linear Layer <span class="nv">Weights</span> <span class="o">===</span>
+</span></span><span class="line"><span class="cl"><span class="o">[[</span> 0.02165058 -0.28883642  0.14545658 -0.3442509   0.32704315<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>-0.18731792  0.28583744  0.22635977  0.13245736  0.29019794<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span> 0.3158916  -0.15826383 -0.03203773  0.16377363 -0.41457543<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>-0.05080034  0.4180087   0.11228557  0.30218413  0.3025514 <span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>-0.38419306  0.24475925 -0.39210224 -0.38660625 -0.2673145 <span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>-0.32321444  0.12200444 -0.03569533  0.2891424  -0.07345333<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span>-0.33704326  0.2521956   0.31587374  0.22590035  0.29866052<span class="o">]</span>
+</span></span><span class="line"><span class="cl"> <span class="o">[</span> 0.4117266  -0.44231793  0.24064957 -0.29684234  0.333821  <span class="o">]]</span>
+</span></span></code></pre></div><h3 id="interesting-facts-about-cbow-">Interesting Facts About CBOW 🧠<a hidden class="anchor" aria-hidden="true" href="#interesting-facts-about-cbow-">#</a></h3>
+<ol>
+<li>
+<p><strong>The &ldquo;Averaging Problem&rdquo;:</strong> This is a common issue in CBOW models. The averaging and training is order-agnostic. All variants of word order in the context window will generate the same output. <em>&ldquo;Dog bit the man&rdquo;</em> and <em>&ldquo;Man bit the dog&rdquo;</em> are the same in CBOW&rsquo;s eyes.</p>
+</li>
+<li>
+<p><strong>Smoothing Effect:</strong> CBOW models are much faster to train than Skip-Gram but are generally smoother.</p>
+</li>
+<li>
+<p><strong>Rare Words:</strong> CBOW models struggle slightly with rare words because the presence of surrounding common words (like articles and prepositions) can skew the embeddings and dissolve their uniqueness.</p>
+</li>
+<li>
+<p><strong>Computational Cost:</strong> Softmax requires summing over the entire vocabulary size, which can be computationally expensive if $V$ is very large. Solutions include <strong>Hierarchical Softmax</strong> and <strong>Negative Sampling</strong> (approximating the denominator by only checking the target word vs. 5 random noise words).</p>
+</li>
+<li>
+<p><strong>Vectors as Double Agents:</strong> Every word has a different representation in the embedding matrix and the output matrix. Most of the time $W_{out}$ is discarded, but some consider averaging both $W_{in}$ and $W_{out}$ for slightly better performance.</p>
+</li>
+<li>
+<p><strong>Linear Relationships:</strong> The famous analogy <code>King - Man + Woman = Queen</code> emerges from the model because of the linear relationships between the words.</p>
+</li>
+<li>
+<p><strong>Initialization:</strong> This is a no-brainer but worth mentioning. Initialization to zero vectors would mean no learning. We must initialize randomly.</p>
+</li>
+</ol>
+<h3 id="2-skip-gram-the-burger-flip-of-cbow-">2. Skip-Gram (The &ldquo;Burger Flip&rdquo; of CBOW) 🔄<a hidden class="anchor" aria-hidden="true" href="#2-skip-gram-the-burger-flip-of-cbow-">#</a></h3>
+<p>Skip-Gram flips the CBOW logic. While CBOW tries to predict the center word given the context, <strong>Skip-Gram tries to predict the scattered context given the center word.</strong></p>
+<p><strong>Core Concept:</strong> If a word like <em>&ldquo;monarch&rdquo;</em> can accurately predict words like <em>&ldquo;king&rdquo;</em>, <em>&ldquo;throne&rdquo;</em>, <em>&ldquo;crown&rdquo;</em>, <em>&ldquo;royalty&rdquo;</em>, and <em>&ldquo;power&rdquo;</em>, then it must effectively capture the concept of royalty.</p>
+<h4 id="training">Training<a hidden class="anchor" aria-hidden="true" href="#training">#</a></h4>
+<p>Let&rsquo;s define dimensions:</p>
+<ol>
+<li>$V$: Vocabulary size</li>
+<li>$D$: Embedding dimension</li>
+<li>$C$: Number of context words</li>
+</ol>
+<p><strong>Step 1: Input Lookup</strong></p>
+<p>Unlike CBOW, our input is just <strong>one</strong> word vector (the center word $w_t$).
+We grab the vector $v_c$ from the Input Matrix $W_{in}$.</p>
+<p>$$
+h = v_{w_t}
+$$</p>
+<p><em>Note: There is no averaging here. The hidden layer</em> $h$ <em>is simply the raw vector of the center word.</em></p>
+<p><strong>Step 2: Output Scoring (The Broadcast)</strong></p>
+<p>The model takes this single vector $h$ and compares it against the <strong>Output Matrix</strong> $W_{out}$ (the entire vocabulary). It computes a score $u_j$ for every word $j$ in the dictionary.</p>
+<p>$$
+u = W_{out}^T h
+$$</p>
+<p>Result $u$: A vector of size $V \times 1$ containing raw scores.</p>
+<p><strong>Step 3: Probability Conversion (Softmax)</strong></p>
+<p>We apply Softmax to turn scores into probabilities.</p>
+<p>$$
+P(w_j | w_t) = \frac{\exp(u_j)}{\sum_{k=1}^V \exp(u_k)}
+$$</p>
+<p><strong>Step 4: The Multi-Target Loss</strong></p>
+<p>Here is the major difference from CBOW. In CBOW, we had one target (the center). In Skip-Gram, we have $2C$ <strong>targets</strong> (all the surrounding words).
+For a sentence <em>&ldquo;The cat sat on mat&rdquo;</em> (Center: &ldquo;sat&rdquo;), the targets are &ldquo;The&rdquo;, &ldquo;cat&rdquo;, &ldquo;on&rdquo;, &ldquo;mat&rdquo;.
+We want to maximize the probability of <strong>all</strong> these true context words. The Loss function ($E$) sums the error for each context word:</p>
+<p>$$
+E = - \sum_{w_{ctx} \in \text{Window}} \log P(w_{ctx} | w_t)
+$$</p>
+<p><strong>Step 5: Backpropagation (Accumulating Gradients)</strong></p>
+<p>Since one input word is responsible for predicting multiple output words, the error signals from all those context words <strong>add up</strong>.</p>
+<ul>
+<li>
+<p><strong>At the Output Layer:</strong></p>
+<ul>
+<li>If &ldquo;cat&rdquo; was a target, the &ldquo;cat&rdquo; vector in $W_{out}$ gets a signal: <em>&ldquo;Move closer to &lsquo;sat&rsquo;.&rdquo;</em></li>
+<li>If &ldquo;apple&rdquo; was NOT a target, the &ldquo;apple&rdquo; vector gets a signal: <em>&ldquo;Move away from &lsquo;sat&rsquo;.&rdquo;</em></li>
+</ul>
+</li>
+<li>
+<p><strong>At the Hidden Layer (</strong>$h$<strong>):</strong></p>
+<ul>
+<li>The center word &ldquo;sat&rdquo; receives feedback from <strong>all</strong> its neighbors simultaneously.</li>
+<li>Error signal = (Error from &ldquo;The&rdquo;) + (Error from &ldquo;cat&rdquo;) + (Error from &ldquo;on&rdquo;)&hellip;</li>
+<li>The vector for &ldquo;sat&rdquo; in $W_{in}$ moves in the average direction of all its neighbors.</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-the-computational-nightmare--negative-sampling">3. The &ldquo;Computational Nightmare&rdquo; &amp; Negative Sampling<a hidden class="anchor" aria-hidden="true" href="#3-the-computational-nightmare--negative-sampling">#</a></h3>
+<p>The equations above describe <strong>Naive Softmax</strong>.</p>
+<p><strong>The Problem:</strong>
+If $V = 100,000$, computing the denominator $\sum \exp(u_k)$ takes 100,000 operations. Doing this for every word in a training set of billions of words is impossibly slow.</p>
+<p><strong>The Solution: Negative Sampling</strong>
+Instead of updating the <em>entire</em> vocabulary (1 correct word vs 99,999 wrong ones), we approximate the problem.</p>
+<ul>
+<li><strong>Positive Pair:</strong> (sat, cat) $\rightarrow$ Maximize probability (Label 1).</li>
+<li><strong>Negative Pairs:</strong> We pick $K$ (e.g., 5) random words the model <em>didn&rsquo;t</em> see, e.g., (sat, bulldozer), (sat, quantum). $\rightarrow$ Minimize probability (Label 0).</li>
+</ul>
+<p><strong>New Equation (Sigmoid instead of Softmax):</strong></p>
+<div>
+$$
+E = - \log \sigma({v'_{\text{pos}}}^T v_{\text{in}}) - \sum_{k=1}^K \log \sigma(-{v'_{\text{neg}_{k}}}^T v_{\text{in}})
+$$
+</div>
+<p><strong>Effect:</strong>
+We typically only update 6 vectors per step (1 pos + 5 negs) instead of 100,000.</p>
+<p>Let&rsquo;s see this in code:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">torch.optim</span> <span class="k">as</span> <span class="nn">optim</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">SkipGramNegativeSampling</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Skip-Gram with Negative Sampling (SGNS) implementation.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    
+</span></span></span><span class="line"><span class="cl"><span class="s2">    SGNS approximates the softmax over the entire vocabulary by instead 
+</span></span></span><span class="line"><span class="cl"><span class="s2">    distinguishing between a real context word (positive) and K noise words (negative).
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">(</span><span class="n">SkipGramNegativeSampling</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Input embeddings: used when the word is the center word</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">in_embed</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Output embeddings: used when the word is a context or negative sample</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">out_embed</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Embedding</span><span class="p">(</span><span class="n">vocab_size</span><span class="p">,</span> <span class="n">embedding_dim</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Initialize weights with small values to prevent gradient saturation</span>
+</span></span><span class="line"><span class="cl">        <span class="n">initrange</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">embedding_dim</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">in_embed</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="n">initrange</span><span class="p">,</span> <span class="n">initrange</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">out_embed</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">uniform_</span><span class="p">(</span><span class="o">-</span><span class="n">initrange</span><span class="p">,</span> <span class="n">initrange</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">center_words</span><span class="p">,</span> <span class="n">target_words</span><span class="p">,</span> <span class="n">negative_words</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Computes the negative sampling loss.
+</span></span></span><span class="line"><span class="cl"><span class="s2">        
+</span></span></span><span class="line"><span class="cl"><span class="s2">        Args:
+</span></span></span><span class="line"><span class="cl"><span class="s2">            center_words: (batch_size)
+</span></span></span><span class="line"><span class="cl"><span class="s2">            target_words: (batch_size)
+</span></span></span><span class="line"><span class="cl"><span class="s2">            negative_words: (batch_size, K) where K is number of negative samples
+</span></span></span><span class="line"><span class="cl"><span class="s2">        &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Retrieve vectors</span>
+</span></span><span class="line"><span class="cl">        <span class="n">v_c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_embed</span><span class="p">(</span><span class="n">center_words</span><span class="p">)</span>      <span class="c1"># (batch_size, embed_dim)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">u_o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_embed</span><span class="p">(</span><span class="n">target_words</span><span class="p">)</span>     <span class="c1"># (batch_size, embed_dim)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">u_n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">out_embed</span><span class="p">(</span><span class="n">negative_words</span><span class="p">)</span>   <span class="c1"># (batch_size, K, embed_dim)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 1. Positive Score: log(sigmoid(v_c · u_o))</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Compute dot product: (batch, 1, dim) @ (batch, dim, 1) -&gt; (batch, 1)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">pos_score</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">u_o</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="n">v_c</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">pos_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">pos_score</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 2. Negative Score: sum(log(sigmoid(-v_c · u_n)))</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># Compute dot products for all K samples: (batch, K, dim) @ (batch, dim, 1) -&gt; (batch, K)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">neg_score</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">bmm</span><span class="p">(</span><span class="n">u_n</span><span class="p">,</span> <span class="n">v_c</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">neg_loss</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="o">-</span><span class="n">neg_score</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-7</span><span class="p">),</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        
+</span></span><span class="line"><span class="cl">        <span class="c1"># Total loss is the negative of the objective function</span>
+</span></span><span class="line"><span class="cl">        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">pos_loss</span> <span class="o">+</span> <span class="n">neg_loss</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># --- Configuration &amp; Mock Data ---</span>
+</span></span><span class="line"><span class="cl"><span class="n">VOCAB_SIZE</span> <span class="o">=</span> <span class="mi">100</span>
+</span></span><span class="line"><span class="cl"><span class="n">EMBED_DIM</span> <span class="o">=</span> <span class="mi">10</span>
+</span></span><span class="line"><span class="cl"><span class="n">word_to_ix</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;fox&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span> <span class="c1"># Example vocabulary mapping</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">model</span> <span class="o">=</span> <span class="n">SkipGramNegativeSampling</span><span class="p">(</span><span class="n">VOCAB_SIZE</span><span class="p">,</span> <span class="n">EMBED_DIM</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">optimizer</span> <span class="o">=</span> <span class="n">optim</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Mock inputs: 1 center word, 1 target word, 5 negative samples</span>
+</span></span><span class="line"><span class="cl"><span class="n">center_id</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">target_id</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">negative_ids</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">99</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">12</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">long</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Training Step</span>
+</span></span><span class="line"><span class="cl"><span class="n">model</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">loss</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">center_id</span><span class="p">,</span> <span class="n">target_id</span><span class="p">,</span> <span class="n">negative_ids</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="n">optimizer</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Output Results</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Loss after one step: </span><span class="si">{</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">word_vec</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">in_embed</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">word_to_ix</span><span class="p">[</span><span class="s1">&#39;fox&#39;</span><span class="p">]]))</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;Vector for &#39;fox&#39;:</span><span class="se">\n</span><span class="si">{</span><span class="n">word_vec</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">)</span>
+</span></span></code></pre></div><p>The outputs:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">Loss after one step: 4.158468
+</span></span><span class="line"><span class="cl">Vector <span class="k">for</span> <span class="s1">&#39;fox&#39;</span>:
+</span></span><span class="line"><span class="cl"><span class="o">[[</span> 0.04197385  0.02400733 -0.03800093  0.01672485 -0.03872231 -0.0061478
+</span></span><span class="line"><span class="cl">   0.0121122   0.04057864 -0.036255    0.03861175<span class="o">]]</span>
+</span></span></code></pre></div><h3 id="interesting-facts-about-skip-gram-">Interesting Facts About Skip-Gram 💡<a hidden class="anchor" aria-hidden="true" href="#interesting-facts-about-skip-gram-">#</a></h3>
+<ol>
+<li>
+<p><strong>Makes Rare Words Shine:</strong>
+Skip-Gram is more effective at capturing the meaning of rare words because it focuses on the context of the center word. In CBOW, a rare word&rsquo;s vector is averaged with others, diluting its signal. In Skip-Gram, when the rare word appears as the center, it gets the full, undivided attention of the backpropagation update.</p>
+</li>
+<li>
+<p><strong>Slow Training:</strong>
+This method creates more training samples. A window of size 2 creates 4 training pairs per center word, while CBOW creates only 1 training pair per center word.</p>
+</li>
+<li>
+<p><strong>Semantic Focus:</strong>
+Skip-Gram puts more emphasis on the <strong>semantic</strong> relationship between words. It views the context as the primary signal, with the center word as the target. This makes it better at capturing the meaning of words in context. Skip-Gram tends to capture semantic relationships (King/Queen) slightly better, while CBOW captures syntactic ones (walk/walked) slightly better.</p>
+</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/large-language-models/">Large-Language-Models</a></li>
+      <li><a href="http://localhost:1313/tags/word-embeddings/">Word-Embeddings</a></li>
+      <li><a href="http://localhost:1313/tags/static-embeddings/">Static-Embeddings</a></li>
+      <li><a href="http://localhost:1313/tags/word2vec/">Word2Vec</a></li>
+      <li><a href="http://localhost:1313/tags/glove/">GloVe</a></li>
+      <li><a href="http://localhost:1313/tags/fasttext/">FastText</a></li>
+    </ul>
+<nav class="paginav">
+    <a class="prev" href="http://localhost:1313/posts/the-dna-of-language/">
+        <span class="title">« Prev</span>
+        <br>
+        <span>The DNA of Language: A Deep Dive into LLM Tokenization concepts</span>
+    </a>
+</nav>
+
+    <div class="social-icons" align="left">
+    <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
+        title="X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+    </path>
+</svg>
+    </a>
+    <a href="https://www.linkedin.com/in/siddhesh-inamdar-24634694/" target="_blank" rel="noopener noreferrer me"
+        title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+</svg>
+    </a>
+    <a href="https://medium.com/@siddheshnmdr" target="_blank" rel="noopener noreferrer me"
+        title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.000000 76.000000" fill="currentColor" stroke-width="2"
+    preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(0.000000,76.000000) scale(0.100000,-0.100000)">
+        <path
+            d="M0 380 l0 -380 380 0 380 0 0 380 0 380 -380 0 -380 0 0 -380z m334 85 c30 -63 57 -115 59 -115 2 0 16 30 31 68 15 37 37 88 49 115 l20 47 76 0 76 -1 -27 -20 -28 -21 0 -151 c0 -150 0 -151 27 -179 l27 -28 -109 0 -109 0 27 28 c26 27 27 32 26 143 0 131 3 134 -71 -58 -24 -62 -48 -113 -53 -113 -6 0 -17 16 -24 35 -7 19 -36 83 -64 142 l-52 108 -3 -98 c-3 -97 -2 -99 28 -133 16 -19 30 -39 30 -44 0 -6 -31 -10 -70 -10 -45 0 -70 4 -70 11 0 6 14 27 30 46 30 33 30 35 30 151 0 116 0 118 -31 155 l-30 37 75 0 76 0 54 -115z" />
+    </g>
+</svg>
+    </a>
+</div>
+</footer>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
