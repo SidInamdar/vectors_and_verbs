@@ -2,45 +2,45 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Categories on Vectors &amp; Verbs</title>
-    <link>http://localhost:1313/categories/</link>
+    <link>http://localhost:60765/categories/</link>
     <description>Recent content in Categories on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 07 Jan 2026 00:23:31 +0530</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:60765/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Artificial-Intelligence</title>
-      <link>http://localhost:1313/categories/artificial-intelligence/</link>
+      <link>http://localhost:60765/categories/artificial-intelligence/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/categories/artificial-intelligence/</guid>
+      <guid>http://localhost:60765/categories/artificial-intelligence/</guid>
       <description></description>
     </item>
     <item>
       <title>Embeddings</title>
-      <link>http://localhost:1313/categories/embeddings/</link>
+      <link>http://localhost:60765/categories/embeddings/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/categories/embeddings/</guid>
+      <guid>http://localhost:60765/categories/embeddings/</guid>
       <description></description>
     </item>
     <item>
       <title>Large-Language-Models</title>
-      <link>http://localhost:1313/categories/large-language-models/</link>
+      <link>http://localhost:60765/categories/large-language-models/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/categories/large-language-models/</guid>
+      <guid>http://localhost:60765/categories/large-language-models/</guid>
       <description></description>
     </item>
     <item>
       <title>Tokenization</title>
-      <link>http://localhost:1313/categories/tokenization/</link>
+      <link>http://localhost:60765/categories/tokenization/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/categories/tokenization/</guid>
+      <guid>http://localhost:60765/categories/tokenization/</guid>
       <description></description>
     </item>
     <item>
       <title>Tech</title>
-      <link>http://localhost:1313/categories/tech/</link>
+      <link>http://localhost:60765/categories/tech/</link>
       <pubDate>Sun, 04 Jan 2026 09:00:00 +0530</pubDate>
-      <guid>http://localhost:1313/categories/tech/</guid>
+      <guid>http://localhost:60765/categories/tech/</guid>
       <description></description>
     </item>
   </channel>

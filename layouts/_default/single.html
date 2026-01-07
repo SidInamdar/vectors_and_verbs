@@ -52,14 +52,14 @@
     {{- if (.Param "ShowPostNavLinks") }}
     {{- partial "post_nav_links.html" . }}
     {{- end }}
-
-    {{/* Replaced Share Icons with Social Icons (X, LinkedIn, Medium) */}}
     {{- partial "social_icons.html" (dict "align" "left") -}}
   </footer>
 
   {{- if (.Param "comments") }}
   {{- partial "comments.html" . }}
   {{- end }}
+
+  {{ partial "newsletter_form.html" . }}
 </article>
 
 {{- end }}{{/* end main */}}

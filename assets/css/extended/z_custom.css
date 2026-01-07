@@ -191,7 +191,8 @@ body .chroma .nd {
 
 /* Compact Global Spacing */
 .home-info {
-    margin-bottom: 10px !important;
+    margin-bottom: var(--gap) !important;
+    min-height: 0 !important;
 }
 
 .social-icons {

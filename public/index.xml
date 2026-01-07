@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Vectors &amp; Verbs</title>
-    <link>http://localhost:1313/</link>
+    <link>http://localhost:60765/</link>
     <description>Recent content on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 07 Jan 2026 00:23:31 +0530</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:60765/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram</title>
-      <link>http://localhost:1313/posts/word-embeddings/</link>
+      <link>http://localhost:60765/posts/word-embeddings/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/posts/word-embeddings/</guid>
-      <description>&lt;p&gt;&lt;img alt=&#34;SkipGram and CBOW Process Diagram&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/embedding-concept-process-flow.png&#34;&gt;
+      <guid>http://localhost:60765/posts/word-embeddings/</guid>
+      <description>&lt;p&gt;&lt;img alt=&#34;SkipGram and CBOW Process Diagram&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:60765/images/embedding-concept-process-flow.png&#34;&gt;
 Before we had Large Language Models writing poetry, we had to teach computers that &amp;ldquo;king&amp;rdquo; and &amp;ldquo;queen&amp;rdquo; are related not just by spelling, but by &lt;em&gt;meaning&lt;/em&gt;. This is the story of that breakthrough. It’s the moment we stopped counting words and started mapping their souls—turning raw text into a mathematical landscape where math can solve analogies. Welcome to the world of &lt;strong&gt;Word2Vec&lt;/strong&gt;. 🔮&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Language models&lt;/strong&gt; require vector representations of words to capture semantic relationships.&lt;/li&gt;
@@ -23,17 +23,17 @@ Before we had Large Language Models writing poetry, we had to teach computers th
     </item>
     <item>
       <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts</title>
-      <link>http://localhost:1313/posts/the-dna-of-language/</link>
+      <link>http://localhost:60765/posts/the-dna-of-language/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
+      <guid>http://localhost:60765/posts/the-dna-of-language/</guid>
       <description>&lt;p&gt;Imagine you have to build a house. You cannot build a stable house using only massive boulders as walls (too big), nor can you build one using only tiny pebbles (too small). You need exactly the right-sized bricks.&lt;/p&gt;
 &lt;p&gt;The same analogy applies to linguistics. We need to find strategies to break down petabytes of language data into usable, atomic chunks. In the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to transform a sizable amount of fluid language data into a discrete mathematical language that machines can process. It is the invisible filter at the heart of LLMs through which every prompt is passed and every response is born.&lt;/p&gt;</description>
     </item>
     <item>
       <title>My First Post</title>
-      <link>http://localhost:1313/posts/first-post/</link>
+      <link>http://localhost:60765/posts/first-post/</link>
       <pubDate>Sun, 04 Jan 2026 09:00:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/first-post/</guid>
+      <guid>http://localhost:60765/posts/first-post/</guid>
       <description>&lt;h2 id=&#34;welcome-to-vectors--verbs&#34;&gt;Welcome to Vectors &amp;amp; Verbs&lt;/h2&gt;
 &lt;p&gt;This is a demo post to verify the PaperMod theme setup.&lt;/p&gt;
 &lt;h3 id=&#34;features-of-this-theme&#34;&gt;Features of this theme:&lt;/h3&gt;
@@ -48,9 +48,9 @@ Before we had Large Language Models writing poetry, we had to teach computers th
     </item>
     <item>
       <title>About Me</title>
-      <link>http://localhost:1313/about/</link>
+      <link>http://localhost:60765/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>http://localhost:60765/about/</guid>
       <description>Lead Data Scientist specializing in AI-driven optimization, anomaly detection, and cloud-scale machine learning engineering.</description>
     </item>
   </channel>
