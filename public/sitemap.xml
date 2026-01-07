@@ -2,86 +2,89 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:60765/categories/artificial-intelligence/</loc>
+    <loc>https://vectorsandverbs.com/categories/artificial-intelligence/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/tags/artificial-intelligence/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/categories/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/categories/embeddings/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/tags/fasttext/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/tags/glove/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/posts/glove-and-fasttext/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/posts/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/tags/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/tags/word-embeddings/</loc>
+    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
+  </url><url>
+    <loc>https://vectorsandverbs.com/categories/large-language-models/</loc>
     <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/tags/artificial-intelligence/</loc>
+    <loc>https://vectorsandverbs.com/tags/large-language-models/</loc>
     <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/categories/</loc>
+    <loc>https://vectorsandverbs.com/posts/word-embeddings/</loc>
     <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/categories/embeddings/</loc>
+    <loc>https://vectorsandverbs.com/tags/static-embeddings/</loc>
     <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/tags/fasttext/</loc>
+    <loc>https://vectorsandverbs.com/tags/word2vec/</loc>
     <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/tags/glove/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/categories/large-language-models/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/tags/large-language-models/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/posts/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/posts/word-embeddings/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/tags/static-embeddings/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/tags/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/tags/word-embeddings/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/tags/word2vec/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:60765/tags/byte-pair-encoding/</loc>
+    <loc>https://vectorsandverbs.com/tags/byte-pair-encoding/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/tags/sentencepiece/</loc>
+    <loc>https://vectorsandverbs.com/tags/sentencepiece/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/posts/the-dna-of-language/</loc>
+    <loc>https://vectorsandverbs.com/posts/the-dna-of-language/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/categories/tokenization/</loc>
+    <loc>https://vectorsandverbs.com/categories/tokenization/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/tags/tokenization/</loc>
+    <loc>https://vectorsandverbs.com/tags/tokenization/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/tags/unigram/</loc>
+    <loc>https://vectorsandverbs.com/tags/unigram/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/tags/wordpiece/</loc>
+    <loc>https://vectorsandverbs.com/tags/wordpiece/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/tags/demo/</loc>
+    <loc>https://vectorsandverbs.com/tags/demo/</loc>
     <lastmod>2026-01-04T09:00:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/tags/hugo/</loc>
+    <loc>https://vectorsandverbs.com/tags/hugo/</loc>
     <lastmod>2026-01-04T09:00:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/posts/first-post/</loc>
+    <loc>https://vectorsandverbs.com/posts/first-post/</loc>
     <lastmod>2026-01-04T09:00:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/categories/tech/</loc>
+    <loc>https://vectorsandverbs.com/categories/tech/</loc>
     <lastmod>2026-01-04T09:00:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:60765/about/</loc>
+    <loc>https://vectorsandverbs.com/about/</loc>
   </url><url>
-    <loc>http://localhost:60765/search/</loc>
+    <loc>https://vectorsandverbs.com/search/</loc>
   </url>
 </urlset>
