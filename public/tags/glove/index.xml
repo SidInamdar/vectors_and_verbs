@@ -2,25 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>GloVe on Vectors &amp; Verbs</title>
-    <link>https://vectorsandverbs.com/tags/glove/</link>
+    <link>http://localhost:1313/tags/glove/</link>
     <description>Recent content in GloVe on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 08 Jan 2026 00:10:00 +0530</lastBuildDate>
-    <atom:link href="https://vectorsandverbs.com/tags/glove/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/glove/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>GloVe and FastText</title>
-      <link>https://vectorsandverbs.com/posts/glove-and-fasttext/</link>
+      <title>The Global Accountant and the Subword Surgeon: GloVe and FastText</title>
+      <link>http://localhost:1313/posts/glove-and-fasttext/</link>
       <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/glove-and-fasttext/</guid>
-      <description></description>
+      <guid>http://localhost:1313/posts/glove-and-fasttext/</guid>
+      <description>&lt;p&gt;Previous static embedding models like Word2Vec successfully captured local semantics of words but they failed in addressing contexts between words that might not appear in the same context window always. also, it treated words as indivisible atomic units in continuous vector spaces.&lt;/p&gt;
+&lt;p&gt;The two simple but effective ideas behind GloVe and FastText are subword units and global co-occurrence. We can see that next.&lt;/p&gt;
+&lt;h3 id=&#34;glove-a-global-mapping-strategy&#34;&gt;GloVe: A global mapping strategy&lt;/h3&gt;
+&lt;p&gt;Global Vectors for Word Representation (GloVe) was created in Stanford. The idea was to train the model so that the word vectors be defined by  how oftern it appears around other words in the corpus.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram</title>
-      <link>https://vectorsandverbs.com/posts/word-embeddings/</link>
+      <link>http://localhost:1313/posts/word-embeddings/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/word-embeddings/</guid>
-      <description>&lt;p&gt;&lt;img alt=&#34;SkipGram and CBOW Process Diagram&#34; loading=&#34;lazy&#34; src=&#34;https://vectorsandverbs.com/images/embedding-concept-process-flow.png&#34;&gt;
+      <guid>http://localhost:1313/posts/word-embeddings/</guid>
+      <description>&lt;p&gt;&lt;img alt=&#34;SkipGram and CBOW Process Diagram&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/embedding-concept-process-flow.png&#34;&gt;
 Before we had Large Language Models writing poetry, we had to teach computers that &amp;ldquo;king&amp;rdquo; and &amp;ldquo;queen&amp;rdquo; are related not just by spelling, but by &lt;em&gt;meaning&lt;/em&gt;. This is the story of that breakthrough. It’s the moment we stopped counting words and started mapping their souls—turning raw text into a mathematical landscape where math can solve analogies. Welcome to the world of &lt;strong&gt;Word2Vec&lt;/strong&gt;. 🔮&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Language models&lt;/strong&gt; require vector representations of words to capture semantic relationships.&lt;/li&gt;

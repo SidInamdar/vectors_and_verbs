@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Demo on Vectors &amp; Verbs</title>
-    <link>https://vectorsandverbs.com/tags/demo/</link>
+    <link>http://localhost:1313/tags/demo/</link>
     <description>Recent content in Demo on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 04 Jan 2026 09:00:00 +0530</lastBuildDate>
-    <atom:link href="https://vectorsandverbs.com/tags/demo/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/demo/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>My First Post</title>
-      <link>https://vectorsandverbs.com/posts/first-post/</link>
+      <link>http://localhost:1313/posts/first-post/</link>
       <pubDate>Sun, 04 Jan 2026 09:00:00 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/first-post/</guid>
+      <guid>http://localhost:1313/posts/first-post/</guid>
       <description>&lt;h2 id=&#34;welcome-to-vectors--verbs&#34;&gt;Welcome to Vectors &amp;amp; Verbs&lt;/h2&gt;
 &lt;p&gt;This is a demo post to verify the PaperMod theme setup.&lt;/p&gt;
 &lt;h3 id=&#34;features-of-this-theme&#34;&gt;Features of this theme:&lt;/h3&gt;
