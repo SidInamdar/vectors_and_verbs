@@ -6,8 +6,15 @@
     <description>Recent content in Categories on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 08 Jan 2026 00:10:00 +0530</lastBuildDate>
+    <lastBuildDate>Fri, 09 Jan 2026 21:45:00 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Tech</title>
+      <link>http://localhost:1313/categories/tech/</link>
+      <pubDate>Fri, 09 Jan 2026 21:45:00 +0530</pubDate>
+      <guid>http://localhost:1313/categories/tech/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Artificial-Intelligence</title>
       <link>http://localhost:1313/categories/artificial-intelligence/</link>
@@ -34,13 +41,6 @@
       <link>http://localhost:1313/categories/tokenization/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
       <guid>http://localhost:1313/categories/tokenization/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Tech</title>
-      <link>http://localhost:1313/categories/tech/</link>
-      <pubDate>Sun, 04 Jan 2026 09:00:00 +0530</pubDate>
-      <guid>http://localhost:1313/categories/tech/</guid>
       <description></description>
     </item>
   </channel>

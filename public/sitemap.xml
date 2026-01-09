@@ -2,13 +2,40 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/deep-learning/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/math/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/nlp/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/tech/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/positional-embeddings/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/transformers/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+  </url><url>
     <loc>http://localhost:1313/categories/artificial-intelligence/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/artificial-intelligence/</loc>
-    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/embeddings/</loc>
@@ -20,16 +47,7 @@
     <loc>http://localhost:1313/tags/glove/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
-  </url><url>
     <loc>http://localhost:1313/posts/glove-and-fasttext/</loc>
-    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/word-embeddings/</loc>
@@ -78,9 +96,6 @@
     <lastmod>2026-01-04T09:00:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/first-post/</loc>
-    <lastmod>2026-01-04T09:00:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/tech/</loc>
     <lastmod>2026-01-04T09:00:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/about/</loc>
