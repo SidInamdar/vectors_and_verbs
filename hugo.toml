@@ -33,6 +33,9 @@ theme = 'papermod'
   [[params.socialIcons]]
     name = "medium"
     url = "https://medium.com/@siddheshnmdr"
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/SidInamdar"
 
 [menu]
   [[menu.main]]
