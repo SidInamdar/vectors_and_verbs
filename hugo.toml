@@ -19,6 +19,7 @@ theme = 'papermod'
   ShowPostNavLinks = true
   ShowBreadCrumbs = true
   ShowCodeCopyButtons = true
+  description = "Exploring the intersection of human creativity and machine intelligence."
   
   [params.homeInfoParams]
     Title = "Vectors & Verbs<span class=\"home-author\">by Siddhesh Inamdar</span>"

@@ -2,59 +2,59 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Vectors &amp; Verbs</title>
-    <link>http://localhost:1313/</link>
+    <link>https://vectorsandverbs.com/</link>
     <description>Recent content on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 10 Jan 2026 01:43:00 +0530</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://vectorsandverbs.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Attention Is All You Need, but exactly which one?: MHA, GQA and MLA</title>
-      <link>http://localhost:1313/posts/attention-mechanisms/</link>
+      <link>https://vectorsandverbs.com/posts/attention-mechanisms/</link>
       <pubDate>Sat, 10 Jan 2026 01:43:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/attention-mechanisms/</guid>
+      <guid>https://vectorsandverbs.com/posts/attention-mechanisms/</guid>
       <description>We are about to touch the holy grail of modern AI. From the original 2017 paper to DeepSeek&amp;rsquo;s MLA, how has the definition of &amp;lsquo;Attention&amp;rsquo; transformed?</description>
     </item>
     <item>
       <title>The Geometry of Meaning: Sine, ALiBi, RoPE, and HoPE</title>
-      <link>http://localhost:1313/posts/positional-embeddings/</link>
+      <link>https://vectorsandverbs.com/posts/positional-embeddings/</link>
       <pubDate>Fri, 09 Jan 2026 21:45:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/positional-embeddings/</guid>
+      <guid>https://vectorsandverbs.com/posts/positional-embeddings/</guid>
       <description>From Sinusoidal to RoPE and HoPE: How Transformers learn to process word order and sequence length.</description>
     </item>
     <item>
       <title>The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText</title>
-      <link>http://localhost:1313/posts/glove-and-fasttext/</link>
+      <link>https://vectorsandverbs.com/posts/glove-and-fasttext/</link>
       <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/glove-and-fasttext/</guid>
+      <guid>https://vectorsandverbs.com/posts/glove-and-fasttext/</guid>
       <description>How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed.</description>
     </item>
     <item>
       <title>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram</title>
-      <link>http://localhost:1313/posts/word-embeddings/</link>
+      <link>https://vectorsandverbs.com/posts/word-embeddings/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/posts/word-embeddings/</guid>
+      <guid>https://vectorsandverbs.com/posts/word-embeddings/</guid>
       <description>Understanding the mathematics behind Word2Vec, CBOW, and Skip-Gram and how they map language to vector space.</description>
     </item>
     <item>
       <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts</title>
-      <link>http://localhost:1313/posts/the-dna-of-language/</link>
+      <link>https://vectorsandverbs.com/posts/the-dna-of-language/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
+      <guid>https://vectorsandverbs.com/posts/the-dna-of-language/</guid>
       <description>A comprehensive guide to tokenization strategies: BPE, WordPiece, Unigram, and SentencePiece.</description>
     </item>
     <item>
       <title>My First Post</title>
-      <link>http://localhost:1313/posts/first-post/</link>
+      <link>https://vectorsandverbs.com/posts/first-post/</link>
       <pubDate>Sun, 04 Jan 2026 09:00:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/first-post/</guid>
+      <guid>https://vectorsandverbs.com/posts/first-post/</guid>
       <description>A brief introduction to Vectors &amp;amp; Verbs and formatting verification.</description>
     </item>
     <item>
       <title>About Me</title>
-      <link>http://localhost:1313/about/</link>
+      <link>https://vectorsandverbs.com/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/</guid>
+      <guid>https://vectorsandverbs.com/about/</guid>
       <description>Lead Data Scientist specializing in AI-driven optimization, anomaly detection, and cloud-scale machine learning engineering.</description>
     </item>
   </channel>

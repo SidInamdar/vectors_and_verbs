@@ -2,31 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>GloVe on Vectors &amp; Verbs</title>
-    <link>http://localhost:1313/tags/glove/</link>
+    <link>https://vectorsandverbs.com/tags/glove/</link>
     <description>Recent content in GloVe on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 08 Jan 2026 00:10:00 +0530</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/glove/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://vectorsandverbs.com/tags/glove/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText</title>
-      <link>http://localhost:1313/posts/glove-and-fasttext/</link>
+      <link>https://vectorsandverbs.com/posts/glove-and-fasttext/</link>
       <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/glove-and-fasttext/</guid>
-      <description>&lt;p&gt;&lt;em&gt;Imagine trying to teach a computer the difference between &amp;ldquo;Apple&amp;rdquo; the fruit and &amp;ldquo;Apple&amp;rdquo; the company. To us, the distinction is intuitive. To a machine, it’s just a string of characters. How do we turn these strings into meaningful math? While early attempts like Word2Vec gave us a great start, they missed the forest for the trees—or in some cases, the twigs for the branches. Enter GloVe and FastText: two algorithms that revolutionized how machines understand the nuances of human language.&lt;/em&gt;&lt;/p&gt;</description>
+      <guid>https://vectorsandverbs.com/posts/glove-and-fasttext/</guid>
+      <description>How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed.</description>
     </item>
     <item>
       <title>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram</title>
-      <link>http://localhost:1313/posts/word-embeddings/</link>
+      <link>https://vectorsandverbs.com/posts/word-embeddings/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/posts/word-embeddings/</guid>
-      <description>&lt;p&gt;&lt;img alt=&#34;SkipGram and CBOW Process Diagram&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/embedding-concept-process-flow.png&#34;&gt;
-Before we had Large Language Models writing poetry, we had to teach computers that &amp;ldquo;king&amp;rdquo; and &amp;ldquo;queen&amp;rdquo; are related not just by spelling, but by &lt;em&gt;meaning&lt;/em&gt;. This is the story of that breakthrough. It’s the moment we stopped counting words and started mapping their souls—turning raw text into a mathematical landscape where math can solve analogies. Welcome to the world of &lt;strong&gt;Word2Vec&lt;/strong&gt;. 🔮&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Language models&lt;/strong&gt; require vector representations of words to capture semantic relationships.&lt;/li&gt;
-&lt;li&gt;Before the 2010s, models used word count-based vector representations that captured only the frequency of words (e.g., One-Hot Encoding).&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;The Problems:&lt;/strong&gt; 🚧&lt;/p&gt;</description>
+      <guid>https://vectorsandverbs.com/posts/word-embeddings/</guid>
+      <description>Understanding the mathematics behind Word2Vec, CBOW, and Skip-Gram and how they map language to vector space.</description>
     </item>
   </channel>
 </rss>

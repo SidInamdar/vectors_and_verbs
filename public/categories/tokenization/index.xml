@@ -2,19 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tokenization on Vectors &amp; Verbs</title>
-    <link>http://localhost:1313/categories/tokenization/</link>
+    <link>https://vectorsandverbs.com/categories/tokenization/</link>
     <description>Recent content in Tokenization on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 05 Jan 2026 00:23:31 +0530</lastBuildDate>
-    <atom:link href="http://localhost:1313/categories/tokenization/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://vectorsandverbs.com/categories/tokenization/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts</title>
-      <link>http://localhost:1313/posts/the-dna-of-language/</link>
+      <link>https://vectorsandverbs.com/posts/the-dna-of-language/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
-      <description>&lt;p&gt;Imagine you have to build a house. You cannot build a stable house using only massive boulders as walls (too big), nor can you build one using only tiny pebbles (too small). You need exactly the right-sized bricks.&lt;/p&gt;
-&lt;p&gt;The same analogy applies to linguistics. We need to find strategies to break down petabytes of language data into usable, atomic chunks. In the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to transform a sizable amount of fluid language data into a discrete mathematical language that machines can process. It is the invisible filter at the heart of LLMs through which every prompt is passed and every response is born.&lt;/p&gt;</description>
+      <guid>https://vectorsandverbs.com/posts/the-dna-of-language/</guid>
+      <description>A comprehensive guide to tokenization strategies: BPE, WordPiece, Unigram, and SentencePiece.</description>
     </item>
   </channel>
 </rss>
