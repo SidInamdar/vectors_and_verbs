@@ -5,6 +5,7 @@ draft: false
 tags: ["artificial-intelligence", "large-language-models", "tokenization", "sentencepiece", "byte-pair-encoding", "wordpiece", "unigram"]
 categories: ["artificial-intelligence", "large-language-models", "tokenization"]
 math: true
+summary: "A comprehensive guide to tokenization strategies: BPE, WordPiece, Unigram, and SentencePiece."
 ---
 Imagine you have to build a house. You cannot build a stable house using only massive boulders as walls (too big), nor can you build one using only tiny pebbles (too small). You need exactly the right-sized bricks.
 

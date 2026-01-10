@@ -2,8 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>http://localhost:1313/categories/artificial-intelligence/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/artificial-intelligence/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/attention/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/attention-mechanisms/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
     <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/large-language-models/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/large-language-models/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/transformer/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/deep-learning/</loc>
     <lastmod>2026-01-09T21:45:00+05:30</lastmod>
@@ -14,12 +44,6 @@
     <loc>http://localhost:1313/tags/nlp/</loc>
     <lastmod>2026-01-09T21:45:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
-  </url><url>
     <loc>http://localhost:1313/categories/tech/</loc>
     <lastmod>2026-01-09T21:45:00+05:30</lastmod>
   </url><url>
@@ -28,15 +52,6 @@
   </url><url>
     <loc>http://localhost:1313/tags/transformers/</loc>
     <lastmod>2026-01-09T21:45:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2026-01-09T21:45:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/artificial-intelligence/</loc>
-    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/artificial-intelligence/</loc>
-    <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/embeddings/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
@@ -52,12 +67,6 @@
   </url><url>
     <loc>http://localhost:1313/tags/word-embeddings/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/large-language-models/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/large-language-models/</loc>
-    <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/word-embeddings/</loc>
     <lastmod>2026-01-07T00:23:31+05:30</lastmod>

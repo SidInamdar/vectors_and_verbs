@@ -6,8 +6,22 @@
     <description>Recent content in Categories on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 09 Jan 2026 21:45:00 +0530</lastBuildDate>
+    <lastBuildDate>Sat, 10 Jan 2026 01:43:00 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Artificial-Intelligence</title>
+      <link>http://localhost:1313/categories/artificial-intelligence/</link>
+      <pubDate>Sat, 10 Jan 2026 01:43:00 +0530</pubDate>
+      <guid>http://localhost:1313/categories/artificial-intelligence/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Large-Language-Models</title>
+      <link>http://localhost:1313/categories/large-language-models/</link>
+      <pubDate>Sat, 10 Jan 2026 01:43:00 +0530</pubDate>
+      <guid>http://localhost:1313/categories/large-language-models/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Tech</title>
       <link>http://localhost:1313/categories/tech/</link>
@@ -16,24 +30,10 @@
       <description></description>
     </item>
     <item>
-      <title>Artificial-Intelligence</title>
-      <link>http://localhost:1313/categories/artificial-intelligence/</link>
-      <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
-      <guid>http://localhost:1313/categories/artificial-intelligence/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Embeddings</title>
       <link>http://localhost:1313/categories/embeddings/</link>
       <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
       <guid>http://localhost:1313/categories/embeddings/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Large-Language-Models</title>
-      <link>http://localhost:1313/categories/large-language-models/</link>
-      <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/categories/large-language-models/</guid>
       <description></description>
     </item>
     <item>

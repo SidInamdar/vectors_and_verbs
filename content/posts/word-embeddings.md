@@ -5,6 +5,7 @@ draft: false
 tags: ["artificial-intelligence", "large-language-models", "word-embeddings", "static-embeddings", "Word2Vec", "GloVe", "FastText"]
 categories: ["artificial-intelligence", "large-language-models", "embeddings"]
 math: true
+summary: "Understanding the mathematics behind Word2Vec, CBOW, and Skip-Gram and how they map language to vector space."
 ---
 ![SkipGram and CBOW Process Diagram](/images/embedding-concept-process-flow.png)
 Before we had Large Language Models writing poetry, we had to teach computers that "king" and "queen" are related not just by spelling, but by *meaning*. This is the story of that breakthrough. It’s the moment we stopped counting words and started mapping their souls—turning raw text into a mathematical landscape where math can solve analogies. Welcome to the world of **Word2Vec**. 🔮   

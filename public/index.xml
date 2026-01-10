@@ -6,61 +6,49 @@
     <description>Recent content on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 09 Jan 2026 21:45:00 +0530</lastBuildDate>
+    <lastBuildDate>Sat, 10 Jan 2026 01:43:00 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Attention Is All You Need, but exactly which one?: MHA, GQA and MLA</title>
+      <link>http://localhost:1313/posts/attention-mechanisms/</link>
+      <pubDate>Sat, 10 Jan 2026 01:43:00 +0530</pubDate>
+      <guid>http://localhost:1313/posts/attention-mechanisms/</guid>
+      <description>We are about to touch the holy grail of modern AI. From the original 2017 paper to DeepSeek&amp;rsquo;s MLA, how has the definition of &amp;lsquo;Attention&amp;rsquo; transformed?</description>
+    </item>
     <item>
       <title>The Geometry of Meaning: Sine, ALiBi, RoPE, and HoPE</title>
       <link>http://localhost:1313/posts/positional-embeddings/</link>
       <pubDate>Fri, 09 Jan 2026 21:45:00 +0530</pubDate>
       <guid>http://localhost:1313/posts/positional-embeddings/</guid>
-      <description>&lt;p&gt;&lt;img alt=&#34;Positional Embeddings Map&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/positional-embeddings-header.png&#34;&gt;&lt;/p&gt;
-&lt;p&gt;Positional Embeddings are the &amp;ldquo;voice&amp;rdquo; that tell Transformers &lt;em&gt;where&lt;/em&gt; words are in a sentence. Without them, there are no mathematical principles by which LLMs can differentiate sentences with alternate arrangements of words.&lt;/p&gt;
-&lt;p&gt;&amp;ldquo;The dog chased the cat&amp;rdquo; and &amp;ldquo;cat chased the dog&amp;rdquo; are mathematically indistinguishable to a Transformer without positional embeddings, as self-attention treats them as a chaotic bag of marbles. Here is an in-depth breakdown of the major positional encoders that solved this problem. The key ingredient in these algorithms is the delicate balance of adding information to word embeddings without polluting the semantic vectors.&lt;/p&gt;</description>
+      <description>From Sinusoidal to RoPE and HoPE: How Transformers learn to process word order and sequence length.</description>
     </item>
     <item>
       <title>The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText</title>
       <link>http://localhost:1313/posts/glove-and-fasttext/</link>
       <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
       <guid>http://localhost:1313/posts/glove-and-fasttext/</guid>
-      <description>&lt;p&gt;&lt;em&gt;Imagine trying to teach a computer the difference between &amp;ldquo;Apple&amp;rdquo; the fruit and &amp;ldquo;Apple&amp;rdquo; the company. To us, the distinction is intuitive. To a machine, it’s just a string of characters. How do we turn these strings into meaningful math? While early attempts like Word2Vec gave us a great start, they missed the forest for the trees—or in some cases, the twigs for the branches. Enter GloVe and FastText: two algorithms that revolutionized how machines understand the nuances of human language.&lt;/em&gt;&lt;/p&gt;</description>
+      <description>How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed.</description>
     </item>
     <item>
       <title>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram</title>
       <link>http://localhost:1313/posts/word-embeddings/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
       <guid>http://localhost:1313/posts/word-embeddings/</guid>
-      <description>&lt;p&gt;&lt;img alt=&#34;SkipGram and CBOW Process Diagram&#34; loading=&#34;lazy&#34; src=&#34;http://localhost:1313/images/embedding-concept-process-flow.png&#34;&gt;
-Before we had Large Language Models writing poetry, we had to teach computers that &amp;ldquo;king&amp;rdquo; and &amp;ldquo;queen&amp;rdquo; are related not just by spelling, but by &lt;em&gt;meaning&lt;/em&gt;. This is the story of that breakthrough. It’s the moment we stopped counting words and started mapping their souls—turning raw text into a mathematical landscape where math can solve analogies. Welcome to the world of &lt;strong&gt;Word2Vec&lt;/strong&gt;. 🔮&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Language models&lt;/strong&gt; require vector representations of words to capture semantic relationships.&lt;/li&gt;
-&lt;li&gt;Before the 2010s, models used word count-based vector representations that captured only the frequency of words (e.g., One-Hot Encoding).&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;&lt;strong&gt;The Problems:&lt;/strong&gt; 🚧&lt;/p&gt;</description>
+      <description>Understanding the mathematics behind Word2Vec, CBOW, and Skip-Gram and how they map language to vector space.</description>
     </item>
     <item>
       <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts</title>
       <link>http://localhost:1313/posts/the-dna-of-language/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
       <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
-      <description>&lt;p&gt;Imagine you have to build a house. You cannot build a stable house using only massive boulders as walls (too big), nor can you build one using only tiny pebbles (too small). You need exactly the right-sized bricks.&lt;/p&gt;
-&lt;p&gt;The same analogy applies to linguistics. We need to find strategies to break down petabytes of language data into usable, atomic chunks. In the context of Large Language Models (LLMs), these bricks are called tokens. Tokens enable us to transform a sizable amount of fluid language data into a discrete mathematical language that machines can process. It is the invisible filter at the heart of LLMs through which every prompt is passed and every response is born.&lt;/p&gt;</description>
+      <description>A comprehensive guide to tokenization strategies: BPE, WordPiece, Unigram, and SentencePiece.</description>
     </item>
     <item>
       <title>My First Post</title>
       <link>http://localhost:1313/posts/first-post/</link>
       <pubDate>Sun, 04 Jan 2026 09:00:00 +0530</pubDate>
       <guid>http://localhost:1313/posts/first-post/</guid>
-      <description>&lt;h2 id=&#34;welcome-to-vectors--verbs&#34;&gt;Welcome to Vectors &amp;amp; Verbs&lt;/h2&gt;
-&lt;p&gt;This is a demo post to verify the PaperMod theme setup.&lt;/p&gt;
-&lt;h3 id=&#34;features-of-this-theme&#34;&gt;Features of this theme:&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Clean and minimal design&lt;/li&gt;
-&lt;li&gt;Dark mode support&lt;/li&gt;
-&lt;li&gt;Fast loading speed&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;hello_world&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;():&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;cl&#34;&gt;    &lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Hello, Hugo!&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Stay tuned for more updates!&lt;/p&gt;</description>
+      <description>A brief introduction to Vectors &amp;amp; Verbs and formatting verification.</description>
     </item>
     <item>
       <title>About Me</title>

@@ -4,6 +4,7 @@ date: 2026-01-04T09:00:00+05:30
 draft: false
 tags: ["demo", "hugo"]
 categories: ["tech"]
+summary: "A brief introduction to Vectors & Verbs and formatting verification."
 ---
 
 ## Welcome to Vectors & Verbs

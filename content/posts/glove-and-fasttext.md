@@ -5,6 +5,7 @@ draft: false
 tags: ["artificial-intelligence", "word-embeddings", "GloVe", "FastText"]
 categories: ["artificial-intelligence", "embeddings"]
 math: true
+summary: "How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed."
 ---
 
  *Imagine trying to teach a computer the difference between "Apple" the fruit and "Apple" the company. To us, the distinction is intuitive. To a machine, it’s just a string of characters. How do we turn these strings into meaningful math? While early attempts like Word2Vec gave us a great start, they missed the forest for the trees—or in some cases, the twigs for the branches. Enter GloVe and FastText: two algorithms that revolutionized how machines understand the nuances of human language.*

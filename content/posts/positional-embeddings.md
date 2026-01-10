@@ -5,6 +5,7 @@ draft: false
 tags: ["nlp", "transformers", "deep-learning", "math"]
 categories: ["tech"]
 math: true
+summary: "From Sinusoidal to RoPE and HoPE: How Transformers learn to process word order and sequence length."
 ---
 
 ![Positional Embeddings Map](/images/positional-embeddings-header.png)
