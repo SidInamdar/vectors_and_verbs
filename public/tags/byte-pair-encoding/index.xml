@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Byte-Pair-Encoding on Vectors &amp; Verbs</title>
-    <link>https://vectorsandverbs.com/tags/byte-pair-encoding/</link>
+    <link>http://localhost:1313/tags/byte-pair-encoding/</link>
     <description>Recent content in Byte-Pair-Encoding on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Mon, 05 Jan 2026 00:23:31 +0530</lastBuildDate>
-    <atom:link href="https://vectorsandverbs.com/tags/byte-pair-encoding/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/byte-pair-encoding/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts</title>
-      <link>https://vectorsandverbs.com/posts/the-dna-of-language/</link>
+      <link>http://localhost:1313/posts/the-dna-of-language/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/the-dna-of-language/</guid>
+      <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
       <description>A comprehensive guide to tokenization strategies: BPE, WordPiece, Unigram, and SentencePiece.</description>
     </item>
   </channel>

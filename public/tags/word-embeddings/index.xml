@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Word-Embeddings on Vectors &amp; Verbs</title>
-    <link>https://vectorsandverbs.com/tags/word-embeddings/</link>
+    <link>http://localhost:1313/tags/word-embeddings/</link>
     <description>Recent content in Word-Embeddings on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 08 Jan 2026 00:10:00 +0530</lastBuildDate>
-    <atom:link href="https://vectorsandverbs.com/tags/word-embeddings/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/word-embeddings/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText</title>
-      <link>https://vectorsandverbs.com/posts/glove-and-fasttext/</link>
+      <link>http://localhost:1313/posts/glove-and-fasttext/</link>
       <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/glove-and-fasttext/</guid>
+      <guid>http://localhost:1313/posts/glove-and-fasttext/</guid>
       <description>How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed.</description>
     </item>
     <item>
       <title>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram</title>
-      <link>https://vectorsandverbs.com/posts/word-embeddings/</link>
+      <link>http://localhost:1313/posts/word-embeddings/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/word-embeddings/</guid>
+      <guid>http://localhost:1313/posts/word-embeddings/</guid>
       <description>Understanding the mathematics behind Word2Vec, CBOW, and Skip-Gram and how they map language to vector space.</description>
     </item>
   </channel>

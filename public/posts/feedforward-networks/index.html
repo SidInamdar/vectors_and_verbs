@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Anatomy of Trillion-Parameter Switchboards: Understanding Feedforward Blocks | Vectors &amp; Verbs</title>
+<meta name="keywords" content="artificial-intelligence, deep-learning, neural-networks, SWiGLU, MoE">
+<meta name="description" content="Exploring the hidden layers of trillion-parameter switchboards: Feedforward Neural Networks and Activation Functions.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/feedforward-networks/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.af84f51093f576d67527cfa457c9742fd73a0c82d9399c6bc9c935e115ac4e68.css" integrity="sha256-r4T1EJP1dtZ1J8&#43;kV8l0L9c6DILZOZxryck14RWsTmg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/feedforward-networks/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Anatomy of Trillion-Parameter Switchboards: Understanding Feedforward Blocks
+    </h1>
+    <div class="post-meta"><span title='2026-01-10 20:20:14 +0530 IST'>January 10, 2026</span>&nbsp;·&nbsp;<span>5 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p><img alt="Activation Functions" loading="lazy" src="/images/activation-functions.png"></p>
+<p>Feedforward network (FFN) blocks are the least talked about elements in the context of LLMs, but they are where more than 70% of the parameters originate. Something as simple and convenient as a couple of linear transformation matrices becomes a burden when models start scaling into billions of parameters. Thus, getting the maximum juice out of a lean structure is a challenge. FFNs are mostly under-represented in discussions even if the sub-layer acts as the primary &ldquo;knowledge&rdquo; processing engine, processing all the meaningful contexts activation layer has provided it.</p>
+<hr>
+<h3 id="-standard-position-wise-feedforward-network">🔥 Standard Position-Wise Feedforward Network<a hidden class="anchor" aria-hidden="true" href="#-standard-position-wise-feedforward-network">#</a></h3>
+<p>This is as simple as it gets: a two-layered fully connected network of neurons with a single activation switch—most probably a ReLU variant (for LLMs).</p>
+<p>$$
+FFN(x) = \max(0, xW_1 + b_1)W_2 + b_2
+$$</p>
+<p>The same transformation is applied to each token in parallel, making it efficient for GPU computation. For example, in the <strong>BERT</strong> model, the 512 dimensions of each token are expanded to 2048 to allow for &ldquo;intricate interactions&rdquo; before projecting back to 512 dimensions. This expansion/contraction is crucial; in every transformer, stacking of layers is possible only because the output of every layer matches its input dimensions.</p>
+<hr>
+<h3 id="-swiglu">🔥 SWiGLU<a hidden class="anchor" aria-hidden="true" href="#-swiglu">#</a></h3>
+<p>Sigmoid Weighted Gated Linear Unit (SWiGLU) has become the gold standard for feedforward networks in LLMs like <strong>Llama 3</strong> and <strong>PaLM</strong>. The primary reasons for choosing the Swish function (shown in the first image) over ReLU or GELU are as follows:</p>
+<ul>
+<li><strong>Mathematical Linearity:</strong> Swish (SiLU) is defined as $x \cdot \text{sigmoid}(\beta x)$, where $\beta$ is a learnable parameter. It is a smooth, non-monotonic function that allows small negative values to pass through. While GELU ($x \cdot \Phi(x)$) is also smooth, Swish&rsquo;s specific curve has empirically improved model performance.</li>
+<li><strong>Computational Efficiency:</strong> SiLU gradients are simpler to compute ($x / (1 + \exp(-x))$) compared to standard GELU approximations. At the massive scale of modern LLMs, these shortcuts save significant training time.</li>
+<li><strong>Performance:</strong> Research in the PaLM and Llama papers found that Swish-based Gated Linear Units consistently outperformed GELU-based versions in terms of perplexity and downstream task accuracy.</li>
+</ul>
+<p>$$SwiGLU(x, W, V, b, c) = (\text{Swish}(xW + b) \otimes (xV + c))W_2$$</p>
+<p>Where $W$ and $V$ are weight matrices for the gate and the data path, and $\otimes$ is element-wise multiplication.</p>
+<ul>
+<li><strong>More Complex Filtering:</strong> Instead of using two weight matrices as in a standard FFN, SWiGLU uses three (gate, data, and output). This allows it to extract more complex features without a drastic increase in parameters. Modern implementations often lower the dimensionality of hidden layers (to ~2/3 of what they would be in a standard FFN) while retaining the performance benefits.</li>
+<li><strong>Zero-Gradient Avoidance:</strong> Unlike ReLU, which has a zero gradient for all negative values (the &ldquo;dying ReLU&rdquo; problem), SwiGLU’s smooth curve ensures the model can still learn from negative inputs, improving training stability in deep stacks.</li>
+</ul>
+<hr>
+<h3 id="-mixture-of-experts-moe">🔥 Mixture of Experts (MoE)<a hidden class="anchor" aria-hidden="true" href="#-mixture-of-experts-moe">#</a></h3>
+<p>MoE is an entire architecture rather than just a single block. It has become the dominant strategy for scaling models to insane sizes—up to a trillion parameters (like <strong>DeepSeek-V3</strong> and <strong>GPT-4</strong>)—because it breaks the direct link between model size (information capacity) and speed (inference cost).</p>
+<ul>
+<li><strong>Sparse Activation:</strong> MoE uses a &ldquo;Router&rdquo; to determine which smaller &ldquo;Experts&rdquo; (specialized FFNs) are best suited for a specific token. Instead of activating the entire network, only a tiny fraction of experts are used per token. For instance, DeepSeek-V3 might have 256 expert layers but only activate 8 for any single token.</li>
+<li><strong>Big Scale, Small Compute:</strong> MoE allows &ldquo;trillion-parameter intelligence&rdquo; to run at the speed of a much smaller model. While DeepSeek-V3 has 671 billion total parameters, it only uses ~37 billion per token during inference. You get the reasoning performance of a massive model with the latency of a smaller one.</li>
+<li><strong>Expert Specialization:</strong> Because different experts handle different tokens, they naturally specialize. Analysis shows certain experts become &ldquo;specialists&rdquo; in mathematics or coding, while others handle general language.</li>
+<li><strong>Training Efficiency:</strong> Since you only update a fraction of the weights for each token, MoE models can process many more tokens per second during training compared to a dense model of the same total size.</li>
+</ul>
+<p><strong>Training Dynamics and instability:</strong> The router assigns probabilities to each expert. To avoid overfitting or &ldquo;expert collapse&rdquo; (where the router sends everything to one expert), noise is often added to the router&rsquo;s output during training. Some models choose one top expert, while others choose multiple and average their outputs. This is called the &ldquo;auxilliary loss free&rdquo; strategy to controll training biases.</p>
+<p><img alt="Mixture of Experts Architecture" loading="lazy" src="/images/moe-architecture.png"></p>
+<h4 id="the-challenges-of-moe">The Challenges of MoE<a hidden class="anchor" aria-hidden="true" href="#the-challenges-of-moe">#</a></h4>
+<ul>
+<li><strong>The RAM Wall:</strong> Even if only a small percentage of parameters are used for computation, all 671B parameters must still reside in GPU memory. This makes MoE models difficult to run on consumer hardware.</li>
+<li><strong>Communication Overhead:</strong> In distributed training, experts are often split across different GPUs. If a token on GPU 1 needs an expert on GPU 4, data must travel over the network. DeepSeek-V3 employs &ldquo;Node-Limited Routing&rdquo; to minimize this congestion.</li>
+</ul>
+<p><strong>Summary:</strong> MoE is the better choice for major labs (like <strong>DeepSeek</strong>, <strong>Google</strong>, or <strong>OpenAI</strong>) trying to maximize intelligence per dollar of training cost. Dense SwiGLU remains the standard for reliability, ease of deployment, and local execution.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/deep-learning/">Deep-Learning</a></li>
+      <li><a href="http://localhost:1313/tags/neural-networks/">Neural-Networks</a></li>
+      <li><a href="http://localhost:1313/tags/swiglu/">SWiGLU</a></li>
+      <li><a href="http://localhost:1313/tags/moe/">MoE</a></li>
+    </ul>
+<nav class="paginav">
+    <a class="prev" href="http://localhost:1313/posts/attention-mechanisms/">
+        <span class="title">« Prev</span>
+        <br>
+        <span>Attention Is All You Need, but exactly which one?: MHA, GQA and MLA</span>
+    </a>
+</nav><div class="social-icons" align="left">
+    <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
+        title="X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+    </path>
+</svg>
+    </a>
+    <a href="https://www.linkedin.com/in/siddhesh-inamdar-24634694/" target="_blank" rel="noopener noreferrer me"
+        title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+</svg>
+    </a>
+    <a href="https://medium.com/@siddheshnmdr" target="_blank" rel="noopener noreferrer me"
+        title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.000000 76.000000" fill="currentColor" stroke-width="2"
+    preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(0.000000,76.000000) scale(0.100000,-0.100000)">
+        <path
+            d="M0 380 l0 -380 380 0 380 0 0 380 0 380 -380 0 -380 0 0 -380z m334 85 c30 -63 57 -115 59 -115 2 0 16 30 31 68 15 37 37 88 49 115 l20 47 76 0 76 -1 -27 -20 -28 -21 0 -151 c0 -150 0 -151 27 -179 l27 -28 -109 0 -109 0 27 28 c26 27 27 32 26 143 0 131 3 134 -71 -58 -24 -62 -48 -113 -53 -113 -6 0 -17 16 -24 35 -7 19 -36 83 -64 142 l-52 108 -3 -98 c-3 -97 -2 -99 28 -133 16 -19 30 -39 30 -44 0 -6 -31 -10 -70 -10 -45 0 -70 4 -70 11 0 6 14 27 30 46 30 33 30 35 30 151 0 116 0 118 -31 155 l-30 37 75 0 76 0 54 -115z" />
+    </g>
+</svg>
+    </a>
+    <a href="https://github.com/SidInamdar" target="_blank" rel="noopener noreferrer me"
+        title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+</div>
+</footer>
+
+  <div class="newsletter-form" style="width: 100%; margin-top: 10px;">
+    <script async src="https://subscribe-forms.beehiiv.com/embed.js"></script><iframe
+        src="https://subscribe-forms.beehiiv.com/cb315fa7-29d0-46fa-ae1f-a34a59e9d3b0" class="beehiiv-embed"
+        data-test-id="beehiiv-embed" frameborder="0" scrolling="no"
+        style="width: 100%; height: 32px; margin: 0; border-radius: 0px 0px 0px 0px !important; background-color: transparent; box-shadow: 0 0 #0000; max-width: 100%;"></iframe>
+</div>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

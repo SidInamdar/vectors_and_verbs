@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText | Vectors &amp; Verbs</title>
 <meta name="keywords" content="artificial-intelligence, word-embeddings, GloVe, FastText">
 <meta name="description" content="How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed.">
 <meta name="author" content="">
-<link rel="canonical" href="https://vectorsandverbs.com/posts/glove-and-fasttext/">
+<link rel="canonical" href="http://localhost:1313/posts/glove-and-fasttext/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.af84f51093f576d67527cfa457c9742fd73a0c82d9399c6bc9c935e115ac4e68.css" integrity="sha256-r4T1EJP1dtZ1J8&#43;kV8l0L9c6DILZOZxryck14RWsTmg=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://vectorsandverbs.com/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://vectorsandverbs.com/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://vectorsandverbs.com/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://vectorsandverbs.com/apple-touch-icon.png">
-<link rel="mask-icon" href="https://vectorsandverbs.com/safari-pinned-tab.svg">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://vectorsandverbs.com/posts/glove-and-fasttext/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/glove-and-fasttext/">
 <noscript>
     <style>
         #theme-toggle,
@@ -85,79 +85,13 @@
     });
 </script>
 
-<meta property="og:url" content="https://vectorsandverbs.com/posts/glove-and-fasttext/">
-  <meta property="og:site_name" content="Vectors & Verbs">
-  <meta property="og:title" content="The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText">
-  <meta property="og:description" content="How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed.">
-  <meta property="og:locale" content="en-us">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-01-08T00:10:00+05:30">
-    <meta property="article:modified_time" content="2026-01-08T00:10:00+05:30">
-    <meta property="article:tag" content="Artificial-Intelligence">
-    <meta property="article:tag" content="Word-Embeddings">
-    <meta property="article:tag" content="GloVe">
-    <meta property="article:tag" content="FastText">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText">
-<meta name="twitter:description" content="How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed.">
 
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://vectorsandverbs.com/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText",
-      "item": "https://vectorsandverbs.com/posts/glove-and-fasttext/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText",
-  "name": "The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText",
-  "description": "How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed.",
-  "keywords": [
-    "artificial-intelligence", "word-embeddings", "GloVe", "FastText"
-  ],
-  "articleBody": "Imagine trying to teach a computer the difference between “Apple” the fruit and “Apple” the company. To us, the distinction is intuitive. To a machine, it’s just a string of characters. How do we turn these strings into meaningful math? While early attempts like Word2Vec gave us a great start, they missed the forest for the trees—or in some cases, the twigs for the branches. Enter GloVe and FastText: two algorithms that revolutionized how machines understand the nuances of human language.\nPrevious static embedding models like Word2Vec successfully captured the local semantics of words, but they failed in addressing contexts between words that might not always appear in the same context window. Furthermore, they treated words as indivisible atomic units in continuous vector spaces, missing out on the internal structure of language.\nThe two simple but effective ideas behind GloVe and FastText are subword units and global co-occurrence. Let’s dive into them.\nGloVe: A Global Mapping Strategy Global Vectors for Word Representation (GloVe) was created at Stanford. The core idea was to train a model where word vectors are defined by how often they appear around other words across the entire corpus, rather than just locally.\nTraining Steps: Co-occurrence Matrix X: GloVe scans the entire corpus and creates a giant matrix (spreadsheet) recording the counts of how often words appear near each other. Factorization: It compresses this giant matrix into smaller, dense vectors. Objective: The function tries to equate the dot product of two word vectors with the logarithm of their probability of appearing together. The error between these values is then backpropagated to update the vectors. $$w_i \\cdot w_j + b_i + b_j = \\log(X_{ij})$$\n$w$: The word vector (what we want). $X_{ij}$: The count from our matrix. The Loss Function: We can’t satisfy the equation above perfectly for every word pair. So, we use a weighting function to minimize the squared error:\n$$J = \\sum_{i,j=1}^V f(X_{ij}) ({w_i}^T w_j + b_i + b_j - \\log(X_{ij}))^2$$\nIf we do not use the weighting function, the loss would be infinite for rare words (since $\\log(0) = \\infty$) and frequent words (like ’the’) would overpower the model.\n$$ f(x) = \\begin{cases} (x/x_{max})^\\alpha \u0026 \\text{if } x \u003c x_{max} \\ 1 \u0026 \\text{otherwise} \\end{cases} $$\n(Typically $x_{max}=100$ and $\\alpha=0.75$)\nFastText: The Lego Bricks Strategy FastText was created by Facebook AI Research (FAIR). The idea was to treat words not as solid rocks, but as structures made of “Lego bricks” (subword units).\nWord2Vec struggled to create embeddings for words it hadn’t seen before (Out-Of-Vocabulary or OOV words). FastText solves this by breaking words down.\nGloVe treats a word like “Apple” as a single, atomic unit. FastText breaks “Apple” into character n-grams: For a complex or new word like “Applesauce”, the model might not know the whole word, but it recognizes the Lego brick for “Apple” and the remaining bits from other subwords.\nFastText takes its inspiration from the SkipGram architecture. The vector for a word is simply the sum of the vectors of its n-gram subwords:\n$$v_w = \\sum_{g \\in G_w} z_g$$\nObjective: The objective is to predict context words given a target word.\n$$P(w_c | w_t) = \\frac{e^{s(v_{w_t} \\cdot v_{w_c})}}{\\sum_{w \\in V} e^{s(v_{w_t} \\cdot v_w)}}$$\nAnd the scoring function is defined as:\n$$s(w_t, w_c) = u_{w_t}^T (\\sum_{g \\in G_w} z_g)$$\n$u_{w_c}$: The vector for the context word (output vector). $z_g$: The vector for the n-gram $g$ (input vector). Modifications to Softmax: Calculating the full softmax for every word in the vocabulary is computationally expensive. FastText uses two methods to approximate this efficiently.\nOption A: Negative Sampling\nWe pick a few random “wrong” words every time to serve as “negative samples” and calculate the loss only for the correct word and these noise words.\n$$J = - \\log \\sigma(s(w_t, w_c)) - \\sum\\limits_{i=1}^{N} \\mathbb{E}_{n_i \\sim P_n(w)} [\\log \\sigma(-s(w_t, n_i))]$$\nThe sigmoid function $\\sigma$ squashes the score between 0 and 1. The first term pushes the probability of the correct word towards 1. The second term pushes the probability of the noise words towards 0. Option B: Hierarchical Softmax (Faster for infrequent words)\nInstead of a flat list of words, imagine the vocabulary arranged as a binary tree (Huffman Tree).\nRoot: Top of the tree. Leaves: The actual words. To calculate the probability of a word, we trace a path from the root to that leaf. At every branching node, we calculate the probability (sigmoid) of going left or right. The probability of a word $w$ is the product of the probabilities of the turns taken to reach it. Code Example from gensim.models import FastText from gensim.test.utils import common_texts # Initialize the FastText model with specific hyperparameters model = FastText( vector_size=100, # Dimensionality of the word vectors window=5, # Maximum distance between the current and predicted word within a sentence min_count=1, # Ignores all words with total frequency lower than this sg=1, # Training algorithm: 1 for skip-gram; 0 for CBOW hs=0, # If 0, and negative is non-zero, negative sampling will be used negative=5, # Number of \"noise words\" to be drawn for negative sampling workers=4, # Number of worker threads to train the model epochs=10, # Number of iterations over the corpus min_n=3, # Minimum length of character n-grams max_n=6 # Maximum length of character n-grams ) # Build the vocabulary from the provided text corpus model.build_vocab(common_texts) # Train the model on the corpus model.train( common_texts, total_examples=model.corpus_count, epochs=model.epochs ) # Calculate and print the cosine similarity between two words in the vocabulary print(f\"Similarity between 'computer' and 'human': {model.wv.similarity('computer', 'human')}\") # Demonstrate FastText's ability to handle Out-Of-Vocabulary (OOV) words # Even if 'computation' wasn't in the training data, FastText constructs a vector using character n-grams oov_vector = model.wv['computation'] # Check if a specific word exists in the model's fixed vocabulary index word = \"computer\" is_in_vocab = word in model.wv.key_to_index print(f\"\\nIs the word '{word}' in the model's vocabulary? {is_in_vocab}\") ",
-  "wordCount" : "978",
-  "inLanguage": "en",
-  "datePublished": "2026-01-08T00:10:00+05:30",
-  "dateModified": "2026-01-08T00:10:00+05:30",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://vectorsandverbs.com/posts/glove-and-fasttext/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Vectors \u0026 Verbs",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://vectorsandverbs.com/favicon.ico"
-    }
-  }
-}
-</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://vectorsandverbs.com/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -183,17 +117,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://vectorsandverbs.com/posts/" title="Posts">
+                <a href="http://localhost:1313/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="https://vectorsandverbs.com/about/" title="About Me">
+                <a href="http://localhost:1313/about/" title="About Me">
                     <span>About Me</span>
                 </a>
             </li>
             <li>
-                <a href="https://vectorsandverbs.com/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -204,7 +138,7 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="https://vectorsandverbs.com/">Home</a>&nbsp;»&nbsp;<a href="https://vectorsandverbs.com/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText
     </h1>
@@ -324,18 +258,18 @@ $$</p>
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://vectorsandverbs.com/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/word-embeddings/">Word-Embeddings</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/glove/">GloVe</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/fasttext/">FastText</a></li>
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/word-embeddings/">Word-Embeddings</a></li>
+      <li><a href="http://localhost:1313/tags/glove/">GloVe</a></li>
+      <li><a href="http://localhost:1313/tags/fasttext/">FastText</a></li>
     </ul>
 <nav class="paginav">
-    <a class="prev" href="https://vectorsandverbs.com/posts/word-embeddings/">
+    <a class="prev" href="http://localhost:1313/posts/word-embeddings/">
         <span class="title">« Prev</span>
         <br>
         <span>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram</span>
     </a>
-    <a class="next" href="https://vectorsandverbs.com/posts/positional-embeddings/">
+    <a class="next" href="http://localhost:1313/posts/positional-embeddings/">
         <span class="title">Next »</span>
         <br>
         <span>The Geometry of Meaning: Sine, ALiBi, RoPE, and HoPE</span>
@@ -390,7 +324,7 @@ $$</p>
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="https://vectorsandverbs.com/">Vectors &amp; Verbs</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
 
     <span>
         Powered by
