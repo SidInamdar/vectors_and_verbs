@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs | Vectors &amp; Verbs</title>
+<meta name="keywords" content="artificial-intelligence, llm, hardware, optimization, gpu">
+<meta name="description" content="An introduction to optimizations for Large Language Models, covering GPU utilization, precision control, and memory management.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/llm-hardware-optimization/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.af84f51093f576d67527cfa457c9742fd73a0c82d9399c6bc9c935e115ac4e68.css" integrity="sha256-r4T1EJP1dtZ1J8&#43;kV8l0L9c6DILZOZxryck14RWsTmg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/llm-hardware-optimization/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs
+    </h1>
+    <div class="post-meta"><span title='2026-01-11 20:21:30 +0530 IST'>January 11, 2026</span>&nbsp;·&nbsp;<span>8 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>According to the laws of hardware physics, training a Large Language Model (LLM) should be practically impossible. Still, we see these behemoths adopting new names and functions every day. The landscape of LLMs is defined by a singular overarching principle: the exponential scaling of model parameters and training datasets. The transition from models with hundreds of millions of parameters to those boasting trillions—such as GPT-4, Llama 3, and DeepSeek-V3—has fundamentally altered machine learning, from algorithmic design to massive-scale systems engineering. Training an LLM now requires an orchestration of thousands of accelerators, functioning as a unified supercomputer.</p>
+<h3 id="the-anatomy-of-a-parameter">The Anatomy of a Parameter:<a hidden class="anchor" aria-hidden="true" href="#the-anatomy-of-a-parameter">#</a></h3>
+<p>The memory consumption of an LLM is not a storage tool for model weights only. It is a standard mixed-precision training environment that is dominated by these components:
+<strong>Model Parameters (Weights):</strong> The raw matrices that define the model&rsquo;s intelligence. In 16-bit precision (2 bytes per parameter), a 1-trillion parameter model requires 2 Terabytes (TB) of storage just to load. For a 1T parameter model with FP16 precision, this is terabytes $2 \times 10^{12} = 2 T$ parameters.<br>
+<strong>Gradient Accumulation:</strong> During the backward pass, the gradient of the loss function with respect to every parameter must be calculated and stored. This mirrors the size of the parameters, adding another 2 TB for a 1T model. For a 1T parameter model will have 1T gradients with FP16 precision, this is terabytes $2 \times 10^{12} = 2 T$.<br>
+<strong>Optimizer States:</strong> This is often the largest consumer of memory. Modern optimizers like Adam require maintaining the momentum (first moment) and variance (second moment) for every parameter to guide the gradient descent. These are typically stored in high precision (FP32). For a model with $\Psi$ parameters, Adam requires 12 bytes per parameter (4 bytes for the master weight copy, 4 bytes for momentum, 4 bytes for variance). For a 1T model, this is 12 TB. The reason for storing high precision values is to help the gradient change even for the very small increments in the parameters. For a 1T model, this is terabytes $12 \times 10^{12} = 12 T$.<br>
+<strong>Activation Cache:</strong> Activations are the intermediate outputs stashed during the forward pass to be used later in the backward pass (backpropagation). Unlike static memory, this scales with Batch Size and Sequence Length (Context Window).
+The Scaling Law: Activation memory is often defined by:$$\text{Memory}_{act} = \text{Batch Size} \times \text{Sequence Length} \times \text{Hidden Dimension} \times \text{Num Layers}$$
+For Compute: 2 FLOPS for Forward Pass (for tokens), 4 FLOPs for backward pass (for tokens and weights), with model size of 1T parameters and training dataset of 10T tokens,
+$$FLOPs = 6 \times 10T \times 1T$$
+A single H100 GPU offers 4000 TFLOPS per second as a theoretical maximum capacity. With this, it would take a single GPU over 400 years to train a 1T parameter model. That is why clusters of thousands of GPUs (10,000+) are used to train LLMs in a few months.</p>
+<p><img alt="Memory Allocation" loading="lazy" src="/images/memory-allocation.png"></p>
+<h3 id="data-parallelism-ddp-the-naive-approach">Data Parallelism (DDP): The &ldquo;Naive&rdquo; Approach<a hidden class="anchor" aria-hidden="true" href="#data-parallelism-ddp-the-naive-approach">#</a></h3>
+<p>To understand this concept, let&rsquo;s consider a simple example: the exam grading analogy. A professor (central model) is tasked with grading 1,000 students&rsquo; exams. He has 10 assistants (workers) to help him. He divides the exams into 10 batches of 100 exams each. He assigns each assistant to grade one batch of exams independently.</p>
+<p>The process is as follows:
+<strong>1. Replication:</strong> Each assistant has an identical copy of the answer key (model parameters).
+<strong>2. Scatter (Partitioning):</strong> Each assistant gets a batch of exams to grade.
+<strong>3. Compute:</strong> Each assistant grades their batch of exams independently. They mark errors, calculate scores, and make necessary score adjustments (gradients). During this process, there is no communication between the assistants.
+<strong>4. Synchronization:</strong> A critical bottleneck. If assistant 1 and assistant 2 decide on different answers, there needs to be an aggregation process. At the end, all 10 assistants need to submit their answers to the professor, forming a long waiting queue before the next grading session begins.</p>
+<p>In technical terms, this is called Data Parallelism. The model $M$ is replicated across $P$ devices. Each device $i$ processes a mini-batch of data $x_i \in D$, performs a forward pass to compute loss $L$, and a backward pass to compute gradients $g_i = \nabla L(x_i)$. The global gradient $G$ used to update the model is the average of all local gradients: $G = \frac{1}{P} \sum_{i=1}^{P} g_i$.</p>
+<p>This replicates the traditional &ldquo;Parameter Server&rdquo; architecture. The next algorithm reduces the communication bottleneck by using &ldquo;Ring All-Reduce&rdquo;.</p>
+<h3 id="synchronization-algorithm-ring-all-reduce">Synchronization Algorithm: Ring All-Reduce<a hidden class="anchor" aria-hidden="true" href="#synchronization-algorithm-ring-all-reduce">#</a></h3>
+<p>This is a more P2P version of updating weights during training. Assume assistants are seated around the round table passing their batches to the next one all at once. Synchronization happens in two phases:
+<strong>Scatter-Reduce:</strong> The gradients (the updates) are chopped into chunks. Assistant 1 passes the first chunk of numbers to Assistant 2, and Assistant 2 does the same with others. This travels a full circle and contains the sum of everyone&rsquo;s updates. Multiple chunks circulate simultaneously like a conveyor belt.
+<strong>All-Gather:</strong> Once the sums are computed they need to be broadcast to all the other assistants. The total sums continue to circulate the ring until every TA has a copy of the complete, aggregated gradient vector.<br>
+<strong>Mathematical Bandwidth Analysis:</strong>
+The Ring All-Reduce optimizes the communication by reducing the number of communication rounds (bandwidth optimality). Let $N$ be the number of model parameters (and gradient vectors). Let $P$ be the number of GPUs.<br>
+In a naive central server architecture, the communication bandwidth scales with $P$. In the ring topology, the data is split into $P$ chunks of size $\frac{N}{P}$.</p>
+<ul>
+<li><strong>Scatter-Reduce:</strong> Each GPU sends chunks of size $\frac{N}{P}$ to the next GPU exactly $P-1$ times.
+$$\text{Data Transferred per GPU} = (P-1) \times \frac{N}{P}$$</li>
+<li><strong>All-Gather:</strong> Each GPU now aggregates with the received chunks for its $\frac{N}{P}$ from all other GPUs and aggregates it. Now these aggregated weights are broadcast to $P-1$ neighbors.
+$$\text{Data Transferred per GPU} = (P-1) \times \frac{N}{P}$$
+<strong>Total Volume per communication round:</strong>
+$$V_{total} = 2 \times \frac{N(P-1)}{P}$$
+As the number of GPUs $P$ tends to infinity, the Volume approaches $2N$. This is constant complexity. This property allows Data Parallelism to scale efficiently to massive clusters, limited only by the latency of the ring.</li>
+</ul>
+<h3 id="breaking-the-memory-wall-zero-and-fsdp">Breaking the Memory Wall: ZeRO and FSDP<a hidden class="anchor" aria-hidden="true" href="#breaking-the-memory-wall-zero-and-fsdp">#</a></h3>
+<p>Standard DDP requires each GPU to store the entire model&rsquo;s parameters, gradients, and optimizer states. Standard H100 GPUs have 80 GB of HBM memory. This limitation led to the development of the Zero Redundancy Optimizer (ZeRO) by Microsoft DeepSpeed, and its PyTorch implementation, Fully Sharded Data Parallelism (FSDP).</p>
+<p><strong>Sharding vs Replication:</strong> In standard DDP, the model is replicated across all GPUs. In ZeRO, the model is sharded across GPUs. This means that while in DDP an encyclopedia is copied for all assistants, in ZeRO we tear it apart and distribute sections equally. Surprisingly, with respect to the compute-to-memory tradeoff, there is negligible loss. Collectively, the group possesses the full knowledge of the model, but no single individual carries the entire weight. When assistant 1 needs to grade a question requiring information from page 25, they request it from assistant 3. Assistant 3 broadcasts the page to everyone. Assistant 1 reads it, performs the calculation, and then immediately deletes it (freeing the memory). This allows the training of models far larger than individual GPU memory. ZeRO comes in three stages:</p>
+<p><strong>ZeRO Stage 1:</strong>
+In this stage, only the optimizer is sharded. The model parameters and gradients are replicated across all GPUs. During this process:</p>
+<ol>
+<li>A forward pass and backward pass are performed as in standard DDP. Then each model updates its section of weights from the sharded optimizer parameters locally. The update is then aggregated and broadcast to all GPUs. This is followed by all GPUs simultaneously.</li>
+</ol>
+<p><strong>ZeRO Stage 2:</strong>
+In this stage, the model gradients are also sharded. The model parameters are replicated across all GPUs. During this process:</p>
+<ol>
+<li>A forward pass is calculated independently on each GPU. While the backward passes are also calculated on the same GPU, the gradients belonging to the layers allotted to other GPUs are sent immediately to those GPUs and deleted immediately, freeing memory. The model only holds onto the gradients for its allotted layers and aggregates them with gradients received from other GPUs. The optimizer is then updated locally on each GPU, resulting in new weights for those layers.</li>
+<li>Once the new weights for partial layers are calculated, all GPUs broadcast their new weights to each other. This is followed by all GPUs simultaneously.</li>
+</ol>
+<p><strong>ZeRO Stage 3 (FSDP):</strong>
+This is the extreme case of model sharding, which increases compute time 1.5 times. In this stage, the model parameters are also sharded. During this process:</p>
+<ol>
+<li>In the forward pass, for each layer, the model parameters are brought from another GPU and loaded for the computation, then deleted immediately after. Each GPU only keeps parameters, gradients, and optimizer states for its partial layers.</li>
+</ol>
+<p>In ZeRO-3, all these components are partitioned across $N_d$ devices. The memory consumption per device becomes:</p>
+<div>
+$$\text{Memory}_{ZeRO-3} = \frac{\Psi_{parameters} + \Psi_{gradients} + \Psi_{optimizer}}{N_d} = \frac{16\Psi}{N_d}$$
+</div>
+<p>For a 1-trillion parameter model ($\Psi = 10^{12}$), the total state memory is roughly 16 TB. DDP requires 16 TB per GPU (impossible). ZeRO-3 with 1024 GPUs: $\frac{16 \text{ TB}}{1024} \approx 16 \text{ GB}$. This 16 GB easily fits within the 80 GB limit of an A100/H100 GPU, leaving ample room for activation memory. This linear scaling capability is what enables the training of trillion-parameter models today.</p>
+<p>This &ldquo;gather-compute-discard&rdquo; cycle could introduce massive latency. To mitigate this, FSDP employs prefetching. While the GPU is busy computing Layer $K$, the network interface (NIC) is simultaneously downloading the shards for Layer $K+1$. If the computation is heavy enough (which it is for large batch sizes), the communication time is effectively hidden, or &ldquo;overlapped,&rdquo; behind the computation. This relies heavily on high-bandwidth interconnects like NVIDIA&rsquo;s NVLink or InfiniBand.</p>
+<p><img alt="ZeRO and FSDP Parallelism" loading="lazy" src="/images/zero-fsdp-parallelism.png"></p>
+<p>Here is a comparison of the memory requirements for ZeRO stages:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">ZeRO Stage</th>
+          <th style="text-align: left">Optimization Target</th>
+          <th style="text-align: left">Memory Reduction Factor</th>
+          <th style="text-align: left">Communication Overhead</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Stage 1 ($P_{os}$)</td>
+          <td style="text-align: left">Optimizer States only</td>
+          <td style="text-align: left">$4\times$</td>
+          <td style="text-align: left">Negligible (Same as DDP)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Stage 2 ($P_{os} + P_g$)</td>
+          <td style="text-align: left">Optimizer + Gradients</td>
+          <td style="text-align: left">$8\times$</td>
+          <td style="text-align: left">Negligible (Same as DDP)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Stage 3 ($P_{os} + P_g + P_p$)</td>
+          <td style="text-align: left">Opt + Grad + Parameters</td>
+          <td style="text-align: left">Linear with $N_d$ (Number of GPUs)</td>
+          <td style="text-align: left">~1.5x DDP</td>
+      </tr>
+  </tbody>
+</table>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/llm/">Llm</a></li>
+      <li><a href="http://localhost:1313/tags/hardware/">Hardware</a></li>
+      <li><a href="http://localhost:1313/tags/optimization/">Optimization</a></li>
+      <li><a href="http://localhost:1313/tags/gpu/">Gpu</a></li>
+    </ul>
+<nav class="paginav">
+    <a class="prev" href="http://localhost:1313/posts/feedforward-networks/">
+        <span class="title">« Prev</span>
+        <br>
+        <span>Anatomy of Trillion-Parameter Switchboards: Understanding Feedforward Blocks</span>
+    </a>
+</nav><div class="social-icons" align="left">
+    <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
+        title="X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+    </path>
+</svg>
+    </a>
+    <a href="https://www.linkedin.com/in/siddhesh-inamdar-24634694/" target="_blank" rel="noopener noreferrer me"
+        title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+</svg>
+    </a>
+    <a href="https://medium.com/@siddheshnmdr" target="_blank" rel="noopener noreferrer me"
+        title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.000000 76.000000" fill="currentColor" stroke-width="2"
+    preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(0.000000,76.000000) scale(0.100000,-0.100000)">
+        <path
+            d="M0 380 l0 -380 380 0 380 0 0 380 0 380 -380 0 -380 0 0 -380z m334 85 c30 -63 57 -115 59 -115 2 0 16 30 31 68 15 37 37 88 49 115 l20 47 76 0 76 -1 -27 -20 -28 -21 0 -151 c0 -150 0 -151 27 -179 l27 -28 -109 0 -109 0 27 28 c26 27 27 32 26 143 0 131 3 134 -71 -58 -24 -62 -48 -113 -53 -113 -6 0 -17 16 -24 35 -7 19 -36 83 -64 142 l-52 108 -3 -98 c-3 -97 -2 -99 28 -133 16 -19 30 -39 30 -44 0 -6 -31 -10 -70 -10 -45 0 -70 4 -70 11 0 6 14 27 30 46 30 33 30 35 30 151 0 116 0 118 -31 155 l-30 37 75 0 76 0 54 -115z" />
+    </g>
+</svg>
+    </a>
+    <a href="https://github.com/SidInamdar" target="_blank" rel="noopener noreferrer me"
+        title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+</div>
+</footer>
+
+  <div class="newsletter-form" style="width: 100%; margin-top: 10px;">
+    <script async src="https://subscribe-forms.beehiiv.com/embed.js"></script><iframe
+        src="https://subscribe-forms.beehiiv.com/cb315fa7-29d0-46fa-ae1f-a34a59e9d3b0" class="beehiiv-embed"
+        data-test-id="beehiiv-embed" frameborder="0" scrolling="no"
+        style="width: 100%; height: 32px; margin: 0; border-radius: 0px 0px 0px 0px !important; background-color: transparent; box-shadow: 0 0 #0000; max-width: 100%;"></iframe>
+</div>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

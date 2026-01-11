@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Gpu on Vectors &amp; Verbs</title>
+    <link>http://localhost:1313/tags/gpu/</link>
+    <description>Recent content in Gpu on Vectors &amp; Verbs</description>
+    <generator>Hugo -- 0.154.2</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 11 Jan 2026 20:21:30 +0530</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/gpu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mission Impossible: How We Fit Trillion-Parameter Giants into 80GB GPUs</title>
+      <link>http://localhost:1313/posts/llm-hardware-optimization/</link>
+      <pubDate>Sun, 11 Jan 2026 20:21:30 +0530</pubDate>
+      <guid>http://localhost:1313/posts/llm-hardware-optimization/</guid>
+      <description>An introduction to optimizations for Large Language Models, covering GPU utilization, precision control, and memory management.</description>
+    </item>
+  </channel>
+</rss>

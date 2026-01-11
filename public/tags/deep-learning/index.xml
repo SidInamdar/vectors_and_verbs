@@ -9,11 +9,11 @@
     <lastBuildDate>Sat, 10 Jan 2026 20:20:14 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/deep-learning/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>The Hidden Layers: Understanding Feedforward Networks</title>
+      <title>Anatomy of Trillion-Parameter Switchboards: Understanding Feedforward Blocks</title>
       <link>http://localhost:1313/posts/feedforward-networks/</link>
       <pubDate>Sat, 10 Jan 2026 20:20:14 +0530</pubDate>
       <guid>http://localhost:1313/posts/feedforward-networks/</guid>
-      <description>Exploring the fundamental building blocks of deep learning: Feedforward Neural Networks and Activation Functions.</description>
+      <description>Exploring the hidden layers of trillion-parameter switchboards: Feedforward Neural Networks and Activation Functions.</description>
     </item>
     <item>
       <title>The Geometry of Meaning: Sine, ALiBi, RoPE, and HoPE</title>
