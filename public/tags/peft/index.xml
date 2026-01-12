@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Peft on Vectors &amp; Verbs</title>
+    <link>http://localhost:1313/tags/peft/</link>
+    <description>Recent content in Peft on Vectors &amp; Verbs</description>
+    <generator>Hugo -- 0.154.2</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 12 Jan 2026 10:52:56 +0530</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/peft/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Parameter-Efficient Fine-Tuning (PEFT): Adapting Large Models Efficiently</title>
+      <link>http://localhost:1313/posts/parameter-efficient-fine-tuning/</link>
+      <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
+      <guid>http://localhost:1313/posts/parameter-efficient-fine-tuning/</guid>
+      <description>An introduction to Parameter-Efficient Fine-Tuning (PEFT) techniques like LoRA, QLoRA, and more.</description>
+    </item>
+  </channel>
+</rss>

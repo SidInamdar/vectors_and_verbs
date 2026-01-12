@@ -6,10 +6,17 @@
     <description>Recent content in Posts on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 11 Jan 2026 20:21:30 +0530</lastBuildDate>
+    <lastBuildDate>Mon, 12 Jan 2026 10:52:56 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Mission Impossible: How We Fit Trillion-Parameter Giants into 80GB GPUs</title>
+      <title>Parameter-Efficient Fine-Tuning (PEFT): Adapting Large Models Efficiently</title>
+      <link>http://localhost:1313/posts/parameter-efficient-fine-tuning/</link>
+      <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
+      <guid>http://localhost:1313/posts/parameter-efficient-fine-tuning/</guid>
+      <description>An introduction to Parameter-Efficient Fine-Tuning (PEFT) techniques like LoRA, QLoRA, and more.</description>
+    </item>
+    <item>
+      <title>Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs</title>
       <link>http://localhost:1313/posts/llm-hardware-optimization/</link>
       <pubDate>Sun, 11 Jan 2026 20:21:30 +0530</pubDate>
       <guid>http://localhost:1313/posts/llm-hardware-optimization/</guid>

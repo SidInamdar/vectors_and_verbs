@@ -3,13 +3,43 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/categories/artificial-intelligence/</loc>
-    <lastmod>2026-01-11T20:21:30+05:30</lastmod>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/artificial-intelligence/</loc>
-    <lastmod>2026-01-11T20:21:30+05:30</lastmod>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2026-01-11T20:21:30+05:30</lastmod>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/fine-tuning/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/categories/large-language-models/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/large-language-models/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/lora/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/parameter-efficient-fine-tuning/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/peft/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/qlora/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-01-12T10:52:56+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/gpu/</loc>
     <lastmod>2026-01-11T20:21:30+05:30</lastmod>
@@ -24,15 +54,6 @@
     <lastmod>2026-01-11T20:21:30+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/optimization/</loc>
-    <lastmod>2026-01-11T20:21:30+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2026-01-11T20:21:30+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2026-01-11T20:21:30+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
     <lastmod>2026-01-11T20:21:30+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/feedforward-networks/</loc>
@@ -54,12 +75,6 @@
     <lastmod>2026-01-10T01:43:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/attention-mechanisms/</loc>
-    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/categories/large-language-models/</loc>
-    <lastmod>2026-01-10T01:43:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/large-language-models/</loc>
     <lastmod>2026-01-10T01:43:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/transformer/</loc>

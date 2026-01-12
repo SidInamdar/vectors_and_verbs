@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="noindex, nofollow">
-<title>Anatomy of Trillion-Parameter Switchboards: Understanding Feedforward Blocks | Vectors &amp; Verbs</title>
-<meta name="keywords" content="artificial-intelligence, deep-learning, neural-networks, SWiGLU, MoE">
-<meta name="description" content="Exploring the hidden layers of trillion-parameter switchboards: Feedforward Neural Networks and Activation Functions.">
+<title>Crafty Patchwork: Parameter-Efficient Fine-Tuning | Vectors &amp; Verbs</title>
+<meta name="keywords" content="artificial-intelligence, large-language-models, fine-tuning, peft, lora, qlora">
+<meta name="description" content="An introduction to Parameter-Efficient Fine-Tuning (PEFT) techniques like LoRA, QLoRA, and more.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/feedforward-networks/">
+<link rel="canonical" href="http://localhost:1313/posts/parameter-efficient-fine-tuning/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.af84f51093f576d67527cfa457c9742fd73a0c82d9399c6bc9c935e115ac4e68.css" integrity="sha256-r4T1EJP1dtZ1J8&#43;kV8l0L9c6DILZOZxryck14RWsTmg=" rel="preload stylesheet" as="style">
 <link rel="icon" href="http://localhost:1313/favicon.ico">
 <link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
@@ -18,7 +18,7 @@
 <link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/feedforward-networks/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/parameter-efficient-fine-tuning/">
 <noscript>
     <style>
         #theme-toggle,
@@ -140,52 +140,102 @@
   <header class="post-header">
     <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
-      Anatomy of Trillion-Parameter Switchboards: Understanding Feedforward Blocks
+      Crafty Patchwork: Parameter-Efficient Fine-Tuning
     </h1>
-    <div class="post-meta"><span title='2026-01-10 20:20:14 +0530 IST'>January 10, 2026</span>&nbsp;·&nbsp;<span>5 min</span>
+    <div class="post-meta"><span title='2026-01-12 10:52:56 +0530 IST'>January 12, 2026</span>&nbsp;·&nbsp;<span>7 min</span>
 
 </div>
   </header> 
-  <div class="post-content"><p><img alt="Activation Functions" loading="lazy" src="/images/activation-functions.png"></p>
-<p>Feedforward network (FFN) blocks are the least talked about elements in the context of LLMs, but they are where more than 70% of the parameters originate. Something as simple and convenient as a couple of linear transformation matrices becomes a burden when models start scaling into billions of parameters. Thus, getting the maximum juice out of a lean structure is a challenge. FFNs are mostly under-represented in discussions even if the sub-layer acts as the primary &ldquo;knowledge&rdquo; processing engine, processing all the meaningful contexts activation layer has provided it.</p>
+  <div class="post-content"><p>The typical modern trajectory of creating intelligent models involves adding scores of GPUs and terabytes of data. This high barrier to entry is a significant limitation, creating a &ldquo;wall&rdquo; between common engineers and the democratization of AI.</p>
+<p>Models that require billions of parameters to function for even a single training pass often cannot fit on consumer hardware. Although full training may be out of reach, we can still nudge these models in desired directions—a process known as <strong>Fine-Tuning</strong>.</p>
+<p>In the traditional sense, <strong>Full Fine-Tuning (FFT)</strong> was performed on earlier models where every parameter was updated during backpropagation. However, for a model like Llama 3 with 70B parameters, FFT is computationally prohibitive. Beyond the parameters themselves, the model must store gradients, optimizer states, and activation caches, which can dwarf the memory footprint of the original weights. This is where <strong>Parameter-Efficient Fine-Tuning (PEFT)</strong> techniques come in.</p>
+<h3 id="the-geometry-of-adaptation">The Geometry of Adaptation<a hidden class="anchor" aria-hidden="true" href="#the-geometry-of-adaptation">#</a></h3>
+<p>After navigating the loss landscapes of model parameters, researchers discovered that LLMs are often over-parameterized. The solutions to specific tasks frequently lie in a much lower-dimensional manifold or &ldquo;subspace&rdquo; of the parameter space. This is referred to as the <strong>Intrinsic Dimension</strong> of the objective function—the minimum number of degrees of freedom required to reach a satisfactory solution.</p>
+<p>During initial training, a model learns vast, general representations of language, requiring high dimensionality to capture the nuances of world knowledge. However, when fine-tuning for a specific task (such as adapting a model to write SQL code), the &ldquo;delta&rdquo; or required change in weights is not random. The model only needs to adjust a few dimensions of its subspace to master the new task.</p>
+<p>This realization is the key behind the success of PEFT. In fact, the larger the model, the less &ldquo;steering&rdquo; effort is needed during fine-tuning. Mathematically, traditional updates look like this:</p>
+<p>$$h = W_0x$$
+$$W_{\text{tuned}} = W_0 + \Delta W$$
+$$h = W_0x + \Delta Wx$$</p>
+<p>Here, $W_0$ and $\Delta W$ share the same dimensions. However, according to the intrinsic dimension hypothesis, $\Delta W$ is <strong>rank-deficient</strong>, meaning it contains far fewer unique dimensions than its total size would suggest. This concept—that $\Delta W$ can be represented more compactly—is the cornerstone of LoRA.</p>
+<h3 id="low-rank-adaptation-lora">Low-Rank Adaptation (LoRA)<a hidden class="anchor" aria-hidden="true" href="#low-rank-adaptation-lora">#</a></h3>
+<p>LoRA converts the theoretical concept of intrinsic dimension into a practical architecture. Instead of training $\Delta W$ directly, we decompose it into two smaller, trainable matrices, $A$ and $B$:</p>
+<p>$$\Delta W = BA$$</p>
+<ul>
+<li><strong>Matrix B</strong>: A trainable matrix with dimensions $d \times r$.</li>
+<li><strong>Matrix A</strong>: A trainable matrix with dimensions $r \times k$.</li>
+</ul>
+<p>The <strong>rank $r$</strong> is a hyperparameter that determines the dimensionality of the update. For minor refinements (like improving linguistic nuance), a rank of $r=4$ is often sufficient. For more complex tasks (like learning a new topic), $r=8$ or higher might be used.</p>
+<p>Because $r \ll \min(d, k)$, the number of parameters in $A$ and $B$ is vastly smaller than in $\Delta W$.</p>
+<h4 id="example-memory-savings">Example: Memory Savings<a hidden class="anchor" aria-hidden="true" href="#example-memory-savings">#</a></h4>
+<p>Consider a weight matrix $W$ with dimensions $4096 \times 4096$:</p>
+<ul>
+<li><strong>Full $\Delta W$</strong>: $4096 \times 4096 = 16,777,216$ parameters.</li>
+<li><strong>LoRA ($r = 8$)</strong>:
+<ul>
+<li>Matrix $A$: $8 \times 4096 = 32,768$</li>
+<li>Matrix $B$: $4096 \times 8 = 32,768$</li>
+<li><strong>Total Parameters</strong>: $65,536$</li>
+</ul>
+</li>
+</ul>
+<p><strong>Reduction Percentage</strong>:
+$$\frac{65,536}{16,777,216} \times 100 \approx 0.39%$$</p>
+<p>The number of trainable parameters is reduced by over 99%.</p>
+<h4 id="the-alpha-scaling-factor">The Alpha Scaling Factor<a hidden class="anchor" aria-hidden="true" href="#the-alpha-scaling-factor">#</a></h4>
+<p>The LoRA update is typically scaled:
+$$h = W_0 x + \frac{\alpha}{r} (B A x)$$</p>
+<p>$\alpha$ (Alpha) is a scaling constant, similar to a learning rate, that amplifies the signal of the adapter. Dividing by $r$ ensures that if you change the rank during experimentation, you don&rsquo;t need to drastically re-tune $\alpha$. It keeps the update magnitude roughly constant—much like steering a giant ship using a small but precisely controlled boat.</p>
+<h4 id="initialization-strategy">Initialization Strategy<a hidden class="anchor" aria-hidden="true" href="#initialization-strategy">#</a></h4>
+<p>If the added parameters ($A$ and $B$) are initialized with random values, the initial gradients would be chaotic, harming performance. Instead:</p>
+<ul>
+<li><strong>Matrix A</strong> is initialized with a random Gaussian distribution (small random numbers).</li>
+<li><strong>Matrix B</strong> is initialized to zero.</li>
+</ul>
+<p>At the start of training, $\Delta W$ (which is $B \times A$) is exactly zero. This ensures the model starts with its original performance and gradually adapts.</p>
+<h4 id="vram-and-latency">VRAM and Latency<a hidden class="anchor" aria-hidden="true" href="#vram-and-latency">#</a></h4>
+<p>$$VRAM \approx \text{Base Model Size} + \text{Optimizer States for LoRA Parameters}$$</p>
+<p>For a 70B model, FFT might require hundreds of gigabytes of VRAM. With LoRA, the memory overhead is significantly reduced.</p>
+<p>Furthermore, LoRA offers <strong>Zero Latency Inference</strong>. Unlike &ldquo;Adapter Layers&rdquo; which insert new physical layers into the network, LoRA weights can be mathematically merged into the base weights ($W_{\text{new}} = W_0 + BA$) after training. This means no extra operations are required during inference.</p>
 <hr>
-<h3 id="-standard-position-wise-feedforward-network">🔥 Standard Position-Wise Feedforward Network<a hidden class="anchor" aria-hidden="true" href="#-standard-position-wise-feedforward-network">#</a></h3>
-<p>This is as simple as it gets: a two-layered fully connected network of neurons with a single activation switch—most probably a ReLU variant (for LLMs).</p>
-<p>$$
-FFN(x) = \max(0, xW_1 + b_1)W_2 + b_2
-$$</p>
-<p>The same transformation is applied to each token in parallel, making it efficient for GPU computation. For example, in the <strong>BERT</strong> model, the 512 dimensions of each token are expanded to 2048 to allow for &ldquo;intricate interactions&rdquo; before projecting back to 512 dimensions. This expansion/contraction is crucial; in every transformer, stacking of layers is possible only because the output of every layer matches its input dimensions.</p>
+<h3 id="qlora-breaking-the-memory-wall-with-quantization">QLoRA: Breaking the Memory Wall with Quantization<a hidden class="anchor" aria-hidden="true" href="#qlora-breaking-the-memory-wall-with-quantization">#</a></h3>
+<p>Quantized LoRA (QLoRA) addresses the model weight bottleneck. It reduces the floating-point precision of the original model weights via quantization while keeping the LoRA parameters in full precision.</p>
+<p>Quantization is the process of mapping high-precision floating-point numbers to lower-precision integers. While standard 4-bit quantization (Int4) evenly spaces values, neural network weights typically follow a Normal distribution, clustering near zero. QLoRA solves this with <strong>NF4 (NormalFloat 4)</strong>: it uses quantile quantization where each bin holds an equal probability mass of the distribution.</p>
+<p>This innovation allows a 70B model to fit into roughly 35–40 GB of VRAM, making it possible to fine-tune on a single 48GB workstation card (like an RTX 6000 Ada) or two consumer 24GB cards.</p>
+<h4 id="double-quantization">Double Quantization<a hidden class="anchor" aria-hidden="true" href="#double-quantization">#</a></h4>
+<p>In quantization, we use &ldquo;quantization constants&rdquo; (scaling factors) to map small integers back to their approximate real values. To maintain accuracy, weights are quantized in blocks (e.g., 64 weights per block), each with its own 32-bit constant. QLoRA introduces <strong>Double Quantization</strong>, which quantizes the constants themselves.</p>
+<ol>
+<li><strong>First Pass</strong>: Quantize weights to 4-bit, producing 32-bit constants.</li>
+<li><strong>Second Pass</strong>: Quantize those 32-bit constants into 8-bit floats.</li>
+</ol>
+<p>This &ldquo;inception-style&rdquo; approach reduces the memory overhead of the constants from ~4GB to ~0.1GB. In the tight confines of GPU memory, every gigabyte counts.</p>
+<h4 id="the-compute-memory-trade-off">The Compute-Memory Trade-off<a hidden class="anchor" aria-hidden="true" href="#the-compute-memory-trade-off">#</a></h4>
+<p>QLoRA is a marvel of efficiency, but it introduces a trade-off in compute latency. Standard hardware cannot perform computation directly on 4-bit tensors, so QLoRA uses <strong>On-The-Fly (OTF) Dequantization</strong>. Weights are dequantized to 16-bit for the calculation and then discarded. This makes QLoRA roughly 30% to 50% slower than standard LoRA.</p>
 <hr>
-<h3 id="-swiglu">🔥 SWiGLU<a hidden class="anchor" aria-hidden="true" href="#-swiglu">#</a></h3>
-<p>Sigmoid Weighted Gated Linear Unit (SWiGLU) has become the gold standard for feedforward networks in LLMs like <strong>Llama 3</strong> and <strong>PaLM</strong>. The primary reasons for choosing the Swish function (shown in the first image) over ReLU or GELU are as follows:</p>
+<h3 id="dora-weight-decomposed-low-rank-adaptation">DoRA: Weight-Decomposed Low-Rank Adaptation<a hidden class="anchor" aria-hidden="true" href="#dora-weight-decomposed-low-rank-adaptation">#</a></h3>
+<p><strong>DoRA</strong> is a recent advancement that addresses mathematical caveats in standard LoRA. Researchers found that LoRA doesn&rsquo;t always match the &ldquo;learning style&rdquo; of full fine-tuning because magnitude and direction updates are coupled.</p>
+<p>In vanilla LoRA, changing the direction of the weights often accidentally changes their magnitude as well. It’s like driving a car where turning the steering wheel also forces you to accelerate. DoRA decouples these two components.</p>
+<h4 id="the-mathematics-of-dora">The Mathematics of DoRA<a hidden class="anchor" aria-hidden="true" href="#the-mathematics-of-dora">#</a></h4>
+<p>DoRA re-parametrizes weight updates by separating the magnitude ($m$) and the direction ($V$):</p>
+<p>$$W = m \frac{V + \Delta V}{||V + \Delta V||}$$</p>
+<h4 id="example-the-dora-advantage">Example: The DoRA Advantage<a hidden class="anchor" aria-hidden="true" href="#example-the-dora-advantage">#</a></h4>
+<p>Imagine a weight vector with values $[3, 4]$.</p>
+<ol>
+<li>
+<p><strong>The LoRA Way (Coupled)</strong>: You add an update $\Delta W = [1, 1]$.
+$$W_{\text{new}} = [3, 4] + [1, 1] = [4, 5]$$
+The ratio changed (from 3:4 to 4:5), but the length (magnitude) jumped from 5 to $\approx 6.4$. If the model only wanted to change the &ldquo;concept&rdquo; (direction) without becoming &ldquo;louder&rdquo; (magnitude), it couldn&rsquo;t.</p>
+</li>
+<li>
+<p><strong>The DoRA Way (Decomposed)</strong>: DoRA treats magnitude ($m = 5$) and direction ($V = [3, 4]$) separately.</p>
 <ul>
-<li><strong>Mathematical Linearity:</strong> Swish (SiLU) is defined as $x \cdot \text{sigmoid}(\beta x)$, where $\beta$ is a learnable parameter. It is a smooth, non-monotonic function that allows small negative values to pass through. While GELU ($x \cdot \Phi(x)$) is also smooth, Swish&rsquo;s specific curve has empirically improved model performance.</li>
-<li><strong>Computational Efficiency:</strong> SiLU gradients are simpler to compute ($x / (1 + \exp(-x))$) compared to standard GELU approximations. At the massive scale of modern LLMs, these shortcuts save significant training time.</li>
-<li><strong>Performance:</strong> Research in the PaLM and Llama papers found that Swish-based Gated Linear Units consistently outperformed GELU-based versions in terms of perplexity and downstream task accuracy.</li>
+<li><strong>Update Direction</strong>: Add the LoRA update to $V$, getting $V&rsquo; = [4, 5]$.</li>
+<li><strong>Normalize</strong>: &ldquo;Re-normalize&rdquo; $V&rsquo;$ so its length is 1 again ($\approx [0.62, 0.78]$).</li>
+<li><strong>Apply Magnitude</strong>: Multiply that pure direction by the magnitude $m$ (which might stay 5).
+$$W_{\text{final}} = 5 \times [0.62, 0.78] = [3.1, 3.9]$$</li>
 </ul>
-<p>$$SwiGLU(x, W, V, b, c) = (\text{Swish}(xW + b) \otimes (xV + c))W_2$$</p>
-<p>Where $W$ and $V$ are weight matrices for the gate and the data path, and $\otimes$ is element-wise multiplication.</p>
-<ul>
-<li><strong>More Complex Filtering:</strong> Instead of using two weight matrices as in a standard FFN, SWiGLU uses three (gate, data, and output). This allows it to extract more complex features without a drastic increase in parameters. Modern implementations often lower the dimensionality of hidden layers (to ~2/3 of what they would be in a standard FFN) while retaining the performance benefits.</li>
-<li><strong>Zero-Gradient Avoidance:</strong> Unlike ReLU, which has a zero gradient for all negative values (the &ldquo;dying ReLU&rdquo; problem), SwiGLU’s smooth curve ensures the model can still learn from negative inputs, improving training stability in deep stacks.</li>
-</ul>
-<hr>
-<h3 id="-mixture-of-experts-moe">🔥 Mixture of Experts (MoE)<a hidden class="anchor" aria-hidden="true" href="#-mixture-of-experts-moe">#</a></h3>
-<p>MoE is an entire architecture rather than just a single block. It has become the dominant strategy for scaling models to insane sizes—up to a trillion parameters (like <strong>DeepSeek-V3</strong> and <strong>GPT-4</strong>)—because it breaks the direct link between model size (information capacity) and speed (inference cost).</p>
-<ul>
-<li><strong>Sparse Activation:</strong> MoE uses a &ldquo;Router&rdquo; to determine which smaller &ldquo;Experts&rdquo; (specialized FFNs) are best suited for a specific token. Instead of activating the entire network, only a tiny fraction of experts are used per token. For instance, DeepSeek-V3 might have 256 expert layers but only activate 8 for any single token.</li>
-<li><strong>Big Scale, Small Compute:</strong> MoE allows &ldquo;trillion-parameter intelligence&rdquo; to run at the speed of a much smaller model. While DeepSeek-V3 has 671 billion total parameters, it only uses ~37 billion per token during inference. You get the reasoning performance of a massive model with the latency of a smaller one.</li>
-<li><strong>Expert Specialization:</strong> Because different experts handle different tokens, they naturally specialize. Analysis shows certain experts become &ldquo;specialists&rdquo; in mathematics or coding, while others handle general language.</li>
-<li><strong>Training Efficiency:</strong> Since you only update a fraction of the weights for each token, MoE models can process many more tokens per second during training compared to a dense model of the same total size.</li>
-</ul>
-<p><strong>Training Dynamics and instability:</strong> The router assigns probabilities to each expert. To avoid overfitting or &ldquo;expert collapse&rdquo; (where the router sends everything to one expert), noise is often added to the router&rsquo;s output during training. Some models choose one top expert, while others choose multiple and average their outputs. This is called the &ldquo;auxilliary loss free&rdquo; strategy to controll training biases.</p>
-<p><img alt="Mixture of Experts Architecture" loading="lazy" src="/images/moe-architecture.png"></p>
-<h4 id="the-challenges-of-moe">The Challenges of MoE<a hidden class="anchor" aria-hidden="true" href="#the-challenges-of-moe">#</a></h4>
-<ul>
-<li><strong>The RAM Wall:</strong> Even if only a small percentage of parameters are used for computation, all 671B parameters must still reside in GPU memory. This makes MoE models difficult to run on consumer hardware.</li>
-<li><strong>Communication Overhead:</strong> In distributed training, experts are often split across different GPUs. If a token on GPU 1 needs an expert on GPU 4, data must travel over the network. DeepSeek-V3 employs &ldquo;Node-Limited Routing&rdquo; to minimize this congestion.</li>
-</ul>
-<p><strong>Summary:</strong> MoE is the better choice for major labs (like <strong>DeepSeek</strong>, <strong>Google</strong>, or <strong>OpenAI</strong>) trying to maximize intelligence per dollar of training cost. Dense SwiGLU remains the standard for reliability, ease of deployment, and local execution.</p>
+</li>
+</ol>
+<p>By giving magnitude and direction their own degrees of freedom, DoRA mimics Full Fine-Tuning more closely, often achieving superior results with the same number of parameters.</p>
 
 
   </div>
@@ -193,19 +243,15 @@ $$</p>
   <footer class="post-footer">
     <ul class="post-tags">
       <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
-      <li><a href="http://localhost:1313/tags/deep-learning/">Deep-Learning</a></li>
-      <li><a href="http://localhost:1313/tags/neural-networks/">Neural-Networks</a></li>
-      <li><a href="http://localhost:1313/tags/swiglu/">SWiGLU</a></li>
-      <li><a href="http://localhost:1313/tags/moe/">MoE</a></li>
+      <li><a href="http://localhost:1313/tags/large-language-models/">Large-Language-Models</a></li>
+      <li><a href="http://localhost:1313/tags/fine-tuning/">Fine-Tuning</a></li>
+      <li><a href="http://localhost:1313/tags/peft/">Peft</a></li>
+      <li><a href="http://localhost:1313/tags/lora/">Lora</a></li>
+      <li><a href="http://localhost:1313/tags/qlora/">Qlora</a></li>
     </ul>
 <nav class="paginav">
-    <a class="prev" href="http://localhost:1313/posts/attention-mechanisms/">
+    <a class="prev" href="http://localhost:1313/posts/llm-hardware-optimization/">
         <span class="title">« Prev</span>
-        <br>
-        <span>Attention Is All You Need, but exactly which one?: MHA, GQA and MLA</span>
-    </a>
-    <a class="next" href="http://localhost:1313/posts/llm-hardware-optimization/">
-        <span class="title">Next »</span>
         <br>
         <span>Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs</span>
     </a>
