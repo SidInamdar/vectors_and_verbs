@@ -231,7 +231,9 @@ SGLang views memory as a <strong>Radix Tree</strong>. It manages the KV cache at
 <li><strong>State Tracking:</strong> The system tracks the current state as tokens are generated.</li>
 <li><strong>Vocabulary Masking:</strong> Invalid tokens are masked by manipulating logits ($z$):</li>
 </ol>
-<p>$$z&rsquo;<em>i = \begin{cases} z_i &amp; \text{if } i \in S</em>{valid} \ -\infty &amp; \text{if } i \notin S_{valid} \end{cases}$$</p>
+<div>
+$$z'_i = \begin{cases} z_i & \text{if } i \in S_{valid} \\ -\infty & \text{if } i \notin S_{valid} \end{cases}$$
+</div>
 <p>Standard masking is expensive, so SGLang uses <strong>Jump-Forward Decoding</strong>: it determines deterministic characters (like <code>{}</code> in JSON) automatically and &ldquo;jumps&rdquo; over them without querying the model. This can make structured generation up to <strong>3x faster</strong>.</p>
 
 

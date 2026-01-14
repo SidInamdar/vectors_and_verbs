@@ -114,7 +114,8 @@ When requests demand specific formats (JSON, multiple choice, etc.), SGLang intr
 1.  **Regex Compilation:** The user's constraint is compiled into an FSM graph.
 2.  **State Tracking:** The system tracks the current state as tokens are generated.
 3.  **Vocabulary Masking:** Invalid tokens are masked by manipulating logits ($z$):
-
+<div>
 $$z'_i = \begin{cases} z_i & \text{if } i \in S_{valid} \\ -\infty & \text{if } i \notin S_{valid} \end{cases}$$
+</div>
 
 Standard masking is expensive, so SGLang uses **Jump-Forward Decoding**: it determines deterministic characters (like `{}` in JSON) automatically and "jumps" over them without querying the model. This can make structured generation up to **3x faster**.
