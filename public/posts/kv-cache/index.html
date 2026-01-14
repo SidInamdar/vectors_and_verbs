@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>The Need For Speed: KV Cache and memory optimization at Inference | Vectors &amp; Verbs</title>
+<meta name="keywords" content="artificial-intelligence, large-language-models, inference, kv-cache, transformer, vLLM, SGLang, RadixAttention">
+<meta name="description" content="An introduction to KV Caching and its role in optimizing Transformer inference.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/kv-cache/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.af84f51093f576d67527cfa457c9742fd73a0c82d9399c6bc9c935e115ac4e68.css" integrity="sha256-r4T1EJP1dtZ1J8&#43;kV8l0L9c6DILZOZxryck14RWsTmg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/kv-cache/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      The Need For Speed: KV Cache and memory optimization at Inference
+    </h1>
+    <div class="post-meta"><span title='2026-01-13 10:52:41 +0530 IST'>January 13, 2026</span>&nbsp;·&nbsp;<span>7 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>Transformer architecture is recursive; it has a self-referential structure. Unlike &lsquo;recurrent&rsquo; networks which have a feedback loop at each stage, transformers process tokens entirely through all the layers and then feed the generated text back into the model. The model repeats this computation until generation stops—this is the <strong>autoregressive</strong> nature of modern LLMs. The entire network waits for a token to be processed in a particular layer, wasting time and resources. Furthermore, the model must remember the redundant computations of the past. For models intended to handle context windows of 128,000 tokens or more—such as GPT-4 or Llama-3—this redundancy would render real-time generation physically and economically impossible. Hence, caching is necessary to optimize the inference process.</p>
+<p>KV Caching of attention layers is not a mere software optimization; it is a fundamental architectural component of the inference runtime. It allows the model to store the <strong>Key</strong> and <strong>Value</strong> pair states of past tokens in GPU memory.</p>
+<p>For a sequence of tokens in autoregressive generation, the model&rsquo;s first token effectively &ldquo;waits&rdquo; until the final token output is generated. This creates $O(N^2)$ computational complexity if not optimized.</p>
+<p><strong>Analogy:</strong> Imagine a child memorizing chapters from a book.</p>
+<ul>
+<li><strong>Normal Caching:</strong> He memorizes the first chapter. To learn the second, he memorizes the first chapter <em>again</em> and then the second.</li>
+<li><strong>KV Caching:</strong> The child writes down a summary of the first chapter that is relevant to the second before moving on. However, this creates a <strong>&ldquo;Memory Wall&rdquo;</strong>: if enough chapters are introduced, the desk becomes cluttered with sticky notes, leaving no space to work. Similarly, KV Caching will consume all available GPU space if not managed properly.</li>
+</ul>
+<hr>
+<h3 id="hardware-reality-bandwidth-latency-and-memory">Hardware Reality: Bandwidth, Latency, and Memory<a hidden class="anchor" aria-hidden="true" href="#hardware-reality-bandwidth-latency-and-memory">#</a></h3>
+<p>LLM Inference consists of two phases with radically different hardware characteristics:</p>
+<p><strong>Phase 1: Prefill</strong>
+When a user sends a prompt (e.g., &ldquo;Summarize this 5,000-word essay!&rdquo;) to the model.</p>
+<ul>
+<li><strong>Operation:</strong> The GPU performs massive matrix-matrix multiplications (GEMMs) by projecting embeddings against weight matrices.</li>
+<li><strong>Hardware State:</strong> CUDA cores are completely saturated; the bottleneck is how fast the chip can perform math.</li>
+<li><strong>Arithmetic Intensity:</strong> Very High. Operations are completed on all tokens simultaneously.</li>
+<li><strong>KV Cache:</strong> The model computes Key and Value states for all tokens and writes them to memory.</li>
+</ul>
+<p><strong>Phase 2: Decode</strong>
+When the model generates tokens one by one.</p>
+<ul>
+<li><strong>Operation:</strong> The model has one token of input and must produce one token of output.</li>
+<li><strong>Hardware State:</strong> The GPU loads the entire KV cache context and the model weights just to generate a single token.</li>
+<li><strong>Arithmetic Intensity:</strong> Low. Only a few operations are needed compared to the massive amount of memory moved.</li>
+<li><strong>The Memory Wall:</strong> Compute cores sit idle while waiting for data to be loaded from memory (HBM).</li>
+</ul>
+<p>$$
+\text{Arithmetic Intensity} = \frac{\text{FLOPs}}{\text{Bytes}}
+$$</p>
+<p>Assume: Weights = $M$ Bytes, KV Cache = $C$ Bytes. For $MN$ elements, Computation ($FLOPs$) $\approx 2MN$. Data Moved = $M$ (weights) + $C$ (KV Cache). Since $C$ is usually very small compared to $M$ during early generation:</p>
+<p>$$
+AI_{decode} \approx \frac{2MN}{M + C} \approx 2 \text{ OPS/Byte}
+$$</p>
+<p>H100 GPUs have a peak compute of ~1,000 TFLOPS but a bandwidth of $\approx 3.35 \text{ TB/s}$, resulting in an $AI \approx 300 \text{ OPS/Byte}$. This means the GPU runs at <strong>less than 1% of its peak compute</strong> during token generation. The speed of generation (tokens per second) is strictly limited by how fast we can stream the KV cache and weights from memory.</p>
+<hr>
+<h3 id="tensor-mechanics-and-capacity-planning">Tensor Mechanics and Capacity Planning<a hidden class="anchor" aria-hidden="true" href="#tensor-mechanics-and-capacity-planning">#</a></h3>
+<p>KV Cache memory grows linearly with context length. In standard Multi-Head Attention (MHA), the KV Cache consists of two tensors per layer (Key and Value). For Batch Size $B$, Sequence Length $L$, Number of Heads $H$, and Head Dimension $D$, the total size is:</p>
+<p>$$Memory_{KV} = 2 \times Layers \times N_{Heads} \times L \times D \times \text{Precision}$$</p>
+<p>For example, a model like Llama-3 70B with a context of 100,000 tokens:</p>
+<p>$$Memory_{token} = 2 \times 80 \times 8 \times 128 \times 2 = 327,680 \text{ bytes} \approx 0.32 \text{ MB per token}$$
+$$\text{Total Cache} = 0.32 \text{ MB} \times 100,000 = 32,000 \text{ MB} = 32 \text{ GB}$$</p>
+<p>This highlights the severity of the problem: a single large-context prompt can burn through 32GB of GPU memory. Architectural revolutions like <strong>Grouped-Query Attention (GQA)</strong> help by reducing the number of KV heads, which you can read about in <a href="http://localhost:1313/posts/attention-mechanisms/">this article</a>.</p>
+<p>However, even with GQA, using continuous memory blocks leads to a <strong>fragmentation crisis</strong>:</p>
+<ol>
+<li><strong>Internal Fragmentation (Over-provisioning):</strong> Systems often reserve space for the <em>maximum</em> possible context length, locking away memory even if the request is short.</li>
+<li><strong>External Fragmentation:</strong> Small, non-contiguous blocks of free memory cannot be used to store a single larger context.</li>
+<li><strong>Reservation Inefficiency:</strong> Memory is often reserved for tokens that haven&rsquo;t been generated yet.</li>
+</ol>
+<p>To solve this, modern runtimes implement techniques like <strong>PagedAttention</strong> and <strong>RadixAttention</strong>.</p>
+<hr>
+<h3 id="vllm-and-pagedattention">vLLM and PagedAttention<a hidden class="anchor" aria-hidden="true" href="#vllm-and-pagedattention">#</a></h3>
+<p>vLLM is a fundamental re-architecture of LLM serving. It shifts from physical memory allocation to <strong>virtual memory</strong>, using a <strong>PagedAttention</strong> algorithm borrowed from Operating Systems.</p>
+<p><strong>The OS Analogy:</strong>
+In classical memory management, a program &ldquo;sees&rdquo; large continuous blocks of RAM. In reality, the OS breaks data into small, fixed-size &ldquo;pages&rdquo; and scatters them wherever physical RAM is available. A <strong>Page Table</strong> maps logical requests to these physical addresses.</p>
+<p>vLLM applies this to the KV Cache:</p>
+<ul>
+<li><strong>Logical KV Blocks:</strong> The sequence of tokens as the model &ldquo;sees&rdquo; them (continuous).</li>
+<li><strong>Physical KV Blocks:</strong> The actual storage locations in GPU HBM (scattered).</li>
+<li><strong>Block Table:</strong> The dictionary that maps the logical view to physical reality.</li>
+</ul>
+<p>$$Address(K_t) = \text{BasePtr} + (P_{block} \times \text{BlockStride}) + (O_{idx} \times \text{TokenStride})$$</p>
+<p>This allows tensors to be located anywhere in memory. A sequence logcially spanning tokens $[0&hellip;31]$ might be stored in Physical Blocks #4 and #99, which are gigabytes apart.</p>
+<p><strong>Efficiency Gains:</strong>
+Pre-vLLM systems often wasted up to 80% of memory. In vLLM, waste is capped at $\frac{B-1}{\text{Tokens}}$ (where $B$ is block size). This abstraction also enables <strong>Copy-on-Write</strong> for parallel sampling: multiple outputs for one prompt can share the same physical blocks for the prompt&rsquo;s KV cache, only creating new blocks when they start to diverge.</p>
+<hr>
+<h3 id="sglang-and-radixattention">SGLang and RadixAttention<a hidden class="anchor" aria-hidden="true" href="#sglang-and-radixattention">#</a></h3>
+<p>While vLLM solved the <em>spatial</em> problem of memory allocation, <strong>SGLang</strong> (Structured Generation Language) addresses the <em>structural</em> and <em>temporal</em> problems. LLM use cases often share massive amounts of prefix memory (e.g., a long system prompt used across many chats).</p>
+<p><strong>RadixAttention: The Memory Tree</strong>
+SGLang views memory as a <strong>Radix Tree</strong>. It manages the KV cache at the level of token sequences rather than individual requests.</p>
+<p>If a user explores a maze and hits a dead end, they reset. But if they have a &ldquo;GPS&rdquo; (Radix Tree), the system persists a map of every path ever walked. If a new user starts a path that has been explored before (e.g., &ldquo;You are a helpful assistant&hellip;&rdquo;), the system &ldquo;teleports&rdquo; them to the existing state in the cache.</p>
+<ul>
+<li><strong>Nodes:</strong> Represent a state of the KV Cache.</li>
+<li><strong>Edges:</strong> Sequences of tokens transitioning between states.</li>
+<li><strong>Values:</strong> Pointers to physical blocks of memory.</li>
+</ul>
+<p>SGLang uses <strong>LRU (Least Recently Used) eviction</strong> policies to manage the finite GPU memory, pruning old branches or leaf nodes when space is needed for new prompts.</p>
+<hr>
+<h3 id="structured-generation-output-taming">Structured Generation: Output Taming<a hidden class="anchor" aria-hidden="true" href="#structured-generation-output-taming">#</a></h3>
+<p>When requests demand specific formats (JSON, multiple choice, etc.), SGLang introduces <strong>Compressed Finite State Machines (FSM)</strong>. This restricts the model&rsquo;s vocabulary to ensure valid outputs.</p>
+<ol>
+<li><strong>Regex Compilation:</strong> The user&rsquo;s constraint is compiled into an FSM graph.</li>
+<li><strong>State Tracking:</strong> The system tracks the current state as tokens are generated.</li>
+<li><strong>Vocabulary Masking:</strong> Invalid tokens are masked by manipulating logits ($z$):</li>
+</ol>
+<p>$$z&rsquo;<em>i = \begin{cases} z_i &amp; \text{if } i \in S</em>{valid} \ -\infty &amp; \text{if } i \notin S_{valid} \end{cases}$$</p>
+<p>Standard masking is expensive, so SGLang uses <strong>Jump-Forward Decoding</strong>: it determines deterministic characters (like <code>{}</code> in JSON) automatically and &ldquo;jumps&rdquo; over them without querying the model. This can make structured generation up to <strong>3x faster</strong>.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/large-language-models/">Large-Language-Models</a></li>
+      <li><a href="http://localhost:1313/tags/inference/">Inference</a></li>
+      <li><a href="http://localhost:1313/tags/kv-cache/">Kv-Cache</a></li>
+      <li><a href="http://localhost:1313/tags/transformer/">Transformer</a></li>
+      <li><a href="http://localhost:1313/tags/vllm/">VLLM</a></li>
+      <li><a href="http://localhost:1313/tags/sglang/">SGLang</a></li>
+      <li><a href="http://localhost:1313/tags/radixattention/">RadixAttention</a></li>
+    </ul>
+<nav class="paginav">
+    <a class="prev" href="http://localhost:1313/posts/parameter-efficient-fine-tuning/">
+        <span class="title">« Prev</span>
+        <br>
+        <span>Crafty Patchwork: Parameter-Efficient Fine-Tuning</span>
+    </a>
+</nav><div class="social-icons" align="left">
+    <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
+        title="X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+    </path>
+</svg>
+    </a>
+    <a href="https://www.linkedin.com/in/siddhesh-inamdar-24634694/" target="_blank" rel="noopener noreferrer me"
+        title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+</svg>
+    </a>
+    <a href="https://medium.com/@siddheshnmdr" target="_blank" rel="noopener noreferrer me"
+        title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.000000 76.000000" fill="currentColor" stroke-width="2"
+    preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(0.000000,76.000000) scale(0.100000,-0.100000)">
+        <path
+            d="M0 380 l0 -380 380 0 380 0 0 380 0 380 -380 0 -380 0 0 -380z m334 85 c30 -63 57 -115 59 -115 2 0 16 30 31 68 15 37 37 88 49 115 l20 47 76 0 76 -1 -27 -20 -28 -21 0 -151 c0 -150 0 -151 27 -179 l27 -28 -109 0 -109 0 27 28 c26 27 27 32 26 143 0 131 3 134 -71 -58 -24 -62 -48 -113 -53 -113 -6 0 -17 16 -24 35 -7 19 -36 83 -64 142 l-52 108 -3 -98 c-3 -97 -2 -99 28 -133 16 -19 30 -39 30 -44 0 -6 -31 -10 -70 -10 -45 0 -70 4 -70 11 0 6 14 27 30 46 30 33 30 35 30 151 0 116 0 118 -31 155 l-30 37 75 0 76 0 54 -115z" />
+    </g>
+</svg>
+    </a>
+    <a href="https://github.com/SidInamdar" target="_blank" rel="noopener noreferrer me"
+        title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+</div>
+</footer>
+
+  <script async src="https://subscribe-forms.beehiiv.com/embed.js"></script><iframe
+    src="https://subscribe-forms.beehiiv.com/cb315fa7-29d0-46fa-ae1f-a34a59e9d3b0" class="beehiiv-embed"
+    data-test-id="beehiiv-embed" frameborder="0" scrolling="no"
+    style="width: 100%; height: 32px; margin: 0; border-radius: 0px 0px 0px 0px !important; background-color: transparent; box-shadow: 0 0 #0000; max-width: 100%;"></iframe>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -9,7 +9,7 @@
     <lastBuildDate>Mon, 12 Jan 2026 10:52:56 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/fine-tuning/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Parameter-Efficient Fine-Tuning (PEFT): Adapting Large Models Efficiently</title>
+      <title>Crafty Patchwork: Parameter-Efficient Fine-Tuning</title>
       <link>http://localhost:1313/posts/parameter-efficient-fine-tuning/</link>
       <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
       <guid>http://localhost:1313/posts/parameter-efficient-fine-tuning/</guid>
