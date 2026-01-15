@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Electronic Executives: RAG, ReAct and MCP | Vectors &amp; Verbs</title>
+<meta name="keywords" content="rag, react-pattern, mcp, anthropic, agentic-workflows, llm-orchestration, artificial-intelligence, large-language-models">
+<meta name="description" content="A deep dive into the cognitive architectures of modern AI agents, exploring Retrieval-Augmented Generation (RAG), the ReAct reasoning pattern, and the Model Context Protocol (MCP).">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/agentic-workflows/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.af84f51093f576d67527cfa457c9742fd73a0c82d9399c6bc9c935e115ac4e68.css" integrity="sha256-r4T1EJP1dtZ1J8&#43;kV8l0L9c6DILZOZxryck14RWsTmg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/agentic-workflows/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Electronic Executives: RAG, ReAct and MCP
+    </h1>
+    <div class="post-meta"><span title='2026-01-15 17:59:29 +0530 IST'>January 15, 2026</span>&nbsp;·&nbsp;<span>6 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>Researchers spent just under a decade perfecting the art of scaling Large Language Models (LLMs) to generate responses in real time. However, these tools were largely built and improved in isolation, simply iterating batches of tokens through the model. While some models developed exceptional reasoning capabilities, they were inherently limited by their architectural solitude.</p>
+<p>This isolation created significant hurdles, particularly in accessing real-time or proprietary data and the inability to perform tasks requiring external tools. This has led to the emergence of advanced toolsets designed to augment reasoning models within <strong>agentic workflows</strong>. These tools envelop the model in sophisticated cognitive and operational architectures: <strong>Retrieval-Augmented Generation (RAG)</strong> solves memory constraints, <strong>ReAct</strong> addresses execution constraints, and the <strong>Model Context Protocol (MCP)</strong> bridges the connectivity gap.</p>
+<hr>
+<h3 id="retrieval-augmented-generation-rag">Retrieval-Augmented Generation (RAG)<a hidden class="anchor" aria-hidden="true" href="#retrieval-augmented-generation-rag">#</a></h3>
+<p>Retrieval-Augmented Generation (RAG) is often misunderstood as a simple pipeline: &ldquo;Search Database $\rightarrow$ Paste into Prompt $\rightarrow$ Generate.&rdquo; In reality, a more accurate description of RAG is <strong>probabilistic marginalization</strong>. RAG treats external information not as a mere preprocessing step, but as a latent variable in the generation process.</p>
+<p><strong>The Retriever and the Generator</strong></p>
+<p>The RAG architecture consists of two primary components:</p>
+<ol>
+<li>
+<p><strong>The Retriever ($P_{\eta}$):</strong> A dense bi-encoder that calculates the probability of a document $z$ being relevant to a query $x$.</p>
+<div>
+$$P_\eta(z|x) = \frac{\exp(\text{sim}(q(x), d(z)))}{\sum_{z' \in \mathcal{Z}} \exp(\text{sim}(q(x), d(z')))}$$
+</div>
+Here, $q(x)$ and $d(z)$ are the dense vector representations of the query and document, respectively, typically produced by BERT-based encoders. The similarity function ($\text{sim}$) is usually the dot product.
+</li>
+<li>
+<p><strong>The Generator ($P_{\theta}$):</strong> An LLM that generates the target sequence $y$ based on the retrieved context.</p>
+</li>
+</ol>
+<h4 id="rag-sequence-level-marginalization">RAG Sequence-Level Marginalization<a hidden class="anchor" aria-hidden="true" href="#rag-sequence-level-marginalization">#</a></h4>
+<p>This model assumes that each retrieved sequence $z$ contains sufficient information to generate the entire target sequence. The system retrieves the top-$K$ documents, generates complete sequences for each, and then aggregates the probabilities:</p>
+<div>
+$$P_{\text{RAG-Sequence}}(y|x) \approx \sum_{z \in \text{top-k}(P(\cdot|x))} P_{\eta}(z|x) \prod_{i=1}^{N} P_{\theta}(y_i | x, z, y_{1:i-1})$$
+</div>
+<p>In this approach, each document $z$ acts as a separate context for the duration of generation. This maintains consistency but limits the model&rsquo;s ability to synthesize disparate facts from multiple sources.</p>
+<h4 id="rag-token-level-marginalization">RAG Token-Level Marginalization<a hidden class="anchor" aria-hidden="true" href="#rag-token-level-marginalization">#</a></h4>
+<p>This model is more flexible but computationally intensive. It allows the generator to consult different documents while generating each subsequent token, enabling the model to shift its focus &ldquo;mid-thought&rdquo;:</p>
+<div>
+$$P_{\text{RAG-Token}}(y|x) \approx \prod_{i=1}^{N} \sum_{z \in \text{top-k}(P(\cdot|x))} P_{\eta}(z|x) P_{\theta}(y_i | x, z, y_{1:i-1})$$
+</div>
+<p>Token-level RAG offers superior performance on multi-hop reasoning tasks but introduces a significant latency penalty. Calculating attention scores for $K$ documents for every token scales linearly with $K$. Most enterprise &ldquo;Chat with Data&rdquo; solutions currently favor <strong>RAG Sequence-Level Marginalization</strong>.</p>
+<hr>
+<h4 id="dense-passage-retrieval-dpr">Dense Passage Retrieval (DPR)<a hidden class="anchor" aria-hidden="true" href="#dense-passage-retrieval-dpr">#</a></h4>
+<p>The effectiveness of the retrieval term $P_{\eta}(z|x)$ is bounded by the quality of the vector space—specifically, the breadth and depth of the training corpus. <strong>Dense Passage Retrieval (DPR)</strong> utilizes a bi-encoder architecture where a model (like BERT) encodes an entire document into a single high-dimensional vector. Bi-encoders process documents independently, allowing for pre-computed document embeddings. (This technique is conceptually similar to Skip-Grams, replacing the feed-forward network with a BERT-like encoder and using entire sequences as input.)</p>
+<p><strong>In-Batch Negatives and Loss Function</strong></p>
+<p>Training a retriever Requires distinguishing between a correct document ($d^+$) and irrelevant ones ($d^-$). To avoid expensive negative mining for every training step, DPR uses <strong>in-batch negatives</strong>.</p>
+<p>In a training batch of $B$ samples ${(q_i, d_i^+)}_{i=1}^B$, the document $d_i^+$ paired with query $q_i$ is the positive sample. Documents paired with <em>other</em> queries in the same batch ($d_j^+$ where $j \neq i$) serve as the negative samples. This allows the model to train on $B(B-1)$ negative pairs efficiently. The loss function is the negative log-likelihood of the positive passage:</p>
+<div>
+$$\mathcal{L}(q_i, d_i^+) = - \log \frac{e^{\text{sim}(q_i, d_i^+) / \tau}}{e^{\text{sim}(q_i, d_i^+) / \tau} + \sum_{j \neq i} e^{\text{sim}(q_i, d_j^+) / \tau}}$$
+</div>
+<p>The temperature parameter $\tau$ scales the dot product. As $\tau \rightarrow 0$, the model&rsquo;s selection becomes sharper. Contrastive learning typically uses $\tau$ values between 0.05 and 0.1.</p>
+<hr>
+<h3 id="advanced-rag-strategies">Advanced RAG Strategies<a hidden class="anchor" aria-hidden="true" href="#advanced-rag-strategies">#</a></h3>
+<p><strong>Self-RAG (Self-Reflective RAG)</strong>
+Self-RAG trains an LLM to generate special <strong>Reflection Tokens</strong> alongside standard text. These tokens act as internal control signals:</p>
+<ul>
+<li><strong>Retrieve Token:</strong> Determines if retrieval is necessary.</li>
+<li><strong>IsRel Token:</strong> Evaluates if the retrieved document is relevant.</li>
+<li><strong>IsSup Token:</strong> Checks if the generated answer is supported by the document.</li>
+<li><strong>IsUse Token:</strong> Assesses if the answer is useful for the query.</li>
+</ul>
+<p><strong>Corrective RAG (CRAG)</strong>
+CRAG employs a lightweight, independent &ldquo;Evaluator&rdquo; component that assigns a confidence score to retrieved documents:</p>
+<ul>
+<li><strong>High Confidence:</strong> Passed directly to the generator.</li>
+<li><strong>Ambiguous Confidence:</strong> Triggers &ldquo;Knowledge Refinement,&rdquo; decomposing the document to isolate relevant sequences.</li>
+<li><strong>Low Confidence:</strong> Triggers an external web search (in &ldquo;Open World&rdquo; agents) or falls back to standard generation.</li>
+</ul>
+<p><strong>Adaptive RAG</strong>
+This approach adjusts its strategy based on query complexity. Simple queries require no retrieval; moderately complex queries use single-shot retrieval; highly complex queries trigger multi-hop or iterative retrieval processes.</p>
+<hr>
+<h3 id="react-pattern-reasoning-and-acting">ReAct Pattern: Reasoning and Acting<a hidden class="anchor" aria-hidden="true" href="#react-pattern-reasoning-and-acting">#</a></h3>
+<p>The <strong>ReAct</strong> (Reason + Act) pattern provides a unified paradigm for LLMs to interact with external tools. While early models were often either &ldquo;thinkers&rdquo; (reasoning in isolation) or &ldquo;doers&rdquo; (following simple commands), ReAct allows for an interweaving of both.</p>
+<p><strong>Addressing Semantic Drift</strong>
+A significant drawback of <strong>Chain of Thought (CoT)</strong> is &ldquo;semantic drift&rdquo;—if a model hallucinates at Step 1, every subsequent step treats that error as ground truth. ReAct mitigates this by forcing the model to interact with the external environment to ground its reasoning.</p>
+<p>We define a trajectory $\tau$:
+$$\tau = (s_1, a_1, o_1, s_2, a_2, o_2, \ldots, s_n, a_n, o_n)$$</p>
+<p>Where:</p>
+<ul>
+<li>$s_t \in \mathcal{L}$ is the <strong>Thought</strong> (a reasoning trace in language space).</li>
+<li>$a_t \in \mathcal{A}$ is the <strong>Action</strong> (a specific tool invocation).</li>
+<li>$o_t \in \mathcal{O}$ is the <strong>Observation</strong> (feedback from the environment, e.g., an API result).</li>
+</ul>
+<p>The objective is to maximize the probability of a successful trajectory. The probability of an action $a_t$ is conditioned on the entire history:
+$$P(a_t | h_t) = P(a_t | s_1, a_1, o_1, \dots, s_t)$$</p>
+<p><strong>The Chain Rule of Reasoning</strong>
+Unlike standard Reinforcement Learning, where a policy $\pi$ maps states directly to actions ($\pi: S \rightarrow A$), ReAct decomposes the process:</p>
+<ol>
+<li><strong>Reasoning Step:</strong> $P(s_t | h_t)$ — The model analyzes the state and plans.</li>
+<li><strong>Action Step:</strong> $P(a_t | h_t, s_t)$ — The model executes an action based on its reasoning.</li>
+<li><strong>Observation Step:</strong> $P(o_t | h_t, a_t)$ — The environment returns feedback.</li>
+</ol>
+<hr>
+<h3 id="model-context-protocol-mcp">Model Context Protocol (MCP)<a hidden class="anchor" aria-hidden="true" href="#model-context-protocol-mcp">#</a></h3>
+<p>While we will cover this in depth in a future article, here is a brief summary. The <strong>Model Context Protocol (MCP)</strong> is an open-standard protocol designed to maintain consistent context across different generations. It solves the $N \times M$ integration problem—where $N$ models need to work with $M$ tools—by standardizing the interface.</p>
+<p>Introduced as a standardization effort by Anthropic, MCP is an application-layer protocol built on <strong>JSON-RPC 2.0</strong>. It is transport-agnostic and defines three distinct roles: <strong>Host</strong>, <strong>Client</strong>, and <strong>Server</strong>.</p>
+<p><strong>Request Object (Client $\to$ Server):</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;jsonrpc&#34;</span><span class="p">:</span> <span class="s2">&#34;2.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;method&#34;</span><span class="p">:</span> <span class="s2">&#34;tools/call&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;params&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;get_customer_data&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;arguments&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;customer_id&#34;</span><span class="p">:</span> <span class="s2">&#34;C-12345&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><strong>Response Object (Server $\to$ Client):</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;jsonrpc&#34;</span><span class="p">:</span> <span class="s2">&#34;2.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;result&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;content&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;text&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;text&#34;</span><span class="p">:</span> <span class="s2">&#34;Customer data retrieved: ...&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/rag/">Rag</a></li>
+      <li><a href="http://localhost:1313/tags/react-pattern/">React-Pattern</a></li>
+      <li><a href="http://localhost:1313/tags/mcp/">Mcp</a></li>
+      <li><a href="http://localhost:1313/tags/anthropic/">Anthropic</a></li>
+      <li><a href="http://localhost:1313/tags/agentic-workflows/">Agentic-Workflows</a></li>
+      <li><a href="http://localhost:1313/tags/llm-orchestration/">Llm-Orchestration</a></li>
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/large-language-models/">Large-Language-Models</a></li>
+    </ul>
+<nav class="paginav">
+    <a class="prev" href="http://localhost:1313/posts/kv-cache/">
+        <span class="title">« Prev</span>
+        <br>
+        <span>The Need For Speed: KV Cache and memory optimization at Inference</span>
+    </a>
+</nav><div class="social-icons" align="left">
+    <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
+        title="X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+    </path>
+</svg>
+    </a>
+    <a href="https://www.linkedin.com/in/siddhesh-inamdar-24634694/" target="_blank" rel="noopener noreferrer me"
+        title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+</svg>
+    </a>
+    <a href="https://medium.com/@siddheshnmdr" target="_blank" rel="noopener noreferrer me"
+        title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.000000 76.000000" fill="currentColor" stroke-width="2"
+    preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(0.000000,76.000000) scale(0.100000,-0.100000)">
+        <path
+            d="M0 380 l0 -380 380 0 380 0 0 380 0 380 -380 0 -380 0 0 -380z m334 85 c30 -63 57 -115 59 -115 2 0 16 30 31 68 15 37 37 88 49 115 l20 47 76 0 76 -1 -27 -20 -28 -21 0 -151 c0 -150 0 -151 27 -179 l27 -28 -109 0 -109 0 27 28 c26 27 27 32 26 143 0 131 3 134 -71 -58 -24 -62 -48 -113 -53 -113 -6 0 -17 16 -24 35 -7 19 -36 83 -64 142 l-52 108 -3 -98 c-3 -97 -2 -99 28 -133 16 -19 30 -39 30 -44 0 -6 -31 -10 -70 -10 -45 0 -70 4 -70 11 0 6 14 27 30 46 30 33 30 35 30 151 0 116 0 118 -31 155 l-30 37 75 0 76 0 54 -115z" />
+    </g>
+</svg>
+    </a>
+    <a href="https://github.com/SidInamdar" target="_blank" rel="noopener noreferrer me"
+        title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+</div>
+</footer>
+
+  <script async src="https://subscribe-forms.beehiiv.com/embed.js"></script><iframe
+    src="https://subscribe-forms.beehiiv.com/cb315fa7-29d0-46fa-ae1f-a34a59e9d3b0" class="beehiiv-embed"
+    data-test-id="beehiiv-embed" frameborder="0" scrolling="no"
+    style="width: 100%; height: 32px; margin: 0; border-radius: 0px 0px 0px 0px !important; background-color: transparent; box-shadow: 0 0 #0000; max-width: 100%;"></iframe>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
