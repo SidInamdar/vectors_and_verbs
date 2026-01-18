@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>USB-C of AI Space: The Model Context Protocol | Vectors &amp; Verbs</title>
+<meta name="keywords" content="mcp, anthropic, agentic-workflows, LLM-orchestration, artificial-intelligence, standardization, JSON-RPC, SSE, fastmcp">
+<meta name="description" content="MCP is the open standard for connecting AI models to data and tools. Discover how Anthropic&rsquo;s new protocol solves the $N 	imes M$ integration problem, creating a plug-and-play ecosystem for AI agents.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/model-context-protocol/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.af84f51093f576d67527cfa457c9742fd73a0c82d9399c6bc9c935e115ac4e68.css" integrity="sha256-r4T1EJP1dtZ1J8&#43;kV8l0L9c6DILZOZxryck14RWsTmg=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/model-context-protocol/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      USB-C of AI Space: The Model Context Protocol
+      <span class="entry-hint" title="Draft">
+        <svg xmlns="http://www.w3.org/2000/svg" height="35" viewBox="0 -960 960 960" fill="currentColor">
+          <path
+            d="M160-410v-60h300v60H160Zm0-165v-60h470v60H160Zm0-165v-60h470v60H160Zm360 580v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q9 9 13 20t4 22q0 11-4.5 22.5T862.09-380L643-160H520Zm300-263-37-37 37 37ZM580-220h38l121-122-18-19-19-18-122 121v38Zm141-141-19-18 37 37-18-19Z" />
+        </svg>
+      </span>
+    </h1>
+    <div class="post-meta"><span title='2026-01-15 20:58:53 +0530 IST'>January 15, 2026</span>&nbsp;·&nbsp;<span>7 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>From 2022 to 2024, the world was abuzz with the technical explosion of AI. Something that was once a niche mathematical/statistical domain was suddenly being sold as a consumer app. The hype was palpable, and the potential was undeniable.</p>
+<p>However, as the AI landscape evolved, it became clear that the promise of AI was not just about the models themselves, but about how they interacted with the world around them. This led to multiple competitors developing variants of their own solutions for AI-embedded ecosystems, trying to capitalize on market share based solely on their own tools and proprietary protocols.</p>
+<p>This led to a fragmented solution space where learning more jargon was a prerequisite for usage. This is often referred to as the <strong>$N \times M$ problem</strong>, where $N$ is the number of models and $M$ is the number of tools.</p>
+<p>In 2024, an open standard movement led by <strong>Anthropic</strong> introduced the <strong>Model Context Protocol (MCP)</strong>. This created a uniform interoperability layer between models and tools, enabling a true &ldquo;plug-and-play&rdquo; ecosystem.</p>
+<h3 id="standardization-the-hardware-analogy">Standardization: The Hardware Analogy<a hidden class="anchor" aria-hidden="true" href="#standardization-the-hardware-analogy">#</a></h3>
+<p>To understand MCP, imagine the connectivity between a computer and a mouse. A peripheral manufacturer does not construct a mouse solely for a specific computer; instead, they adhere to the <strong>USB standard</strong>. This ensures that any computer equipped with a USB port can use any mouse designed for that standard.</p>
+<p>In the MCP Architecture:</p>
+<ul>
+<li>The <strong>MCP Host</strong> is like the computer (e.g., Claude Desktop, an IDE, or an AI Agent).</li>
+<li>The <strong>MCP Server</strong> is like the peripheral (e.g., Google Drive, a database server).</li>
+<li>The <strong>Protocol</strong> corresponds to the USB communication standard.</li>
+</ul>
+<p>By this logic, a developer creates a &ldquo;Google Drive MCP Server&rdquo; <strong>once</strong>, and that single implementation can be plugged into any Host, effectively collapsing the $N \times M$ complexity into $1 \times M$.</p>
+<p>The primary tenets of MCP are:</p>
+<ul>
+<li><strong>Model Agnosticism</strong>: The protocol is indifferent to which model weights, architecture, or provider is used.</li>
+<li><strong>Client-Controlled Security</strong>: Host-side controls create a boundary of trust; the agent&rsquo;s capabilities are not left unchecked, as the host acts as a gatekeeper.</li>
+<li><strong>Composability</strong>: A single host can connect to multiple servers simultaneously, allowing for complex emergent behaviors.</li>
+</ul>
+<h3 id="architectural-anatomy">Architectural Anatomy<a hidden class="anchor" aria-hidden="true" href="#architectural-anatomy">#</a></h3>
+<p><strong>1. MCP Host</strong>
+The Host is the application layer where the user interacts with the AI. It is responsible for the user interface, process management, and context orchestration. It manages lifecycle operations, launches MCP servers as local subprocesses, and maintains connections (often via stdio or HTTP). The Host determines when to send information from a server to an LLM.</p>
+<p><strong>2. MCP Client</strong>
+The Client is the internal protocol implementation inside the Host. There is a 1:1 connection with the MCP Server. Its primary responsibilities are message framing and state management. It handles JSON-RPC serialization and manages connections/route requests (like <code>tools/call</code>). Clients isolate different servers from each other; only the Host is allowed to aggregate context. This security boundary ensures the implementation serves the user&rsquo;s intent and prevents cross-contamination.</p>
+<p><strong>3. MCP Server</strong>
+The Server is the bridge to the external world. It is a lightweight, specialized application that wraps a specific data source or toolset and translates its native API into the MCP standard. Servers are defined by their <strong>Capabilities</strong>. During the initiation handshake, the server declares what primitives it supports so the host can adapt its UI and logic. While the connection is stateful, MCP servers are typically designed to be stateless in operation.</p>
+<h3 id="the-core-primitives">The Core Primitives<a hidden class="anchor" aria-hidden="true" href="#the-core-primitives">#</a></h3>
+<p>Functional MCP consists of three distinct modalities through which an AI model can interact with the external environment:</p>
+<p><strong>Resources: Passive Context (Reading)</strong>
+Resources represent data that the model can &ldquo;read.&rdquo; Think of them as &lsquo;books&rsquo;, &lsquo;documents&rsquo;, or &lsquo;files&rsquo;. An assistant can open them to answer a query but cannot rewrite the pages. A Resource is any entity identifiable by a URI (Uniform Resource Identifier).</p>
+<p><em>Example</em>: Consider an MCP server for an internal documentation platform. It might expose a resource <code>docs://api/v1/endpoints</code>. When a user asks, &ldquo;How do I use the login endpoint?&rdquo;, the Host recognizes the relevance, reads this resource, and provides the content to the LLM. The model then generates an answer based on the exact documentation rather than its training memory.</p>
+<p>The Resource primitive also supports a <strong>subscription model</strong>. A client can subscribe to a specific URI; if the underlying data changes (e.g., a new log entry), the server sends a <code>notifications/resources/updated</code> message.</p>
+<p><strong>Tools: The Active Agency (Doing)</strong>
+Tools are executable functions. They allow AI to actively manipulate the environment: writing a file, sending an email, executing a SQL query, or deploying code. The server lists tools using a <strong>strictly typed JSON schema</strong>. The LLM calls these tools by generating a structured request which the Host executes.</p>
+<p>Strict typing is essential for reliability. Furthermore, a <strong>Human-in-the-Loop (HITL)</strong> approval process is often employed to prevent unauthorized autonomous actions—a critical security control.</p>
+<p><strong>Prompts: The Standardized Interface (Guiding)</strong>
+Prompts are reusable templates for interaction. Returning to the library analogy, Prompts are standardized forms or &ldquo;request slips&rdquo; available at the help desk. They help users or the AI structure their intent effectively to achieve specific outcomes.</p>
+<h3 id="protocol-mechanics-the-data-layer">Protocol Mechanics: The Data Layer<a hidden class="anchor" aria-hidden="true" href="#protocol-mechanics-the-data-layer">#</a></h3>
+<p>MCP is built on top of <strong>JSON-RPC 2.0</strong>, a stateless, lightweight remote procedure call protocol. This choice ensures broad compatibility and easy parsing.</p>
+<p><strong>Example Request:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;jsonrpc&#34;</span><span class="p">:</span> <span class="s2">&#34;2.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;method&#34;</span><span class="p">:</span> <span class="s2">&#34;tools/call&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;params&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;get_weather&#34;</span><span class="p">,</span> <span class="nt">&#34;arguments&#34;</span><span class="p">:</span> <span class="p">{</span><span class="nt">&#34;city&#34;</span><span class="p">:</span> <span class="s2">&#34;Paris&#34;</span><span class="p">}</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><strong>Example Response:</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;jsonrpc&#34;</span><span class="p">:</span> <span class="s2">&#34;2.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;id&#34;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;result&#34;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&#34;temperature&#34;</span><span class="p">:</span> <span class="s2">&#34;15°C&#34;</span><span class="p">,</span> <span class="nt">&#34;condition&#34;</span><span class="p">:</span> <span class="s2">&#34;Rain&#34;</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p><strong>Transport Layer:</strong>
+MCP defines two primary transport mechanisms:</p>
+<ol>
+<li><strong>Stdio Transport</strong>: The default for local development and desktop apps (like Claude Desktop). Data flows over Standard Input (stdin) and Standard Output (stdout).</li>
+<li><strong>HTTP/SSE Transport</strong>: Used when the server runs on a remote machine. It employs a dual-channel approach: <strong>Server-Sent Events (SSE)</strong> for server-to-client messages (push), and standard <strong>HTTP POST</strong> requests for client-to-server messages.</li>
+</ol>
+<h3 id="practical-example-python-sdk">Practical Example: Python SDK<a hidden class="anchor" aria-hidden="true" href="#practical-example-python-sdk">#</a></h3>
+<p>Utilizing the <strong>FastMCP</strong> abstraction allows for rapid development:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">mcp.server.fastmcp</span> <span class="kn">import</span> <span class="n">FastMCP</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Instantiate the server</span>
+</span></span><span class="line"><span class="cl"><span class="n">mcp</span> <span class="o">=</span> <span class="n">FastMCP</span><span class="p">(</span><span class="s2">&#34;Weather Service&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Define a tool using the @mcp.tool decorator</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@mcp.tool</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">get_forecast</span><span class="p">(</span><span class="n">latitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">longitude</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Get weather forecast for a location.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Args:
+</span></span></span><span class="line"><span class="cl"><span class="s2">        latitude: Latitude of the location
+</span></span></span><span class="line"><span class="cl"><span class="s2">        longitude: Longitude of the location
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Logic to call external Weather API</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s2">&#34;Sunny, 25C&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Define a resource using a URI template</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@mcp.resource</span><span class="p">(</span><span class="s2">&#34;weather://</span><span class="si">{state}</span><span class="s2">/alerts&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">async</span> <span class="k">def</span> <span class="nf">get_alerts</span><span class="p">(</span><span class="n">state</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Get active alerts for a state&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="s2">&#34;Flood Warning: Moderate&#34;</span>
+</span></span></code></pre></div><h3 id="advanced-capabilities-sampling-and-pagination">Advanced Capabilities: Sampling and Pagination<a hidden class="anchor" aria-hidden="true" href="#advanced-capabilities-sampling-and-pagination">#</a></h3>
+<p>The most futuristic aspect of MCP is <strong>Sampling</strong>. This feature flips the control flow: The Server asks the Host (and thus the LLM) to generate content. This allows the Server to leverage the Host&rsquo;s intelligence for tasks like semantic description of raw binary data.</p>
+<p>When dealing with massive resources (e.g., a log file with 1 million lines), MCP supports <strong>Pagination</strong>. The Client requests resources, the Server returns a batch with a <code>nextCursor</code>, and the Client follows up as needed. This mechanism is critical for performance and cost management in token-based billing models.</p>
+<h3 id="mcp-vs-language-server-protocol-lsp">MCP vs. Language Server Protocol (LSP)<a hidden class="anchor" aria-hidden="true" href="#mcp-vs-language-server-protocol-lsp">#</a></h3>
+<p>The strongest conceptual parallel to MCP is the <strong>Language Server Protocol (LSP)</strong>. LSP standardized how IDEs (VS Code, Vim) talk to language compilers.</p>
+<ul>
+<li><strong>LSP</strong>: Client = IDE, Server = Language Analyzer. Goal = IDE features (Autocomplete, Go to Definition).</li>
+<li><strong>MCP</strong>: Client = LLM Host, Server = Context Provider. Goal = Retrieval Augmented Generation (RAG) and Action execution.</li>
+</ul>
+<p><strong>Insight</strong>: MCP is essentially &ldquo;<strong>LSP for AI</strong>.&rdquo; Just as LSP stopped every text editor from writing its own bespoke Java parser, MCP stops every AI application from writing its own bespoke Jira integration.</p>
+<h3 id="why-not-just-use-rest-apis">Why not just use REST APIs?<a hidden class="anchor" aria-hidden="true" href="#why-not-just-use-rest-apis">#</a></h3>
+<p>A common question is: <em>&ldquo;Why not just let LLMs call REST APIs directly?&rdquo;</em></p>
+<ol>
+<li><strong>Context Window Limits</strong>: APIs often have thousands of endpoints with verbose documentation. Dumping a full Swagger definition into an LLM context is expensive and error-prone.</li>
+<li><strong>Abstraction</strong>: MCP Servers act as a &ldquo;Curated API,&rdquo; exposing only high-level, relevant tools.</li>
+<li><strong>State Management</strong>: MCP manages connection states and resource subscriptions, which stateless REST APIs do not natively handle. This enables persistent, real-time monitoring.</li>
+</ol>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/mcp/">Mcp</a></li>
+      <li><a href="http://localhost:1313/tags/anthropic/">Anthropic</a></li>
+      <li><a href="http://localhost:1313/tags/agentic-workflows/">Agentic-Workflows</a></li>
+      <li><a href="http://localhost:1313/tags/llm-orchestration/">Llm-Orchestration</a></li>
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/standardization/">Standardization</a></li>
+      <li><a href="http://localhost:1313/tags/json-rpc/">Json-Rpc</a></li>
+      <li><a href="http://localhost:1313/tags/sse/">Sse</a></li>
+      <li><a href="http://localhost:1313/tags/fastmcp/">Fastmcp</a></li>
+    </ul>
+<nav class="paginav">
+    <a class="prev" href="http://localhost:1313/posts/agentic-workflows/">
+        <span class="title">« Prev</span>
+        <br>
+        <span>Electronic Executives: RAG, ReAct and MCP</span>
+    </a>
+</nav><div class="social-icons" align="left">
+    <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
+        title="X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+    </path>
+</svg>
+    </a>
+    <a href="https://www.linkedin.com/in/siddhesh-inamdar-24634694/" target="_blank" rel="noopener noreferrer me"
+        title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+</svg>
+    </a>
+    <a href="https://medium.com/@siddheshnmdr" target="_blank" rel="noopener noreferrer me"
+        title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.000000 76.000000" fill="currentColor" stroke-width="2"
+    preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(0.000000,76.000000) scale(0.100000,-0.100000)">
+        <path
+            d="M0 380 l0 -380 380 0 380 0 0 380 0 380 -380 0 -380 0 0 -380z m334 85 c30 -63 57 -115 59 -115 2 0 16 30 31 68 15 37 37 88 49 115 l20 47 76 0 76 -1 -27 -20 -28 -21 0 -151 c0 -150 0 -151 27 -179 l27 -28 -109 0 -109 0 27 28 c26 27 27 32 26 143 0 131 3 134 -71 -58 -24 -62 -48 -113 -53 -113 -6 0 -17 16 -24 35 -7 19 -36 83 -64 142 l-52 108 -3 -98 c-3 -97 -2 -99 28 -133 16 -19 30 -39 30 -44 0 -6 -31 -10 -70 -10 -45 0 -70 4 -70 11 0 6 14 27 30 46 30 33 30 35 30 151 0 116 0 118 -31 155 l-30 37 75 0 76 0 54 -115z" />
+    </g>
+</svg>
+    </a>
+    <a href="https://github.com/SidInamdar" target="_blank" rel="noopener noreferrer me"
+        title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+</div>
+</footer>
+
+  <script async src="https://subscribe-forms.beehiiv.com/embed.js"></script><iframe
+    src="https://subscribe-forms.beehiiv.com/cb315fa7-29d0-46fa-ae1f-a34a59e9d3b0" class="beehiiv-embed"
+    data-test-id="beehiiv-embed" frameborder="0" scrolling="no"
+    style="width: 100%; height: 32px; margin: 0; border-radius: 0px 0px 0px 0px !important; background-color: transparent; box-shadow: 0 0 #0000; max-width: 100%;"></iframe>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

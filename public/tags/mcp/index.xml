@@ -6,10 +6,17 @@
     <description>Recent content in Mcp on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 Jan 2026 17:59:29 +0530</lastBuildDate>
+    <lastBuildDate>Thu, 15 Jan 2026 20:58:53 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/mcp/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Silicon Executives: RAG, ReAct and MCP</title>
+      <title>USB-C of AI Space: The Model Context Protocol</title>
+      <link>http://localhost:1313/posts/model-context-protocol/</link>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
+      <guid>http://localhost:1313/posts/model-context-protocol/</guid>
+      <description>An in-depth look at the Model Context Protocol (MCP) and its role in standardizing how AI models interact with tools and data.</description>
+    </item>
+    <item>
+      <title>Electronic Executives: RAG, ReAct and MCP</title>
       <link>http://localhost:1313/posts/agentic-workflows/</link>
       <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
       <guid>http://localhost:1313/posts/agentic-workflows/</guid>

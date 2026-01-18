@@ -6,20 +6,69 @@
     <description>Recent content in Tags on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 Jan 2026 17:59:29 +0530</lastBuildDate>
+    <lastBuildDate>Thu, 15 Jan 2026 20:58:53 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Agentic-Workflows</title>
       <link>http://localhost:1313/tags/agentic-workflows/</link>
-      <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
       <guid>http://localhost:1313/tags/agentic-workflows/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Anthropic</title>
+      <link>http://localhost:1313/tags/anthropic/</link>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
+      <guid>http://localhost:1313/tags/anthropic/</guid>
       <description></description>
     </item>
     <item>
       <title>Artificial-Intelligence</title>
       <link>http://localhost:1313/tags/artificial-intelligence/</link>
-      <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
       <guid>http://localhost:1313/tags/artificial-intelligence/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Fastmcp</title>
+      <link>http://localhost:1313/tags/fastmcp/</link>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
+      <guid>http://localhost:1313/tags/fastmcp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Json-Rpc</title>
+      <link>http://localhost:1313/tags/json-rpc/</link>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
+      <guid>http://localhost:1313/tags/json-rpc/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Llm-Orchestration</title>
+      <link>http://localhost:1313/tags/llm-orchestration/</link>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
+      <guid>http://localhost:1313/tags/llm-orchestration/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Mcp</title>
+      <link>http://localhost:1313/tags/mcp/</link>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
+      <guid>http://localhost:1313/tags/mcp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sse</title>
+      <link>http://localhost:1313/tags/sse/</link>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
+      <guid>http://localhost:1313/tags/sse/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Standardization</title>
+      <link>http://localhost:1313/tags/standardization/</link>
+      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
+      <guid>http://localhost:1313/tags/standardization/</guid>
       <description></description>
     </item>
     <item>
@@ -27,6 +76,20 @@
       <link>http://localhost:1313/tags/large-language-models/</link>
       <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
       <guid>http://localhost:1313/tags/large-language-models/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Rag</title>
+      <link>http://localhost:1313/tags/rag/</link>
+      <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
+      <guid>http://localhost:1313/tags/rag/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>React-Pattern</title>
+      <link>http://localhost:1313/tags/react-pattern/</link>
+      <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
+      <guid>http://localhost:1313/tags/react-pattern/</guid>
       <description></description>
     </item>
     <item>
