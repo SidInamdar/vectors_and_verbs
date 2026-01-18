@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Llm-Orchestration on Vectors &amp; Verbs</title>
+    <title>LLM-Orchestration on Vectors &amp; Verbs</title>
     <link>http://localhost:1313/tags/llm-orchestration/</link>
-    <description>Recent content in Llm-Orchestration on Vectors &amp; Verbs</description>
+    <description>Recent content in LLM-Orchestration on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 15 Jan 2026 20:58:53 +0530</lastBuildDate>
@@ -13,7 +13,7 @@
       <link>http://localhost:1313/posts/model-context-protocol/</link>
       <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
       <guid>http://localhost:1313/posts/model-context-protocol/</guid>
-      <description>An in-depth look at the Model Context Protocol (MCP) and its role in standardizing how AI models interact with tools and data.</description>
+      <description>MCP is the open standard for connecting AI models to data and tools. Discover how Anthropic&amp;rsquo;s new protocol solves the $N 	imes M$ integration problem, creating a plug-and-play ecosystem for AI agents.</description>
     </item>
     <item>
       <title>Electronic Executives: RAG, ReAct and MCP</title>

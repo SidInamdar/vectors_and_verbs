@@ -13,7 +13,7 @@
       <link>http://localhost:1313/posts/model-context-protocol/</link>
       <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
       <guid>http://localhost:1313/posts/model-context-protocol/</guid>
-      <description>An in-depth look at the Model Context Protocol (MCP) and its role in standardizing how AI models interact with tools and data.</description>
+      <description>MCP is the open standard for connecting AI models to data and tools. Discover how Anthropic&amp;rsquo;s new protocol solves the $N 	imes M$ integration problem, creating a plug-and-play ecosystem for AI agents.</description>
     </item>
     <item>
       <title>Electronic Executives: RAG, ReAct and MCP</title>

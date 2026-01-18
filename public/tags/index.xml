@@ -37,14 +37,14 @@
       <description></description>
     </item>
     <item>
-      <title>Json-Rpc</title>
+      <title>JSON-RPC</title>
       <link>http://localhost:1313/tags/json-rpc/</link>
       <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
       <guid>http://localhost:1313/tags/json-rpc/</guid>
       <description></description>
     </item>
     <item>
-      <title>Llm-Orchestration</title>
+      <title>LLM-Orchestration</title>
       <link>http://localhost:1313/tags/llm-orchestration/</link>
       <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
       <guid>http://localhost:1313/tags/llm-orchestration/</guid>
@@ -58,7 +58,7 @@
       <description></description>
     </item>
     <item>
-      <title>Sse</title>
+      <title>SSE</title>
       <link>http://localhost:1313/tags/sse/</link>
       <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
       <guid>http://localhost:1313/tags/sse/</guid>

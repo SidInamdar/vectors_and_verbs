@@ -17,6 +17,12 @@
     <loc>http://localhost:1313/categories/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
+    <loc>http://localhost:1313/tags/fastmcp/</loc>
+    <lastmod>2026-01-15T20:58:53+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/json-rpc/</loc>
+    <lastmod>2026-01-15T20:58:53+05:30</lastmod>
+  </url><url>
     <loc>http://localhost:1313/categories/large-language-models/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
@@ -27,6 +33,12 @@
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-01-15T20:58:53+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/sse/</loc>
+    <lastmod>2026-01-15T20:58:53+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/standardization/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/</loc>

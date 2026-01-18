@@ -1,7 +1,7 @@
 ---
 title: "USB-C of AI Space: The Model Context Protocol"
 date: 2026-01-15T20:58:53+05:30
-draft: true
+draft: false
 tags: ["mcp", "anthropic", "agentic-workflows", "LLM-orchestration", "artificial-intelligence", "standardization", "JSON-RPC", "SSE", "fastmcp"]
 categories: ["artificial-intelligence", "large-language-models"]
 math: true
