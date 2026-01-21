@@ -6,8 +6,15 @@
     <description>Recent content in Artificial-Intelligence on Vectors &amp; Verbs</description>
     <generator>Hugo -- 0.154.2</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 Jan 2026 20:58:53 +0530</lastBuildDate>
+    <lastBuildDate>Wed, 21 Jan 2026 23:40:56 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/artificial-intelligence/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Probabilistic Report Cards: LLM Evaluation Metrics</title>
+      <link>http://localhost:1313/posts/evaluation-metrics/</link>
+      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
+      <guid>http://localhost:1313/posts/evaluation-metrics/</guid>
+      <description>A deep dive into evaluation metrics for LLMs.</description>
+    </item>
     <item>
       <title>USB-C of AI Space: The Model Context Protocol</title>
       <link>http://localhost:1313/posts/model-context-protocol/</link>
