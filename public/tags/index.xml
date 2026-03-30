@@ -4,15 +4,71 @@
     <title>Tags on Vectors &amp; Verbs</title>
     <link>http://localhost:1313/tags/</link>
     <description>Recent content in Tags on Vectors &amp; Verbs</description>
-    <generator>Hugo -- 0.154.2</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 21 Jan 2026 23:40:56 +0530</lastBuildDate>
+    <lastBuildDate>Sun, 29 Mar 2026 08:29:10 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Artificial-Intelligence</title>
       <link>http://localhost:1313/tags/artificial-intelligence/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
+      <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
       <guid>http://localhost:1313/tags/artificial-intelligence/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Bert</title>
+      <link>http://localhost:1313/tags/bert/</link>
+      <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
+      <guid>http://localhost:1313/tags/bert/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cuda</title>
+      <link>http://localhost:1313/tags/cuda/</link>
+      <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
+      <guid>http://localhost:1313/tags/cuda/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Gpu</title>
+      <link>http://localhost:1313/tags/gpu/</link>
+      <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
+      <guid>http://localhost:1313/tags/gpu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Profiling</title>
+      <link>http://localhost:1313/tags/profiling/</link>
+      <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
+      <guid>http://localhost:1313/tags/profiling/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pytorch</title>
+      <link>http://localhost:1313/tags/pytorch/</link>
+      <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
+      <guid>http://localhost:1313/tags/pytorch/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>BERTScore</title>
+      <link>http://localhost:1313/tags/bertscore/</link>
+      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
+      <guid>http://localhost:1313/tags/bertscore/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>BLEU</title>
+      <link>http://localhost:1313/tags/bleu/</link>
+      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
+      <guid>http://localhost:1313/tags/bleu/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>COMET</title>
+      <link>http://localhost:1313/tags/comet/</link>
+      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
+      <guid>http://localhost:1313/tags/comet/</guid>
       <description></description>
     </item>
     <item>
@@ -23,6 +79,13 @@
       <description></description>
     </item>
     <item>
+      <title>G-Eval</title>
+      <link>http://localhost:1313/tags/g-eval/</link>
+      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
+      <guid>http://localhost:1313/tags/g-eval/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>Large-Language-Models</title>
       <link>http://localhost:1313/tags/large-language-models/</link>
       <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
@@ -30,10 +93,31 @@
       <description></description>
     </item>
     <item>
+      <title>LLM-as-a-Judge</title>
+      <link>http://localhost:1313/tags/llm-as-a-judge/</link>
+      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
+      <guid>http://localhost:1313/tags/llm-as-a-judge/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>METEOR</title>
+      <link>http://localhost:1313/tags/meteor/</link>
+      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
+      <guid>http://localhost:1313/tags/meteor/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>Metrics</title>
       <link>http://localhost:1313/tags/metrics/</link>
       <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
       <guid>http://localhost:1313/tags/metrics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ROUGE</title>
+      <link>http://localhost:1313/tags/rouge/</link>
+      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
+      <guid>http://localhost:1313/tags/rouge/</guid>
       <description></description>
     </item>
     <item>
@@ -65,7 +149,7 @@
       <description></description>
     </item>
     <item>
-      <title>Llm-Orchestration</title>
+      <title>LLM-Orchestration</title>
       <link>http://localhost:1313/tags/llm-orchestration/</link>
       <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
       <guid>http://localhost:1313/tags/llm-orchestration/</guid>
@@ -174,13 +258,6 @@
       <link>http://localhost:1313/tags/qlora/</link>
       <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
       <guid>http://localhost:1313/tags/qlora/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Gpu</title>
-      <link>http://localhost:1313/tags/gpu/</link>
-      <pubDate>Sun, 11 Jan 2026 20:21:30 +0530</pubDate>
-      <guid>http://localhost:1313/tags/gpu/</guid>
       <description></description>
     </item>
     <item>

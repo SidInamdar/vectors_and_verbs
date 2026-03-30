@@ -3,15 +3,54 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/categories/artificial-intelligence/</loc>
-    <lastmod>2026-01-21T23:40:56+05:30</lastmod>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/artificial-intelligence/</loc>
-    <lastmod>2026-01-21T23:40:56+05:30</lastmod>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/bert/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/cuda/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/gpu/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/profiling/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/pytorch/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/profiling-deep-learning-models/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-03-29T08:29:10+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/bertscore/</loc>
+    <lastmod>2026-01-21T23:40:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/bleu/</loc>
+    <lastmod>2026-01-21T23:40:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/comet/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/evaluation/</loc>
+    <lastmod>2026-01-21T23:40:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/g-eval/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/large-language-models/</loc>
@@ -20,19 +59,19 @@
     <loc>http://localhost:1313/tags/large-language-models/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/metrics/</loc>
+    <loc>http://localhost:1313/tags/llm-as-a-judge/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
+    <loc>http://localhost:1313/tags/meteor/</loc>
+    <lastmod>2026-01-21T23:40:56+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/metrics/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/evaluation-metrics/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2026-01-21T23:40:56+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
+    <loc>http://localhost:1313/tags/rouge/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/agentic-workflows/</loc>
@@ -106,9 +145,6 @@
   </url><url>
     <loc>http://localhost:1313/tags/qlora/</loc>
     <lastmod>2026-01-12T10:52:56+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/gpu/</loc>
-    <lastmod>2026-01-11T20:21:30+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/hardware/</loc>
     <lastmod>2026-01-11T20:21:30+05:30</lastmod>

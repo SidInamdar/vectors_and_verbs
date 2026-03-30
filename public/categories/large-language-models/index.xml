@@ -4,7 +4,7 @@
     <title>Large-Language-Models on Vectors &amp; Verbs</title>
     <link>http://localhost:1313/categories/large-language-models/</link>
     <description>Recent content in Large-Language-Models on Vectors &amp; Verbs</description>
-    <generator>Hugo -- 0.154.2</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 21 Jan 2026 23:40:56 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/categories/large-language-models/index.xml" rel="self" type="application/rss+xml" />
@@ -13,7 +13,7 @@
       <link>http://localhost:1313/posts/evaluation-metrics/</link>
       <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
       <guid>http://localhost:1313/posts/evaluation-metrics/</guid>
-      <description>A deep dive into evaluation metrics for LLMs.</description>
+      <description>From N-Grams to LLM-as-a-Judge: A deep dive into the evolution of evaluation metrics.</description>
     </item>
     <item>
       <title>USB-C of AI Space: The Model Context Protocol</title>
