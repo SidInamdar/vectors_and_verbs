@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Speed of Thought: Optimizing Gemma 27B with Custom Triton Kernels | Vectors &amp; Verbs</title>
+<meta name="keywords" content="artificial-intelligence, gpu, triton, gemma, cuda, optimization, kernels, blackwell">
+<meta name="description" content="Profiling Gemma 27B on dual RTX 5090 Blackwell GPUs, discovering a legacy CUDA path bottleneck, and building a custom Triton kernel that shaves 1.1 seconds off every inference batch.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/gemma-triton-optimization/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6e08a867ed9f4aac96600166f644e24c654e0ff59c4b361af3ddbb5e45b15f76.css" integrity="sha256-bgioZ&#43;2fSqyWYAFm9kTiTGVOD/WcSzYa8927XkWxX3Y=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/gemma-triton-optimization/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+    mermaid.initialize({ startOnLoad: true });
+</script>
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Speed of Thought: Optimizing Gemma 27B with Custom Triton Kernels
+    </h1>
+    <div class="post-meta"><span title='2026-04-05 10:14:00 +0530 IST'>April 5, 2026</span>&nbsp;·&nbsp;<span>10 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>Large language models are, at their core, a stack of repeating algebraic layers. Most popular research focuses on permutations of these stacks to improve inference accuracy—swapping sinusoidal positional encoding for Rotary Positional Encoding, or building Mixture-of-Experts feed-forward layers instead of a single dense layer. These architectural innovations are genuinely important, but they also create increasingly complex compute graphs that behave in unexpected ways on real hardware. Some models now require multiple GPU nodes just to load their weights.</p>
+<p>The industry has responded with excellent profiling tooling. If you haven&rsquo;t profiled a model before, <a href="/posts/profiling-deep-learning-models/">Squeeze every FLOP: Profiling AI models</a> covers the full stack—from the PyTorch Profiler down to Nsight Systems—and is a good starting point before reading this.</p>
+<p>This article documents an experiment: taking an off-the-shelf Gemma 27B model, running it on two RTX 5090 (Blackwell) GPU nodes, dissecting its performance with Nsight Systems, and methodically engineering a custom Triton kernel to fix what we found. The results were surprising, the pitfalls were humbling, and the final numbers were worth the effort.</p>
+<hr>
+<h3 id="why-gemma">Why Gemma?<a hidden class="anchor" aria-hidden="true" href="#why-gemma">#</a></h3>
+<p>Google&rsquo;s Gemma family (2B, 7B, 27B, and the Gemma 2 variants) are open-weights models designed to punch well above their weight class. They incorporate several architectural refinements over vanilla transformers that make them particularly interesting from a systems engineering perspective:</p>
+<ul>
+<li><strong>RMSNorm</strong> instead of LayerNorm — cheaper normalisation with no mean subtraction</li>
+<li><strong>Rotary Positional Embeddings (RoPE)</strong> — for length generalisation without learned position tables</li>
+<li><strong>Grouped-Query Attention (GQA)</strong> — fewer KV heads to shrink cache footprint (<a href="/posts/attention-mechanisms/">see the deep-dive here</a>)</li>
+<li><strong>GeGLU activations</strong> in the feed-forward blocks — a gated variant of GeLU</li>
+</ul>
+<p>Each of these is a natural <strong>kernel-fusion target</strong>. PyTorch&rsquo;s default implementation dispatches multiple separate CUDA kernels per operation. Every kernel launch carries overhead: CPU-to-GPU round trips, repeated HBM reads and writes, and register pressure from context switches. Fusion collapses several of these into a single pass over the data.</p>
+<div class="mermaid">%%{init: {"theme": "base", "themeVariables": {"fontSize": "17px", "fontFamily": "Inter, sans-serif"}}}%%
+flowchart TD
+    Input["📥 Input Tensor\nfrom HBM"] --> RMS["RMSNorm\nnormalize hidden states"]
+    RMS --> ROPE["RoPE\nrotary positional encoding"]
+    ROPE --> QKV["QKV Projection\nfused linear layer"]
+    QKV --> Attn["Grouped-Query Attention\nshared KV heads"]
+    Attn --> FFN["GeGLU Feed-Forward\ngated activation"]
+    FFN --> Out["📤 Output Tensor\nback to HBM"]
+
+    style Input fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    style RMS fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+    style ROPE fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+    style QKV fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c
+    style Attn fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c
+    style FFN fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+    style Out fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+</div>
+<p>The green nodes—RMSNorm, RoPE, and the FFN—are exactly where custom kernels can reclaim the most time. That said, the experiment began not with a plan but with a profiler run that revealed something unexpected.</p>
+<hr>
+<h3 id="the-discovery-ghost-in-the-machine">The Discovery: Ghost in the Machine<a hidden class="anchor" aria-hidden="true" href="#the-discovery-ghost-in-the-machine">#</a></h3>
+<p>The first step was a vanilla profiling run using NVTX markers to label inference regions, captured with Nsight Systems. The goal was simple: find the &ldquo;hot&rdquo; kernels—the ones consuming the lion&rsquo;s share of GPU wall-clock time.</p>
+<img src="/images/nsys-baseline-run.png" width="100%" alt="Nsight Systems: Baseline run — cutlass kernel consuming 61.4% of GPU time">
+<p>The stat table told the story immediately. A single GEMM kernel was responsible for <strong>61.4% of total GPU wall-clock time</strong>, clocking 40,168 instances at an average of 91µs each, totalling 3.68 seconds. The kernel&rsquo;s name revealed the smoking gun:</p>
+<pre tabindex="0"><code>void cutlass::Kernel2&lt;cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16...&gt;
+</code></pre><p>In NVIDIA&rsquo;s nomenclature, <strong><code>80</code></strong> refers to the <strong>Ampere architecture</strong> (SM80, the RTX 30-series and A100). The current PyTorch stack, lacking a specific Blackwell (SM120) path tuned for Gemma&rsquo;s hidden dimensions, had silently fallen back to a four-year-old code path. We were asking a 2025 supercar to run on an engine map written for a 2021 sedan.</p>
+<p>Before diving into the fix, it helps to understand the vocabulary the profiler is speaking.</p>
+<h4 id="understanding-bound">Understanding &ldquo;Bound&rdquo;<a hidden class="anchor" aria-hidden="true" href="#understanding-bound">#</a></h4>
+<p>In systems engineering, <strong>&ldquo;bound&rdquo;</strong> means <em>limited by</em>. It identifies the slowest step in the pipeline—the constraint that caps overall throughput.</p>
+<ul>
+<li><strong>Compute Bound (ALU Bound):</strong> The GPU&rsquo;s Streaming Multiprocessors and Tensor Cores are working at capacity. Going faster requires either a better chip or more efficient algorithms.</li>
+<li><strong>Memory Bandwidth Bound:</strong> The math units are idle because they&rsquo;re waiting for data from VRAM. Even the 5090&rsquo;s enormous GDDR7 bandwidth can be saturated by operations with low arithmetic intensity—like simple matrix additions.</li>
+<li><strong>CPU Bound (Host Bound):</strong> The GPU is literally waiting for the CPU to issue the next command. This shows up as &ldquo;gaps&rdquo; in the Nsight timeline—stretches where the GPU does nothing while Python is being interpreted.</li>
+</ul>
+<p>On a card as fast as the RTX 5090, the bottleneck is almost never raw compute. It is almost always memory bandwidth or host-side overhead. The legacy Ampere kernel was doing both badly: it generated enormous numbers of individual launches (host overhead) and accessed HBM with a pattern optimised for older memory subsystems.</p>
+<hr>
+<h3 id="engineering-the-custom-kernel">Engineering the Custom Kernel<a hidden class="anchor" aria-hidden="true" href="#engineering-the-custom-kernel">#</a></h3>
+<p>The goal was to build a Triton kernel that <strong>fuses</strong> three operations into a single GPU pass—linear projection, SiLU activation, and bias addition—eliminating two round-trips to VRAM that standard PyTorch requires.</p>
+<p>The key insight is register locality. When intermediate results live in registers or L1 cache rather than being evicted to VRAM between kernels, the effective arithmetic intensity rises dramatically. The <code>evict_last</code> eviction policy tells the compiler that a tile is likely to be reused, nudging the scheduler to keep it resident in the RTX 5090&rsquo;s 96 MB L2 cache—substantially larger than previous generations.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nd">@triton.jit</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">blackwell_fused_linear_kernel</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ap</span><span class="p">,</span> <span class="n">bp</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">strideam</span><span class="p">,</span> <span class="n">strideak</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">stridebk</span><span class="p">,</span> <span class="n">stridebn</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">stridecm</span><span class="p">,</span> <span class="n">stridecn</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">BLOCK_SIZE_M</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span> <span class="n">BLOCK_SIZE_N</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span> <span class="n">BLOCK_SIZE_K</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">GROUP_SIZE_M</span><span class="p">:</span> <span class="n">tl</span><span class="o">.</span><span class="n">constexpr</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pid</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">program_id</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Swizzling tile order for better L2 cache hit rate</span>
+</span></span><span class="line"><span class="cl">    <span class="n">num_pid_m</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">BLOCK_SIZE_M</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">num_pid_n</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">BLOCK_SIZE_N</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">pid_m</span> <span class="o">=</span> <span class="p">(</span><span class="n">pid</span> <span class="o">%</span> <span class="n">num_pid_m</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pid_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">pid</span> <span class="o">//</span> <span class="n">num_pid_m</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">rm</span> <span class="o">=</span> <span class="n">pid_m</span> <span class="o">*</span> <span class="n">BLOCK_SIZE_M</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BLOCK_SIZE_M</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rn</span> <span class="o">=</span> <span class="n">pid_n</span> <span class="o">*</span> <span class="n">BLOCK_SIZE_N</span> <span class="o">+</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BLOCK_SIZE_N</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">rk</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">BLOCK_SIZE_K</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Base pointers for the current tiles</span>
+</span></span><span class="line"><span class="cl">    <span class="n">a_ptrs</span> <span class="o">=</span> <span class="n">ap</span> <span class="o">+</span> <span class="p">(</span><span class="n">rm</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">strideam</span> <span class="o">+</span> <span class="n">rk</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="n">strideak</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">b_ptrs</span> <span class="o">=</span> <span class="n">bp</span> <span class="o">+</span> <span class="p">(</span><span class="n">rk</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">stridebk</span> <span class="o">+</span> <span class="n">rn</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="n">stridebn</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">accumulator</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">BLOCK_SIZE_M</span><span class="p">,</span> <span class="n">BLOCK_SIZE_N</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tl</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">tl</span><span class="o">.</span><span class="n">cdiv</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">BLOCK_SIZE_K</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">k_remaining</span> <span class="o">=</span> <span class="n">K</span> <span class="o">-</span> <span class="n">k</span> <span class="o">*</span> <span class="n">BLOCK_SIZE_K</span>
+</span></span><span class="line"><span class="cl">        <span class="n">a_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">rm</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rk</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;</span> <span class="n">k_remaining</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">b_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">rk</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">k_remaining</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rn</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># &#39;evict_last&#39; keeps tiles hot in the 5090&#39;s 96 MB L2 cache</span>
+</span></span><span class="line"><span class="cl">        <span class="n">a</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">a_ptrs</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">a_mask</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">eviction_policy</span><span class="o">=</span><span class="s1">&#39;evict_last&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">b</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">b_ptrs</span><span class="p">,</span> <span class="n">mask</span><span class="o">=</span><span class="n">b_mask</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">eviction_policy</span><span class="o">=</span><span class="s1">&#39;evict_last&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># Accumulate in FP32 for precision; tl.dot targets the Tensor Cores</span>
+</span></span><span class="line"><span class="cl">        <span class="n">accumulator</span> <span class="o">=</span> <span class="n">tl</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">accumulator</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">a_ptrs</span> <span class="o">+=</span> <span class="n">BLOCK_SIZE_K</span> <span class="o">*</span> <span class="n">strideak</span>
+</span></span><span class="line"><span class="cl">        <span class="n">b_ptrs</span> <span class="o">+=</span> <span class="n">BLOCK_SIZE_K</span> <span class="o">*</span> <span class="n">stridebk</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Write the final result back to VRAM in BF16</span>
+</span></span><span class="line"><span class="cl">    <span class="n">c_ptrs</span> <span class="o">=</span> <span class="n">cp</span> <span class="o">+</span> <span class="p">(</span><span class="n">rm</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">stridecm</span> <span class="o">+</span> <span class="n">rn</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">*</span> <span class="n">stridecn</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">c_mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">rm</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">M</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">rn</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">c_ptrs</span><span class="p">,</span> <span class="n">accumulator</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">tl</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">),</span> <span class="n">mask</span><span class="o">=</span><span class="n">c_mask</span><span class="p">)</span>
+</span></span></code></pre></div><p>The kernel breaks the 27B parameter matrices into manageable tiles, processes each tile entirely within registers and shared memory, and only writes the final accumulated result back to VRAM once. In theory, a substantial win.</p>
+<p>In practice, the first deployment was a shock.</p>
+<hr>
+<h3 id="the-register-spilling-trap">The Register Spilling Trap<a hidden class="anchor" aria-hidden="true" href="#the-register-spilling-trap">#</a></h3>
+<p>The initial kernel run produced the following Nsight trace:</p>
+<img src="/images/nsys-first-kernel-run.png" width="100%" alt="Nsight Systems: First custom kernel run — blackwell_fused_linear_kernel consuming 90.2% at 413µs per launch">
+<p>The custom kernel now dominated the trace at <strong>90.2% of GPU time</strong>—but the <em>total batch time had barely improved</em>, and the per-launch cost had ballooned to <strong>413µs per launch</strong>, nearly <strong>4× slower</strong> than the Ampere fallback at 91µs. We had fewer kernel launches but each one was doing much more damage.</p>
+<p>The technical autopsy pointed to <strong>register spilling</strong>.</p>
+<p>The tile size chosen was $256 \times 128$. While this looked attractive for maximising L2 reuse, it was too heavy for the SM&rsquo;s register file. An SM on the RTX 5090 has a hard physical limit of <strong>65,536 registers</strong>. These are the tiny, ultra-fast workbenches where threads perform their arithmetic.</p>
+<p>The arithmetic is merciless:</p>
+<ul>
+<li><strong>At 32 registers per thread:</strong> the SM fits 2,048 threads simultaneously — 100% occupancy.</li>
+<li><strong>At 33 registers per thread:</strong> the SM&rsquo;s bin-packing logic forces it to drop to 1,024 active threads — a <strong>50% occupancy collapse</strong> from adding a single variable.</li>
+</ul>
+<p>A $256 \times 128$ tile is asking each thread to track too many intermediate sums simultaneously. The SM, unable to fit everything in registers, began spilling overflow variables to VRAM—the very memory hierarchy we were trying to avoid. We had won the &ldquo;system war&rdquo; (fewer launches) but were losing the &ldquo;math battle&rdquo; on every single one.</p>
+<hr>
+<h3 id="the-pivot-tuning-the-tile">The Pivot: Tuning the Tile<a hidden class="anchor" aria-hidden="true" href="#the-pivot-tuning-the-tile">#</a></h3>
+<p>The fix required thinking of the SM as a <strong>job shop</strong>. In manufacturing, you don&rsquo;t give one worker a 100-step task; you decompose it into steps that fit their workbench and pipeline them. The tile was shrunk from $256 \times 128$ to $128 \times 128$, and the pipeline stages were increased to 4.</p>
+<p>This smaller tile fit cleanly within the register budget, eliminating spilling. The increased stage count gave the <strong>TMA (Tensor Memory Accelerator)</strong>—a dedicated hardware prefetch engine on Blackwell—enough lead time to fetch the next two tiles into shared memory <em>while the current tile was being computed</em>. The VRAM latency became fully hidden behind useful arithmetic.</p>
+<h4 id="why-we-cant-just-automate-this">Why We Can&rsquo;t Just Automate This<a hidden class="anchor" aria-hidden="true" href="#why-we-cant-just-automate-this">#</a></h4>
+<p>A natural question: couldn&rsquo;t a Mixed Integer Programming (MIP) solver or a stochastic autotuner find this automatically?</p>
+<p>Mathematically, yes—performance across the tile-size space is <strong>piecewise convex</strong>. There are stable plateaus where tile sizes fit the hardware, separated by &ldquo;cliffs&rdquo; where a single-register increase causes a 50% occupancy collapse. Defining the RTX 5090&rsquo;s hard constraints as a MIP yields:</p>
+<ul>
+<li><strong>Integer constraint:</strong> block sizes must be multiples of the warp size (32)</li>
+<li><strong>Register constraint:</strong> registers per thread × threads per block ≤ 64,536</li>
+<li><strong>Shared memory constraint:</strong> shared memory per block × active blocks ≤ 99 KB</li>
+</ul>
+<p>The obstacle is the JIT compiler. Triton and NVCC perform register allocation, instruction scheduling, and loop unrolling internally, and those passes interact in ways that are difficult to predict from source code. A small Triton change might trigger an LLVM optimisation that swaps high-latency arithmetic for low-latency address calculations, completely changing the register count. Because we cannot inspect the compiler&rsquo;s internal &ldquo;job schedule&rdquo; before it runs, we cannot close the MIP exactly.</p>
+<p>This is why <strong>heuristic search grounded in architectural constants</strong> beats pure stochastic autotuning for new hardware. A random search doesn&rsquo;t know that crossing 32→33 registers is a cliff; it treats all tile sizes as equivalent points in space. An architecture-aware heuristic can eliminate entire &ldquo;valleys&rdquo; of spilling configurations before sampling a single point, converging on the theoretical maximum with a fraction of the profiling runs. For a deeper look at the CUDA execution model that underpins all of this, see the <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html">NVIDIA CUDA Programming Guide — Programming Model</a>.</p>
+<hr>
+<h3 id="the-optimization-loop">The Optimization Loop<a hidden class="anchor" aria-hidden="true" href="#the-optimization-loop">#</a></h3>
+<p>Kernel engineering is not a one-shot exercise. Each run informs the next:</p>
+<div class="mermaid">%%{init: {"theme": "base", "themeVariables": {"fontSize": "16px", "fontFamily": "Inter, sans-serif"}}}%%
+flowchart LR
+    Profile["🔍 Profile\nnative model"] --> Identify["📊 Identify\nbottlenecks"]
+    Identify --> Write["✍️ Write\nTriton kernel"]
+    Write --> Bench["⏱️ Benchmark\nvs. baseline"]
+    Bench --> Autotune["⚙️ Autotune\ntile sizes"]
+    Autotune --> Verify["✅ Verify\ncorrectness"]
+    Verify --> Profile
+
+    style Profile  fill:#e3f2fd,stroke:#1565c0,color:#0d47a1
+    style Identify fill:#fff8e1,stroke:#f57f17,color:#e65100
+    style Write    fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+    style Bench    fill:#fff8e1,stroke:#f57f17,color:#e65100
+    style Autotune fill:#f3e5f5,stroke:#6a1b9a,color:#4a148c
+    style Verify   fill:#fce4ec,stroke:#b71c1c,color:#880e4f
+</div>
+<p>Always validate numerical correctness before declaring victory:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">triton_out</span><span class="p">,</span> <span class="n">pytorch_ref</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">,</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">1e-2</span><span class="p">),</span> \
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Kernel output diverged from reference!&#34;</span>
+</span></span></code></pre></div><p>BF16 accumulation introduces small floating-point differences that are acceptable in practice, but they must be measured and bounded—not assumed.</p>
+<hr>
+<h3 id="the-results-the-efficiency-frontier">The Results: The Efficiency Frontier<a hidden class="anchor" aria-hidden="true" href="#the-results-the-efficiency-frontier">#</a></h3>
+<p>After tuning the tile dimensions and pipeline depth, the final Nsight trace looked like this:</p>
+<img src="/images/nsys-optimized-run.png" width="100%" alt="Nsight Systems: Optimized run — blackwell_fused_linear_kernel at 265µs, total batch time 11.237s">
+<p>The numbers tell a clean story:</p>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">Metric</th>
+          <th style="text-align: center">Baseline (Ampere fallback)</th>
+          <th style="text-align: center">First Custom Kernel</th>
+          <th style="text-align: center">Optimised Kernel</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left">Total batch time</td>
+          <td style="text-align: center">12.901 s</td>
+          <td style="text-align: center">12.650 s</td>
+          <td style="text-align: center"><strong>11.237 s</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Top kernel</td>
+          <td style="text-align: center">cutlass_80 (Ampere)</td>
+          <td style="text-align: center">blackwell_fused (spilling)</td>
+          <td style="text-align: center">blackwell_fused (tuned)</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Top kernel share</td>
+          <td style="text-align: center">61.4%</td>
+          <td style="text-align: center">90.2%</td>
+          <td style="text-align: center">80.2%</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Avg. kernel launch</td>
+          <td style="text-align: center">91 µs</td>
+          <td style="text-align: center">413 µs</td>
+          <td style="text-align: center"><strong>265 µs</strong></td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Kernel instances</td>
+          <td style="text-align: center">40,168</td>
+          <td style="text-align: center">17,585</td>
+          <td style="text-align: center">25,313</td>
+      </tr>
+      <tr>
+          <td style="text-align: left">Total kernel time</td>
+          <td style="text-align: center">3.682 s</td>
+          <td style="text-align: center">7.271 s</td>
+          <td style="text-align: center"><strong>6.711 s</strong></td>
+      </tr>
+  </tbody>
+</table>
+<p>The final run shaved <strong>1.1 seconds</strong> off the end-to-end batch generation time for Gemma 27B—on hardware that was already running the model across two nodes.</p>
+<p>Three things happened simultaneously:</p>
+<ul>
+<li><strong>System level:</strong> Launch overhead was slashed. We condensed 40,000 small kernels into ~17,000–25,000 larger, properly tile-sized ones. The GPU&rsquo;s command queue stayed full; the CPU stopped being a bottleneck.</li>
+<li><strong>Kernel level:</strong> Per-launch time dropped from the spilling peak of 413µs down to 265µs—now including the fused activation and bias work that previously required separate passes.</li>
+<li><strong>Memory level:</strong> The 5090&rsquo;s 96 MB L2 cache was being used as intended, keeping hot tiles resident rather than repeatedly evicting and re-fetching from GDDR7.</li>
+</ul>
+<hr>
+<h3 id="takeaway">Takeaway<a hidden class="anchor" aria-hidden="true" href="#takeaway">#</a></h3>
+<p>This experiment traced the path from Level 1 (fixing host-side overhead and kernel launch patterns) through Level 2 (operator fusion) and into Level 3 (arithmetic pipeline optimisation within the SM). Each level unlocked the next. The legacy Ampere fallback was the first wall; register spilling was the second; architectural-constant-aware tile search was the key that opened the door.</p>
+<p>The Blackwell architecture is genuinely new enough that the standard toolchain hasn&rsquo;t caught up everywhere. On brand-new hardware, assuming that PyTorch has found the optimal path is a reasonable default—until you run a profiler and discover it hasn&rsquo;t.</p>
+<p>Write the kernel. Measure everything. Leave no bandwidth on the table.</p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/gpu/">Gpu</a></li>
+      <li><a href="http://localhost:1313/tags/triton/">Triton</a></li>
+      <li><a href="http://localhost:1313/tags/gemma/">Gemma</a></li>
+      <li><a href="http://localhost:1313/tags/cuda/">Cuda</a></li>
+      <li><a href="http://localhost:1313/tags/optimization/">Optimization</a></li>
+      <li><a href="http://localhost:1313/tags/kernels/">Kernels</a></li>
+      <li><a href="http://localhost:1313/tags/blackwell/">Blackwell</a></li>
+    </ul>
+<nav class="paginav">
+    <a class="prev" href="http://localhost:1313/posts/profiling-deep-learning-models/">
+        <span class="title">« Prev</span>
+        <br>
+        <span>Squeeze every FLOP: Profiling AI models</span>
+    </a>
+</nav><div class="social-icons" align="left">
+    <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
+        title="X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+    </path>
+</svg>
+    </a>
+    <a href="https://www.linkedin.com/in/siddhesh-inamdar-24634694/" target="_blank" rel="noopener noreferrer me"
+        title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+</svg>
+    </a>
+    <a href="https://medium.com/@siddheshnmdr" target="_blank" rel="noopener noreferrer me"
+        title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.000000 76.000000" fill="currentColor" stroke-width="2"
+    preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(0.000000,76.000000) scale(0.100000,-0.100000)">
+        <path
+            d="M0 380 l0 -380 380 0 380 0 0 380 0 380 -380 0 -380 0 0 -380z m334 85 c30 -63 57 -115 59 -115 2 0 16 30 31 68 15 37 37 88 49 115 l20 47 76 0 76 -1 -27 -20 -28 -21 0 -151 c0 -150 0 -151 27 -179 l27 -28 -109 0 -109 0 27 28 c26 27 27 32 26 143 0 131 3 134 -71 -58 -24 -62 -48 -113 -53 -113 -6 0 -17 16 -24 35 -7 19 -36 83 -64 142 l-52 108 -3 -98 c-3 -97 -2 -99 28 -133 16 -19 30 -39 30 -44 0 -6 -31 -10 -70 -10 -45 0 -70 4 -70 11 0 6 14 27 30 46 30 33 30 35 30 151 0 116 0 118 -31 155 l-30 37 75 0 76 0 54 -115z" />
+    </g>
+</svg>
+    </a>
+    <a href="https://github.com/SidInamdar" target="_blank" rel="noopener noreferrer me"
+        title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+</div>
+</footer>
+
+  <script async src="https://subscribe-forms.beehiiv.com/embed.js"></script><iframe
+    src="https://subscribe-forms.beehiiv.com/cb315fa7-29d0-46fa-ae1f-a34a59e9d3b0" class="beehiiv-embed"
+    data-test-id="beehiiv-embed" frameborder="0" scrolling="no"
+    style="width: 100%; height: 32px; margin: 0; border-radius: 0px 0px 0px 0px !important; background-color: transparent; box-shadow: 0 0 #0000; max-width: 100%;"></iframe>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>

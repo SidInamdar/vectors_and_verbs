@@ -239,3 +239,45 @@ body .chroma .nd {
     font-size: 40px;
     line-height: 1.3;
 }
+
+/* --- Post Image Shadows --- */
+.post-content img {
+    border-radius: 10px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.18);
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+    display: block;
+}
+
+.post-content img:hover {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.28);
+    transform: translateY(-2px);
+}
+
+:root[data-theme="dark"] .post-content img {
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
+}
+
+:root[data-theme="dark"] .post-content img:hover {
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.75);
+}
+
+/* --- Mermaid: White arrows in dark theme --- */
+/* Edge lines */
+:root[data-theme="dark"] .mermaid svg .flowchart-link,
+:root[data-theme="dark"] .mermaid svg .edgePath path,
+:root[data-theme="dark"] .mermaid svg path.path {
+    stroke: #ffffff !important;
+}
+
+/* Arrowhead marker fill */
+:root[data-theme="dark"] .mermaid svg marker path,
+:root[data-theme="dark"] .mermaid svg .arrowheadPath {
+    fill: #ffffff !important;
+    stroke: #ffffff !important;
+}
+
+/* Edge label backgrounds */
+:root[data-theme="dark"] .mermaid svg .edgeLabel .label {
+    color: #ffffff;
+    background-color: transparent;
+}
