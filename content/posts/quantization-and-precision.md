@@ -1,11 +1,11 @@
 ---
-title: "The Architecture of Precision: Why Quantization Defines the AI Era"
+title: "The Architecture of Precision: Variations in model quantizations"
 date: 2026-04-05T15:19:00+05:30
 draft: false
 tags: ["artificial-intelligence", "quantization", "gpu", "inference", "llm", "hardware", "optimization", "precision"]
 categories: ["artificial-intelligence"]
 mermaid: true
-summary: "From FP32 to NF4 — a deep dive into how quantization bridges the gap between trillion-parameter models and the hardware they run on, and why 'smaller' is almost always 'faster'."
+summary: "Summary of how quantization bridges the gap between trillion-parameter models and the hardware they run on, and why 'smaller' is almost always 'faster'."
 ---
 
 In the early days of deep learning, the primary goal was raw accuracy. Researchers trained models using 32-bit floating-point precision, treating computational resources as an infinite well. However, as the industry moved from million-parameter models to trillion-parameter giants, a physical reality set in: the **Memory Wall**. Getting data *to* the GPU became the bottleneck, not the GPU's ability to crunch numbers.
@@ -137,6 +137,7 @@ The problem is **outliers**. A few activations in large language models are much
 #### FP8 — 8-bit Floating Point
 
 **Two versions:**
+
 - **E4M3** — 4 exponent bits, 3 mantissa bits → prioritizes precision
 - **E5M2** — 5 exponent bits, 2 mantissa bits → prioritizes range
 
