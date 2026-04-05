@@ -3,12 +3,48 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>http://localhost:1313/categories/artificial-intelligence/</loc>
-    <lastmod>2026-04-05T10:14:00+05:30</lastmod>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/artificial-intelligence/</loc>
-    <lastmod>2026-04-05T10:14:00+05:30</lastmod>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/categories/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/gpu/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/hardware/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/inference/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/llm/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/optimization/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/precision/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/quantization/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/posts/quantization-and-precision/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/</loc>
+    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+  </url><url>
+    <loc>http://localhost:1313/tags/blackwell/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/cuda/</loc>
@@ -17,28 +53,13 @@
     <loc>http://localhost:1313/tags/gemma/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/gpu/</loc>
-    <lastmod>2026-04-05T10:14:00+05:30</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/kernels/</loc>
-    <lastmod>2026-04-05T10:14:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/optimization/</loc>
-    <lastmod>2026-04-05T10:14:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/posts/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/gemma-triton-optimization/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2026-04-05T10:14:00+05:30</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/triton/</loc>
-    <lastmod>2026-04-05T10:14:00+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/tags/bert/</loc>
@@ -125,9 +146,6 @@
     <loc>http://localhost:1313/tags/react-pattern/</loc>
     <lastmod>2026-01-15T17:59:29+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/inference/</loc>
-    <lastmod>2026-01-13T10:52:41+05:30</lastmod>
-  </url><url>
     <loc>http://localhost:1313/tags/kv-cache/</loc>
     <lastmod>2026-01-13T10:52:41+05:30</lastmod>
   </url><url>
@@ -160,12 +178,6 @@
   </url><url>
     <loc>http://localhost:1313/tags/qlora/</loc>
     <lastmod>2026-01-12T10:52:56+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/hardware/</loc>
-    <lastmod>2026-01-11T20:21:30+05:30</lastmod>
-  </url><url>
-    <loc>http://localhost:1313/tags/llm/</loc>
-    <lastmod>2026-01-11T20:21:30+05:30</lastmod>
   </url><url>
     <loc>http://localhost:1313/posts/llm-hardware-optimization/</loc>
     <lastmod>2026-01-11T20:21:30+05:30</lastmod>

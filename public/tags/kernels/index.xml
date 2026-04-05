@@ -9,11 +9,11 @@
     <lastBuildDate>Sun, 05 Apr 2026 10:14:00 +0530</lastBuildDate>
     <atom:link href="http://localhost:1313/tags/kernels/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Speed of Thought: Optimizing Gemma with Custom Triton Kernels</title>
+      <title>Speed of Thought: Optimizing Gemma 27B with Custom Triton Kernels</title>
       <link>http://localhost:1313/posts/gemma-triton-optimization/</link>
       <pubDate>Sun, 05 Apr 2026 10:14:00 +0530</pubDate>
       <guid>http://localhost:1313/posts/gemma-triton-optimization/</guid>
-      <description>A deep dive into writing custom Triton GPU kernels to accelerate Gemma&amp;rsquo;s core operations—fused RMSNorm, rotary embeddings, and fused linear layers—from first principles.</description>
+      <description>Profiling Gemma 27B on dual RTX 5090 Blackwell GPUs, discovering a legacy CUDA path bottleneck, and building a custom Triton kernel that shaves 1.1 seconds off every inference batch.</description>
     </item>
   </channel>
 </rss>

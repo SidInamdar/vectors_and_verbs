@@ -155,7 +155,7 @@
   </header> 
   <div class="post-content"><p>Large language models are, at their core, a stack of repeating algebraic layers. Most popular research focuses on permutations of these stacks to improve inference accuracy—swapping sinusoidal positional encoding for Rotary Positional Encoding, or building Mixture-of-Experts feed-forward layers instead of a single dense layer. These architectural innovations are genuinely important, but they also create increasingly complex compute graphs that behave in unexpected ways on real hardware. Some models now require multiple GPU nodes just to load their weights.</p>
 <p>The industry has responded with excellent profiling tooling. If you haven&rsquo;t profiled a model before, <a href="/posts/profiling-deep-learning-models/">Squeeze every FLOP: Profiling AI models</a> covers the full stack—from the PyTorch Profiler down to Nsight Systems—and is a good starting point before reading this.</p>
-<p>This article documents an experiment: taking an off-the-shelf Gemma 27B model, running it on two RTX 5090 (Blackwell) GPU nodes, dissecting its performance with Nsight Systems, and methodically engineering a custom Triton kernel to fix what we found. The results were surprising, the pitfalls were humbling, and the final numbers were worth the effort.</p>
+<p>This article documents an experiment: taking an off-the-shelf Gemma 27B model, running it on two RTX 5090 (Blackwell) GPU nodes, dissecting its performance with Nsight Systems, and methodically engineering a custom Triton kernel to fix what I found. The results were surprising, the pitfalls were humbling, and the final numbers were worth the effort.</p>
 <hr>
 <h3 id="why-gemma">Why Gemma?<a hidden class="anchor" aria-hidden="true" href="#why-gemma">#</a></h3>
 <p>Google&rsquo;s Gemma family (2B, 7B, 27B, and the Gemma 2 variants) are open-weights models designed to punch well above their weight class. They incorporate several architectural refinements over vanilla transformers that make them particularly interesting from a systems engineering perspective:</p>
@@ -190,7 +190,7 @@ flowchart TD
 <img src="/images/nsys-baseline-run.png" width="100%" alt="Nsight Systems: Baseline run — cutlass kernel consuming 61.4% of GPU time">
 <p>The stat table told the story immediately. A single GEMM kernel was responsible for <strong>61.4% of total GPU wall-clock time</strong>, clocking 40,168 instances at an average of 91µs each, totalling 3.68 seconds. The kernel&rsquo;s name revealed the smoking gun:</p>
 <pre tabindex="0"><code>void cutlass::Kernel2&lt;cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16...&gt;
-</code></pre><p>In NVIDIA&rsquo;s nomenclature, <strong><code>80</code></strong> refers to the <strong>Ampere architecture</strong> (SM80, the RTX 30-series and A100). The current PyTorch stack, lacking a specific Blackwell (SM120) path tuned for Gemma&rsquo;s hidden dimensions, had silently fallen back to a four-year-old code path. We were asking a 2025 supercar to run on an engine map written for a 2021 sedan.</p>
+</code></pre><p>In NVIDIA&rsquo;s nomenclature, <strong><code>80</code></strong> refers to the <strong>Ampere architecture</strong> (SM80, the RTX 30-series and A100). The current PyTorch stack, lacking a specific Blackwell (SM120) path tuned for Gemma&rsquo;s hidden dimensions, had silently fallen back to a four-year-old code path. I was asking a 2025 supercar to run on an engine map written for a 2021 sedan.</p>
 <p>Before diving into the fix, it helps to understand the vocabulary the profiler is speaking.</p>
 <h4 id="understanding-bound">Understanding &ldquo;Bound&rdquo;<a hidden class="anchor" aria-hidden="true" href="#understanding-bound">#</a></h4>
 <p>In systems engineering, <strong>&ldquo;bound&rdquo;</strong> means <em>limited by</em>. It identifies the slowest step in the pipeline—the constraint that caps overall throughput.</p>
@@ -258,7 +258,7 @@ flowchart TD
 <h3 id="the-register-spilling-trap">The Register Spilling Trap<a hidden class="anchor" aria-hidden="true" href="#the-register-spilling-trap">#</a></h3>
 <p>The initial kernel run produced the following Nsight trace:</p>
 <img src="/images/nsys-first-kernel-run.png" width="100%" alt="Nsight Systems: First custom kernel run — blackwell_fused_linear_kernel consuming 90.2% at 413µs per launch">
-<p>The custom kernel now dominated the trace at <strong>90.2% of GPU time</strong>—but the <em>total batch time had barely improved</em>, and the per-launch cost had ballooned to <strong>413µs per launch</strong>, nearly <strong>4× slower</strong> than the Ampere fallback at 91µs. We had fewer kernel launches but each one was doing much more damage.</p>
+<p>The custom kernel now dominated the trace at <strong>90.2% of GPU time</strong>—but the <em>total batch time had barely improved</em>, and the per-launch cost had ballooned to <strong>413µs per launch</strong>, nearly <strong>4× slower</strong> than the Ampere fallback at 91µs. I had fewer kernel launches but each one was doing much more damage.</p>
 <p>The technical autopsy pointed to <strong>register spilling</strong>.</p>
 <p>The tile size chosen was $256 \times 128$. While this looked attractive for maximising L2 reuse, it was too heavy for the SM&rsquo;s register file. An SM on the RTX 5090 has a hard physical limit of <strong>65,536 registers</strong>. These are the tiny, ultra-fast workbenches where threads perform their arithmetic.</p>
 <p>The arithmetic is merciless:</p>
@@ -266,12 +266,12 @@ flowchart TD
 <li><strong>At 32 registers per thread:</strong> the SM fits 2,048 threads simultaneously — 100% occupancy.</li>
 <li><strong>At 33 registers per thread:</strong> the SM&rsquo;s bin-packing logic forces it to drop to 1,024 active threads — a <strong>50% occupancy collapse</strong> from adding a single variable.</li>
 </ul>
-<p>A $256 \times 128$ tile is asking each thread to track too many intermediate sums simultaneously. The SM, unable to fit everything in registers, began spilling overflow variables to VRAM—the very memory hierarchy we were trying to avoid. We had won the &ldquo;system war&rdquo; (fewer launches) but were losing the &ldquo;math battle&rdquo; on every single one.</p>
+<p>A $256 \times 128$ tile is asking each thread to track too many intermediate sums simultaneously. The SM, unable to fit everything in registers, began spilling overflow variables to VRAM—the very memory hierarchy I was trying to avoid. I had won the &ldquo;system war&rdquo; (fewer launches) but was losing the &ldquo;math battle&rdquo; on every single one.</p>
 <hr>
 <h3 id="the-pivot-tuning-the-tile">The Pivot: Tuning the Tile<a hidden class="anchor" aria-hidden="true" href="#the-pivot-tuning-the-tile">#</a></h3>
 <p>The fix required thinking of the SM as a <strong>job shop</strong>. In manufacturing, you don&rsquo;t give one worker a 100-step task; you decompose it into steps that fit their workbench and pipeline them. The tile was shrunk from $256 \times 128$ to $128 \times 128$, and the pipeline stages were increased to 4.</p>
 <p>This smaller tile fit cleanly within the register budget, eliminating spilling. The increased stage count gave the <strong>TMA (Tensor Memory Accelerator)</strong>—a dedicated hardware prefetch engine on Blackwell—enough lead time to fetch the next two tiles into shared memory <em>while the current tile was being computed</em>. The VRAM latency became fully hidden behind useful arithmetic.</p>
-<h4 id="why-we-cant-just-automate-this">Why We Can&rsquo;t Just Automate This<a hidden class="anchor" aria-hidden="true" href="#why-we-cant-just-automate-this">#</a></h4>
+<h4 id="why-i-cant-just-automate-this">Why I Can&rsquo;t Just Automate This<a hidden class="anchor" aria-hidden="true" href="#why-i-cant-just-automate-this">#</a></h4>
 <p>A natural question: couldn&rsquo;t a Mixed Integer Programming (MIP) solver or a stochastic autotuner find this automatically?</p>
 <p>Mathematically, yes—performance across the tile-size space is <strong>piecewise convex</strong>. There are stable plateaus where tile sizes fit the hardware, separated by &ldquo;cliffs&rdquo; where a single-register increase causes a 50% occupancy collapse. Defining the RTX 5090&rsquo;s hard constraints as a MIP yields:</p>
 <ul>
@@ -279,7 +279,7 @@ flowchart TD
 <li><strong>Register constraint:</strong> registers per thread × threads per block ≤ 64,536</li>
 <li><strong>Shared memory constraint:</strong> shared memory per block × active blocks ≤ 99 KB</li>
 </ul>
-<p>The obstacle is the JIT compiler. Triton and NVCC perform register allocation, instruction scheduling, and loop unrolling internally, and those passes interact in ways that are difficult to predict from source code. A small Triton change might trigger an LLVM optimisation that swaps high-latency arithmetic for low-latency address calculations, completely changing the register count. Because we cannot inspect the compiler&rsquo;s internal &ldquo;job schedule&rdquo; before it runs, we cannot close the MIP exactly.</p>
+<p>The obstacle is the JIT compiler. Triton and NVCC perform register allocation, instruction scheduling, and loop unrolling internally, and those passes interact in ways that are difficult to predict from source code. A small Triton change might trigger an LLVM optimisation that swaps high-latency arithmetic for low-latency address calculations, completely changing the register count. Because I cannot inspect the compiler&rsquo;s internal &ldquo;job schedule&rdquo; before it runs, I cannot close the MIP exactly.</p>
 <p>This is why <strong>heuristic search grounded in architectural constants</strong> beats pure stochastic autotuning for new hardware. A random search doesn&rsquo;t know that crossing 32→33 registers is a cliff; it treats all tile sizes as equivalent points in space. An architecture-aware heuristic can eliminate entire &ldquo;valleys&rdquo; of spilling configurations before sampling a single point, converging on the theoretical maximum with a fraction of the profiling runs. For a deeper look at the CUDA execution model that underpins all of this, see the <a href="https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html">NVIDIA CUDA Programming Guide — Programming Model</a>.</p>
 <hr>
 <h3 id="the-optimization-loop">The Optimization Loop<a hidden class="anchor" aria-hidden="true" href="#the-optimization-loop">#</a></h3>
@@ -360,7 +360,7 @@ flowchart LR
 <p>The final run shaved <strong>1.1 seconds</strong> off the end-to-end batch generation time for Gemma 27B—on hardware that was already running the model across two nodes.</p>
 <p>Three things happened simultaneously:</p>
 <ul>
-<li><strong>System level:</strong> Launch overhead was slashed. We condensed 40,000 small kernels into ~17,000–25,000 larger, properly tile-sized ones. The GPU&rsquo;s command queue stayed full; the CPU stopped being a bottleneck.</li>
+<li><strong>System level:</strong> Launch overhead was slashed. I condensed 40,000 small kernels into ~17,000–25,000 larger, properly tile-sized ones. The GPU&rsquo;s command queue stayed full; the CPU stopped being a bottleneck.</li>
 <li><strong>Kernel level:</strong> Per-launch time dropped from the spilling peak of 413µs down to 265µs—now including the fused activation and bias work that previously required separate passes.</li>
 <li><strong>Memory level:</strong> The 5090&rsquo;s 96 MB L2 cache was being used as intended, keeping hot tiles resident rather than repeatedly evicting and re-fetching from GDDR7.</li>
 </ul>
@@ -389,6 +389,11 @@ flowchart LR
         <span class="title">« Prev</span>
         <br>
         <span>Squeeze every FLOP: Profiling AI models</span>
+    </a>
+    <a class="next" href="http://localhost:1313/posts/quantization-and-precision/">
+        <span class="title">Next »</span>
+        <br>
+        <span>The Architecture of Precision: Why Quantization Defines the AI Era</span>
     </a>
 </nav><div class="social-icons" align="left">
     <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
