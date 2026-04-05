@@ -13,7 +13,7 @@ Large language models are, at their core, a stack of repeating algebraic layers.
 
 The industry has responded with excellent profiling tooling. If you haven't profiled a model before, [Squeeze every FLOP: Profiling AI models](/posts/profiling-deep-learning-models/) covers the full stack—from the PyTorch Profiler down to Nsight Systems—and is a good starting point before reading this.
 
-This article documents an experiment: taking an off-the-shelf Gemma 27B model, running it on two RTX 5090 (Blackwell) GPU nodes, dissecting its performance with Nsight Systems, and methodically engineering a custom Triton kernel to fix what we found. The results were surprising, the pitfalls were humbling, and the final numbers were worth the effort.
+This article documents an experiment: taking an off-the-shelf Gemma 27B model, running it on two RTX 5090 (Blackwell) GPU nodes, dissecting its performance with Nsight Systems, and methodically engineering a custom Triton kernel to fix what I found. The results were surprising, the pitfalls were humbling, and the final numbers were worth the effort.
 
 ---
 
@@ -63,7 +63,7 @@ The stat table told the story immediately. A single GEMM kernel was responsible 
 void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16...>
 ```
 
-In NVIDIA's nomenclature, **`80`** refers to the **Ampere architecture** (SM80, the RTX 30-series and A100). The current PyTorch stack, lacking a specific Blackwell (SM120) path tuned for Gemma's hidden dimensions, had silently fallen back to a four-year-old code path. We were asking a 2025 supercar to run on an engine map written for a 2021 sedan.
+In NVIDIA's nomenclature, **`80`** refers to the **Ampere architecture** (SM80, the RTX 30-series and A100). The current PyTorch stack, lacking a specific Blackwell (SM120) path tuned for Gemma's hidden dimensions, had silently fallen back to a four-year-old code path. I was asking a 2025 supercar to run on an engine map written for a 2021 sedan.
 
 Before diving into the fix, it helps to understand the vocabulary the profiler is speaking.
 
@@ -148,7 +148,7 @@ The initial kernel run produced the following Nsight trace:
 
 <img src="/images/nsys-first-kernel-run.png" width="100%" alt="Nsight Systems: First custom kernel run — blackwell_fused_linear_kernel consuming 90.2% at 413µs per launch">
 
-The custom kernel now dominated the trace at **90.2% of GPU time**—but the *total batch time had barely improved*, and the per-launch cost had ballooned to **413µs per launch**, nearly **4× slower** than the Ampere fallback at 91µs. We had fewer kernel launches but each one was doing much more damage.
+The custom kernel now dominated the trace at **90.2% of GPU time**—but the *total batch time had barely improved*, and the per-launch cost had ballooned to **413µs per launch**, nearly **4× slower** than the Ampere fallback at 91µs. I had fewer kernel launches but each one was doing much more damage.
 
 The technical autopsy pointed to **register spilling**.
 
@@ -159,7 +159,7 @@ The arithmetic is merciless:
 - **At 32 registers per thread:** the SM fits 2,048 threads simultaneously — 100% occupancy.
 - **At 33 registers per thread:** the SM's bin-packing logic forces it to drop to 1,024 active threads — a **50% occupancy collapse** from adding a single variable.
 
-A $256 \times 128$ tile is asking each thread to track too many intermediate sums simultaneously. The SM, unable to fit everything in registers, began spilling overflow variables to VRAM—the very memory hierarchy we were trying to avoid. We had won the "system war" (fewer launches) but were losing the "math battle" on every single one.
+A $256 \times 128$ tile is asking each thread to track too many intermediate sums simultaneously. The SM, unable to fit everything in registers, began spilling overflow variables to VRAM—the very memory hierarchy I was trying to avoid. I had won the "system war" (fewer launches) but was losing the "math battle" on every single one.
 
 ---
 
@@ -169,7 +169,7 @@ The fix required thinking of the SM as a **job shop**. In manufacturing, you don
 
 This smaller tile fit cleanly within the register budget, eliminating spilling. The increased stage count gave the **TMA (Tensor Memory Accelerator)**—a dedicated hardware prefetch engine on Blackwell—enough lead time to fetch the next two tiles into shared memory *while the current tile was being computed*. The VRAM latency became fully hidden behind useful arithmetic.
 
-#### Why We Can't Just Automate This
+#### Why I Can't Just Automate This
 
 A natural question: couldn't a Mixed Integer Programming (MIP) solver or a stochastic autotuner find this automatically?
 
@@ -179,7 +179,7 @@ Mathematically, yes—performance across the tile-size space is **piecewise conv
 - **Register constraint:** registers per thread × threads per block ≤ 64,536
 - **Shared memory constraint:** shared memory per block × active blocks ≤ 99 KB
 
-The obstacle is the JIT compiler. Triton and NVCC perform register allocation, instruction scheduling, and loop unrolling internally, and those passes interact in ways that are difficult to predict from source code. A small Triton change might trigger an LLVM optimisation that swaps high-latency arithmetic for low-latency address calculations, completely changing the register count. Because we cannot inspect the compiler's internal "job schedule" before it runs, we cannot close the MIP exactly.
+The obstacle is the JIT compiler. Triton and NVCC perform register allocation, instruction scheduling, and loop unrolling internally, and those passes interact in ways that are difficult to predict from source code. A small Triton change might trigger an LLVM optimisation that swaps high-latency arithmetic for low-latency address calculations, completely changing the register count. Because I cannot inspect the compiler's internal "job schedule" before it runs, I cannot close the MIP exactly.
 
 This is why **heuristic search grounded in architectural constants** beats pure stochastic autotuning for new hardware. A random search doesn't know that crossing 32→33 registers is a cliff; it treats all tile sizes as equivalent points in space. An architecture-aware heuristic can eliminate entire "valleys" of spilling configurations before sampling a single point, converging on the theoretical maximum with a fraction of the profiling runs. For a deeper look at the CUDA execution model that underpins all of this, see the [NVIDIA CUDA Programming Guide — Programming Model](https://docs.nvidia.com/cuda/cuda-programming-guide/01-introduction/programming-model.html).
 
@@ -239,7 +239,7 @@ The final run shaved **1.1 seconds** off the end-to-end batch generation time fo
 
 Three things happened simultaneously:
 
-- **System level:** Launch overhead was slashed. We condensed 40,000 small kernels into ~17,000–25,000 larger, properly tile-sized ones. The GPU's command queue stayed full; the CPU stopped being a bottleneck.
+- **System level:** Launch overhead was slashed. I condensed 40,000 small kernels into ~17,000–25,000 larger, properly tile-sized ones. The GPU's command queue stayed full; the CPU stopped being a bottleneck.
 - **Kernel level:** Per-launch time dropped from the spilling peak of 413µs down to 265µs—now including the fused activation and bias work that previously required separate passes.
 - **Memory level:** The 5090's 96 MB L2 cache was being used as intended, keeping hot tiles resident rather than repeatedly evicting and re-fetching from GDDR7.
 
