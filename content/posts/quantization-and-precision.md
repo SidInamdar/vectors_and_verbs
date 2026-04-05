@@ -1,6 +1,6 @@
 ---
 title: "The Architecture of Precision: Variations in model quantizations"
-date: 2026-04-05T15:19:00+05:30
+date: 2026-04-06T15:19:00+05:30
 draft: false
 tags: ["artificial-intelligence", "quantization", "gpu", "inference", "llm", "hardware", "optimization", "precision"]
 categories: ["artificial-intelligence"]
