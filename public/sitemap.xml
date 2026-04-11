@@ -2,278 +2,278 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://localhost:1313/categories/artificial-intelligence/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/tags/artificial-intelligence/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/artificial-intelligence/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/categories/artificial-intelligence/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/categories/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/gpu/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/tags/gpu/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/hardware/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/tags/hardware/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/inference/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/tags/inference/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/llm/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/tags/llm/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/optimization/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/tags/optimization/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/posts/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/precision/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/tags/precision/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/quantization/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/tags/quantization/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/tags/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/quantization-and-precision/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/posts/quantization-and-precision/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/</loc>
-    <lastmod>2026-04-05T15:19:00+05:30</lastmod>
+    <loc>https://vectorsandverbs.com/</loc>
+    <lastmod>2026-04-06T15:19:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/blackwell/</loc>
+    <loc>https://vectorsandverbs.com/tags/blackwell/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/cuda/</loc>
+    <loc>https://vectorsandverbs.com/tags/cuda/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/gemma/</loc>
+    <loc>https://vectorsandverbs.com/tags/gemma/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/kernels/</loc>
+    <loc>https://vectorsandverbs.com/tags/kernels/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/gemma-triton-optimization/</loc>
+    <loc>https://vectorsandverbs.com/posts/gemma-triton-optimization/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/triton/</loc>
+    <loc>https://vectorsandverbs.com/tags/triton/</loc>
     <lastmod>2026-04-05T10:14:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/bert/</loc>
+    <loc>https://vectorsandverbs.com/tags/bert/</loc>
     <lastmod>2026-03-29T08:29:10+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/profiling/</loc>
+    <loc>https://vectorsandverbs.com/tags/profiling/</loc>
     <lastmod>2026-03-29T08:29:10+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/pytorch/</loc>
+    <loc>https://vectorsandverbs.com/tags/pytorch/</loc>
     <lastmod>2026-03-29T08:29:10+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/profiling-deep-learning-models/</loc>
+    <loc>https://vectorsandverbs.com/posts/profiling-deep-learning-models/</loc>
     <lastmod>2026-03-29T08:29:10+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/bertscore/</loc>
+    <loc>https://vectorsandverbs.com/tags/bertscore/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/bleu/</loc>
+    <loc>https://vectorsandverbs.com/tags/bleu/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/comet/</loc>
+    <loc>https://vectorsandverbs.com/tags/comet/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/evaluation/</loc>
+    <loc>https://vectorsandverbs.com/tags/evaluation/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/g-eval/</loc>
+    <loc>https://vectorsandverbs.com/tags/g-eval/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/large-language-models/</loc>
+    <loc>https://vectorsandverbs.com/tags/large-language-models/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/large-language-models/</loc>
+    <loc>https://vectorsandverbs.com/categories/large-language-models/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/llm-as-a-judge/</loc>
+    <loc>https://vectorsandverbs.com/tags/llm-as-a-judge/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/meteor/</loc>
+    <loc>https://vectorsandverbs.com/tags/meteor/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/metrics/</loc>
+    <loc>https://vectorsandverbs.com/tags/metrics/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/evaluation-metrics/</loc>
+    <loc>https://vectorsandverbs.com/posts/evaluation-metrics/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/rouge/</loc>
+    <loc>https://vectorsandverbs.com/tags/rouge/</loc>
     <lastmod>2026-01-21T23:40:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/agentic-workflows/</loc>
+    <loc>https://vectorsandverbs.com/tags/agentic-workflows/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/anthropic/</loc>
+    <loc>https://vectorsandverbs.com/tags/anthropic/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/fastmcp/</loc>
+    <loc>https://vectorsandverbs.com/tags/fastmcp/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/json-rpc/</loc>
+    <loc>https://vectorsandverbs.com/tags/json-rpc/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/llm-orchestration/</loc>
+    <loc>https://vectorsandverbs.com/tags/llm-orchestration/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/mcp/</loc>
+    <loc>https://vectorsandverbs.com/tags/mcp/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/sse/</loc>
+    <loc>https://vectorsandverbs.com/tags/sse/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/standardization/</loc>
+    <loc>https://vectorsandverbs.com/tags/standardization/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/model-context-protocol/</loc>
+    <loc>https://vectorsandverbs.com/posts/model-context-protocol/</loc>
     <lastmod>2026-01-15T20:58:53+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/agentic-workflows/</loc>
+    <loc>https://vectorsandverbs.com/posts/agentic-workflows/</loc>
     <lastmod>2026-01-15T17:59:29+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/rag/</loc>
+    <loc>https://vectorsandverbs.com/tags/rag/</loc>
     <lastmod>2026-01-15T17:59:29+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/react-pattern/</loc>
+    <loc>https://vectorsandverbs.com/tags/react-pattern/</loc>
     <lastmod>2026-01-15T17:59:29+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/kv-cache/</loc>
+    <loc>https://vectorsandverbs.com/tags/kv-cache/</loc>
     <lastmod>2026-01-13T10:52:41+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/radixattention/</loc>
+    <loc>https://vectorsandverbs.com/tags/radixattention/</loc>
     <lastmod>2026-01-13T10:52:41+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/sglang/</loc>
+    <loc>https://vectorsandverbs.com/tags/sglang/</loc>
     <lastmod>2026-01-13T10:52:41+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/kv-cache/</loc>
+    <loc>https://vectorsandverbs.com/posts/kv-cache/</loc>
     <lastmod>2026-01-13T10:52:41+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/transformer/</loc>
+    <loc>https://vectorsandverbs.com/tags/transformer/</loc>
     <lastmod>2026-01-13T10:52:41+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/vllm/</loc>
+    <loc>https://vectorsandverbs.com/tags/vllm/</loc>
     <lastmod>2026-01-13T10:52:41+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/parameter-efficient-fine-tuning/</loc>
+    <loc>https://vectorsandverbs.com/posts/parameter-efficient-fine-tuning/</loc>
     <lastmod>2026-01-12T10:52:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/fine-tuning/</loc>
+    <loc>https://vectorsandverbs.com/tags/fine-tuning/</loc>
     <lastmod>2026-01-12T10:52:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/lora/</loc>
+    <loc>https://vectorsandverbs.com/tags/lora/</loc>
     <lastmod>2026-01-12T10:52:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/peft/</loc>
+    <loc>https://vectorsandverbs.com/tags/peft/</loc>
     <lastmod>2026-01-12T10:52:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/qlora/</loc>
+    <loc>https://vectorsandverbs.com/tags/qlora/</loc>
     <lastmod>2026-01-12T10:52:56+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/llm-hardware-optimization/</loc>
+    <loc>https://vectorsandverbs.com/posts/llm-hardware-optimization/</loc>
     <lastmod>2026-01-11T20:21:30+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/feedforward-networks/</loc>
+    <loc>https://vectorsandverbs.com/posts/feedforward-networks/</loc>
     <lastmod>2026-01-10T20:20:14+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/deep-learning/</loc>
+    <loc>https://vectorsandverbs.com/tags/deep-learning/</loc>
     <lastmod>2026-01-10T20:20:14+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/moe/</loc>
+    <loc>https://vectorsandverbs.com/tags/moe/</loc>
     <lastmod>2026-01-10T20:20:14+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/neural-networks/</loc>
+    <loc>https://vectorsandverbs.com/tags/neural-networks/</loc>
     <lastmod>2026-01-10T20:20:14+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/swiglu/</loc>
+    <loc>https://vectorsandverbs.com/tags/swiglu/</loc>
     <lastmod>2026-01-10T20:20:14+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/attention/</loc>
+    <loc>https://vectorsandverbs.com/tags/attention/</loc>
     <lastmod>2026-01-10T01:43:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/attention-mechanisms/</loc>
+    <loc>https://vectorsandverbs.com/posts/attention-mechanisms/</loc>
     <lastmod>2026-01-10T01:43:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/math/</loc>
+    <loc>https://vectorsandverbs.com/tags/math/</loc>
     <lastmod>2026-01-09T21:45:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/nlp/</loc>
+    <loc>https://vectorsandverbs.com/tags/nlp/</loc>
     <lastmod>2026-01-09T21:45:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/tech/</loc>
+    <loc>https://vectorsandverbs.com/categories/tech/</loc>
     <lastmod>2026-01-09T21:45:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/positional-embeddings/</loc>
+    <loc>https://vectorsandverbs.com/posts/positional-embeddings/</loc>
     <lastmod>2026-01-09T21:45:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/transformers/</loc>
+    <loc>https://vectorsandverbs.com/tags/transformers/</loc>
     <lastmod>2026-01-09T21:45:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/embeddings/</loc>
+    <loc>https://vectorsandverbs.com/categories/embeddings/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/fasttext/</loc>
+    <loc>https://vectorsandverbs.com/tags/fasttext/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/glove/</loc>
+    <loc>https://vectorsandverbs.com/tags/glove/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/glove-and-fasttext/</loc>
+    <loc>https://vectorsandverbs.com/posts/glove-and-fasttext/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/word-embeddings/</loc>
+    <loc>https://vectorsandverbs.com/tags/word-embeddings/</loc>
     <lastmod>2026-01-08T00:10:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/word-embeddings/</loc>
+    <loc>https://vectorsandverbs.com/posts/word-embeddings/</loc>
     <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/static-embeddings/</loc>
+    <loc>https://vectorsandverbs.com/tags/static-embeddings/</loc>
     <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/word2vec/</loc>
+    <loc>https://vectorsandverbs.com/tags/word2vec/</loc>
     <lastmod>2026-01-07T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/byte-pair-encoding/</loc>
+    <loc>https://vectorsandverbs.com/tags/byte-pair-encoding/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/sentencepiece/</loc>
+    <loc>https://vectorsandverbs.com/tags/sentencepiece/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/the-dna-of-language/</loc>
+    <loc>https://vectorsandverbs.com/posts/the-dna-of-language/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/categories/tokenization/</loc>
+    <loc>https://vectorsandverbs.com/tags/tokenization/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/tokenization/</loc>
+    <loc>https://vectorsandverbs.com/categories/tokenization/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/unigram/</loc>
+    <loc>https://vectorsandverbs.com/tags/unigram/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/wordpiece/</loc>
+    <loc>https://vectorsandverbs.com/tags/wordpiece/</loc>
     <lastmod>2026-01-05T00:23:31+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/demo/</loc>
+    <loc>https://vectorsandverbs.com/tags/demo/</loc>
     <lastmod>2026-01-04T09:00:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/tags/hugo/</loc>
+    <loc>https://vectorsandverbs.com/tags/hugo/</loc>
     <lastmod>2026-01-04T09:00:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/posts/first-post/</loc>
+    <loc>https://vectorsandverbs.com/posts/first-post/</loc>
     <lastmod>2026-01-04T09:00:00+05:30</lastmod>
   </url><url>
-    <loc>http://localhost:1313/about/</loc>
+    <loc>https://vectorsandverbs.com/about/</loc>
   </url><url>
-    <loc>http://localhost:1313/search/</loc>
+    <loc>https://vectorsandverbs.com/search/</loc>
   </url>
 </urlset>

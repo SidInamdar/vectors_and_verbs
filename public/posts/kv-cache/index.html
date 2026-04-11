@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>The Need For Speed: KV Cache and memory optimization at Inference | Vectors &amp; Verbs</title>
 <meta name="keywords" content="artificial-intelligence, large-language-models, inference, kv-cache, transformer, vLLM, SGLang, RadixAttention">
 <meta name="description" content="An introduction to KV Caching and its role in optimizing Transformer inference.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/kv-cache/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.6e08a867ed9f4aac96600166f644e24c654e0ff59c4b361af3ddbb5e45b15f76.css" integrity="sha256-bgioZ&#43;2fSqyWYAFm9kTiTGVOD/WcSzYa8927XkWxX3Y=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="canonical" href="https://vectorsandverbs.com/posts/kv-cache/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5e242e78b8a6116b995763faf8a4603e8105633124ba846b519904ec6782cc0e.css" integrity="sha256-XiQueLimEWuZV2P6&#43;KRgPoEFYzEkuoRrUZkE7GeCzA4=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://vectorsandverbs.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://vectorsandverbs.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://vectorsandverbs.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://vectorsandverbs.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://vectorsandverbs.com/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/kv-cache/">
+<link rel="alternate" hreflang="en" href="https://vectorsandverbs.com/posts/kv-cache/">
 <noscript>
     <style>
         #theme-toggle,
@@ -87,13 +87,82 @@
 
 
 
+<meta property="og:url" content="https://vectorsandverbs.com/posts/kv-cache/">
+  <meta property="og:site_name" content="Vectors &amp; Verbs">
+  <meta property="og:title" content="The Need For Speed: KV Cache and memory optimization at Inference">
+  <meta property="og:description" content="An introduction to KV Caching and its role in optimizing Transformer inference.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-13T10:52:41+05:30">
+    <meta property="article:modified_time" content="2026-01-13T10:52:41+05:30">
+    <meta property="article:tag" content="Artificial-Intelligence">
+    <meta property="article:tag" content="Large-Language-Models">
+    <meta property="article:tag" content="Inference">
+    <meta property="article:tag" content="Kv-Cache">
+    <meta property="article:tag" content="Transformer">
+    <meta property="article:tag" content="VLLM">
 
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="The Need For Speed: KV Cache and memory optimization at Inference">
+  <meta name="twitter:description" content="An introduction to KV Caching and its role in optimizing Transformer inference.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://vectorsandverbs.com/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "The Need For Speed: KV Cache and memory optimization at Inference",
+      "item": "https://vectorsandverbs.com/posts/kv-cache/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "The Need For Speed: KV Cache and memory optimization at Inference",
+  "name": "The Need For Speed: KV Cache and memory optimization at Inference",
+  "description": "An introduction to KV Caching and its role in optimizing Transformer inference.",
+  "keywords": [
+    "artificial-intelligence", "large-language-models", "inference", "kv-cache", "transformer", "vLLM", "SGLang", "RadixAttention"
+  ],
+  "articleBody": "Transformer architecture is recursive; it has a self-referential structure. Unlike ‘recurrent’ networks which have a feedback loop at each stage, transformers process tokens entirely through all the layers and then feed the generated text back into the model. The model repeats this computation until generation stops—this is the autoregressive nature of modern LLMs. The entire network waits for a token to be processed in a particular layer, wasting time and resources. Furthermore, the model must remember the redundant computations of the past. For models intended to handle context windows of 128,000 tokens or more—such as GPT-4 or Llama-3—this redundancy would render real-time generation physically and economically impossible. Hence, caching is necessary to optimize the inference process.\nKV Caching of attention layers is not a mere software optimization; it is a fundamental architectural component of the inference runtime. It allows the model to store the Key and Value pair states of past tokens in GPU memory.\nFor a sequence of tokens in autoregressive generation, the model’s first token effectively “waits” until the final token output is generated. This creates $O(N^2)$ computational complexity if not optimized.\nAnalogy: Imagine a child memorizing chapters from a book.\nNormal Caching: He memorizes the first chapter. To learn the second, he memorizes the first chapter again and then the second. KV Caching: The child writes down a summary of the first chapter that is relevant to the second before moving on. However, this creates a “Memory Wall”: if enough chapters are introduced, the desk becomes cluttered with sticky notes, leaving no space to work. Similarly, KV Caching will consume all available GPU space if not managed properly. Hardware Reality: Bandwidth, Latency, and Memory LLM Inference consists of two phases with radically different hardware characteristics:\nPhase 1: Prefill When a user sends a prompt (e.g., “Summarize this 5,000-word essay!”) to the model.\nOperation: The GPU performs massive matrix-matrix multiplications (GEMMs) by projecting embeddings against weight matrices. Hardware State: CUDA cores are completely saturated; the bottleneck is how fast the chip can perform math. Arithmetic Intensity: Very High. Operations are completed on all tokens simultaneously. KV Cache: The model computes Key and Value states for all tokens and writes them to memory. Phase 2: Decode When the model generates tokens one by one.\nOperation: The model has one token of input and must produce one token of output. Hardware State: The GPU loads the entire KV cache context and the model weights just to generate a single token. Arithmetic Intensity: Low. Only a few operations are needed compared to the massive amount of memory moved. The Memory Wall: Compute cores sit idle while waiting for data to be loaded from memory (HBM). $$ \\text{Arithmetic Intensity} = \\frac{\\text{FLOPs}}{\\text{Bytes}} $$\nAssume: Weights = $M$ Bytes, KV Cache = $C$ Bytes. For $MN$ elements, Computation ($FLOPs$) $\\approx 2MN$. Data Moved = $M$ (weights) + $C$ (KV Cache). Since $C$ is usually very small compared to $M$ during early generation:\n$$ AI_{decode} \\approx \\frac{2MN}{M + C} \\approx 2 \\text{ OPS/Byte} $$\nH100 GPUs have a peak compute of ~1,000 TFLOPS but a bandwidth of $\\approx 3.35 \\text{ TB/s}$, resulting in an $AI \\approx 300 \\text{ OPS/Byte}$. This means the GPU runs at less than 1% of its peak compute during token generation. The speed of generation (tokens per second) is strictly limited by how fast we can stream the KV cache and weights from memory.\nTensor Mechanics and Capacity Planning KV Cache memory grows linearly with context length. In standard Multi-Head Attention (MHA), the KV Cache consists of two tensors per layer (Key and Value). For Batch Size $B$, Sequence Length $L$, Number of Heads $H$, and Head Dimension $D$, the total size is:\n$$Memory_{KV} = 2 \\times Layers \\times N_{Heads} \\times L \\times D \\times \\text{Precision}$$\nFor example, a model like Llama-3 70B with a context of 100,000 tokens:\n$$Memory_{token} = 2 \\times 80 \\times 8 \\times 128 \\times 2 = 327,680 \\text{ bytes} \\approx 0.32 \\text{ MB per token}$$ $$\\text{Total Cache} = 0.32 \\text{ MB} \\times 100,000 = 32,000 \\text{ MB} = 32 \\text{ GB}$$\nThis highlights the severity of the problem: a single large-context prompt can burn through 32GB of GPU memory. Architectural revolutions like Grouped-Query Attention (GQA) help by reducing the number of KV heads, which you can read about in this article.\nHowever, even with GQA, using continuous memory blocks leads to a fragmentation crisis:\nInternal Fragmentation (Over-provisioning): Systems often reserve space for the maximum possible context length, locking away memory even if the request is short. External Fragmentation: Small, non-contiguous blocks of free memory cannot be used to store a single larger context. Reservation Inefficiency: Memory is often reserved for tokens that haven’t been generated yet. To solve this, modern runtimes implement techniques like PagedAttention and RadixAttention.\nvLLM and PagedAttention vLLM is a fundamental re-architecture of LLM serving. It shifts from physical memory allocation to virtual memory, using a PagedAttention algorithm borrowed from Operating Systems.\nThe OS Analogy: In classical memory management, a program “sees” large continuous blocks of RAM. In reality, the OS breaks data into small, fixed-size “pages” and scatters them wherever physical RAM is available. A Page Table maps logical requests to these physical addresses.\nvLLM applies this to the KV Cache:\nLogical KV Blocks: The sequence of tokens as the model “sees” them (continuous). Physical KV Blocks: The actual storage locations in GPU HBM (scattered). Block Table: The dictionary that maps the logical view to physical reality. $$Address(K_t) = \\text{BasePtr} + (P_{block} \\times \\text{BlockStride}) + (O_{idx} \\times \\text{TokenStride})$$\nThis allows tensors to be located anywhere in memory. A sequence logcially spanning tokens $[0…31]$ might be stored in Physical Blocks #4 and #99, which are gigabytes apart.\nEfficiency Gains: Pre-vLLM systems often wasted up to 80% of memory. In vLLM, waste is capped at $\\frac{B-1}{\\text{Tokens}}$ (where $B$ is block size). This abstraction also enables Copy-on-Write for parallel sampling: multiple outputs for one prompt can share the same physical blocks for the prompt’s KV cache, only creating new blocks when they start to diverge.\nSGLang and RadixAttention While vLLM solved the spatial problem of memory allocation, SGLang (Structured Generation Language) addresses the structural and temporal problems. LLM use cases often share massive amounts of prefix memory (e.g., a long system prompt used across many chats).\nRadixAttention: The Memory Tree SGLang views memory as a Radix Tree. It manages the KV cache at the level of token sequences rather than individual requests.\nIf a user explores a maze and hits a dead end, they reset. But if they have a “GPS” (Radix Tree), the system persists a map of every path ever walked. If a new user starts a path that has been explored before (e.g., “You are a helpful assistant…”), the system “teleports” them to the existing state in the cache.\nNodes: Represent a state of the KV Cache. Edges: Sequences of tokens transitioning between states. Values: Pointers to physical blocks of memory. SGLang uses LRU (Least Recently Used) eviction policies to manage the finite GPU memory, pruning old branches or leaf nodes when space is needed for new prompts.\nStructured Generation: Output Taming When requests demand specific formats (JSON, multiple choice, etc.), SGLang introduces Compressed Finite State Machines (FSM). This restricts the model’s vocabulary to ensure valid outputs.\nRegex Compilation: The user’s constraint is compiled into an FSM graph. State Tracking: The system tracks the current state as tokens are generated. Vocabulary Masking: Invalid tokens are masked by manipulating logits ($z$): $$z'_i = \\begin{cases} z_i \u0026 \\text{if } i \\in S_{valid} \\\\ -\\infty \u0026 \\text{if } i \\notin S_{valid} \\end{cases}$$ Standard masking is expensive, so SGLang uses Jump-Forward Decoding: it determines deterministic characters (like {} in JSON) automatically and “jumps” over them without querying the model. This can make structured generation up to 3x faster.\n",
+  "wordCount" : "1292",
+  "inLanguage": "en",
+  "datePublished": "2026-01-13T10:52:41+05:30",
+  "dateModified": "2026-01-13T10:52:41+05:30",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://vectorsandverbs.com/posts/kv-cache/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Vectors \u0026 Verbs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://vectorsandverbs.com/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <a href="https://vectorsandverbs.com/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -119,17 +188,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://vectorsandverbs.com/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About Me">
+                <a href="https://vectorsandverbs.com/about/" title="About Me">
                     <span>About Me</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://vectorsandverbs.com/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -140,7 +209,7 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://vectorsandverbs.com/">Home</a>&nbsp;»&nbsp;<a href="https://vectorsandverbs.com/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       The Need For Speed: KV Cache and memory optimization at Inference
     </h1>
@@ -190,7 +259,7 @@ $$</p>
 <p>For example, a model like Llama-3 70B with a context of 100,000 tokens:</p>
 <p>$$Memory_{token} = 2 \times 80 \times 8 \times 128 \times 2 = 327,680 \text{ bytes} \approx 0.32 \text{ MB per token}$$
 $$\text{Total Cache} = 0.32 \text{ MB} \times 100,000 = 32,000 \text{ MB} = 32 \text{ GB}$$</p>
-<p>This highlights the severity of the problem: a single large-context prompt can burn through 32GB of GPU memory. Architectural revolutions like <strong>Grouped-Query Attention (GQA)</strong> help by reducing the number of KV heads, which you can read about in <a href="http://localhost:1313/posts/attention-mechanisms/">this article</a>.</p>
+<p>This highlights the severity of the problem: a single large-context prompt can burn through 32GB of GPU memory. Architectural revolutions like <strong>Grouped-Query Attention (GQA)</strong> help by reducing the number of KV heads, which you can read about in <a href="https://vectorsandverbs.com/posts/attention-mechanisms/">this article</a>.</p>
 <p>However, even with GQA, using continuous memory blocks leads to a <strong>fragmentation crisis</strong>:</p>
 <ol>
 <li><strong>Internal Fragmentation (Over-provisioning):</strong> Systems often reserve space for the <em>maximum</em> possible context length, locking away memory even if the request is short.</li>
@@ -243,22 +312,22 @@ $$z'_i = \begin{cases} z_i & \text{if } i \in S_{valid} \\ -\infty & \text{if } 
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
-      <li><a href="http://localhost:1313/tags/large-language-models/">Large-Language-Models</a></li>
-      <li><a href="http://localhost:1313/tags/inference/">Inference</a></li>
-      <li><a href="http://localhost:1313/tags/kv-cache/">Kv-Cache</a></li>
-      <li><a href="http://localhost:1313/tags/transformer/">Transformer</a></li>
-      <li><a href="http://localhost:1313/tags/vllm/">VLLM</a></li>
-      <li><a href="http://localhost:1313/tags/sglang/">SGLang</a></li>
-      <li><a href="http://localhost:1313/tags/radixattention/">RadixAttention</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/large-language-models/">Large-Language-Models</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/inference/">Inference</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/kv-cache/">Kv-Cache</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/transformer/">Transformer</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/vllm/">VLLM</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/sglang/">SGLang</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/radixattention/">RadixAttention</a></li>
     </ul>
 <nav class="paginav">
-    <a class="prev" href="http://localhost:1313/posts/parameter-efficient-fine-tuning/">
+    <a class="prev" href="https://vectorsandverbs.com/posts/parameter-efficient-fine-tuning/">
         <span class="title">« Prev</span>
         <br>
         <span>Crafty Patchwork: Parameter-Efficient Fine-Tuning</span>
     </a>
-    <a class="next" href="http://localhost:1313/posts/agentic-workflows/">
+    <a class="next" href="https://vectorsandverbs.com/posts/agentic-workflows/">
         <span class="title">Next »</span>
         <br>
         <span>Electronic Executives: RAG, ReAct and MCP</span>
@@ -311,7 +380,7 @@ $$z'_i = \begin{cases} z_i & \text{if } i \in S_{valid} \\ -\infty & \text{if } 
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+        <span>&copy; 2026 <a href="https://vectorsandverbs.com/">Vectors &amp; Verbs</a></span> · 
 
     <span>
         Powered by

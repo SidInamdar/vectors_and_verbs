@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Squeeze every FLOP: Profiling AI models | Vectors &amp; Verbs</title>
 <meta name="keywords" content="artificial-intelligence, gpu, pytorch, profiling, bert, cuda">
 <meta name="description" content="This guide covers profiling at the code, framework, and hardware levels using PyTorch and Nsight Systems.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/profiling-deep-learning-models/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.6e08a867ed9f4aac96600166f644e24c654e0ff59c4b361af3ddbb5e45b15f76.css" integrity="sha256-bgioZ&#43;2fSqyWYAFm9kTiTGVOD/WcSzYa8927XkWxX3Y=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="canonical" href="https://vectorsandverbs.com/posts/profiling-deep-learning-models/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5e242e78b8a6116b995763faf8a4603e8105633124ba846b519904ec6782cc0e.css" integrity="sha256-XiQueLimEWuZV2P6&#43;KRgPoEFYzEkuoRrUZkE7GeCzA4=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://vectorsandverbs.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://vectorsandverbs.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://vectorsandverbs.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://vectorsandverbs.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://vectorsandverbs.com/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/profiling-deep-learning-models/">
+<link rel="alternate" hreflang="en" href="https://vectorsandverbs.com/posts/profiling-deep-learning-models/">
 <noscript>
     <style>
         #theme-toggle,
@@ -92,13 +92,82 @@
     mermaid.initialize({ startOnLoad: true });
 </script>
 
+<meta property="og:url" content="https://vectorsandverbs.com/posts/profiling-deep-learning-models/">
+  <meta property="og:site_name" content="Vectors &amp; Verbs">
+  <meta property="og:title" content="Squeeze every FLOP: Profiling AI models">
+  <meta property="og:description" content="This guide covers profiling at the code, framework, and hardware levels using PyTorch and Nsight Systems.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-03-29T08:29:10+05:30">
+    <meta property="article:modified_time" content="2026-03-29T08:29:10+05:30">
+    <meta property="article:tag" content="Artificial-Intelligence">
+    <meta property="article:tag" content="Gpu">
+    <meta property="article:tag" content="Pytorch">
+    <meta property="article:tag" content="Profiling">
+    <meta property="article:tag" content="Bert">
+    <meta property="article:tag" content="Cuda">
 
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Squeeze every FLOP: Profiling AI models">
+  <meta name="twitter:description" content="This guide covers profiling at the code, framework, and hardware levels using PyTorch and Nsight Systems.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://vectorsandverbs.com/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Squeeze every FLOP: Profiling AI models",
+      "item": "https://vectorsandverbs.com/posts/profiling-deep-learning-models/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Squeeze every FLOP: Profiling AI models",
+  "name": "Squeeze every FLOP: Profiling AI models",
+  "description": "This guide covers profiling at the code, framework, and hardware levels using PyTorch and Nsight Systems.",
+  "keywords": [
+    "artificial-intelligence", "gpu", "pytorch", "profiling", "bert", "cuda"
+  ],
+  "articleBody": "Getting a model to train and converge is only half the battle. When you’re scaling up to large models on enterprise hardware—especially when orchestrating jobs across a heavy compute cluster—leaving performance on the table isn’t an option.\nWhy do we profile? Because modern deep learning frameworks abstract away the hardware so well that it’s dangerously easy to write inefficient code. Profiling moves optimization from a guessing game to a precise science.\nThe Test Subject: BERT Architecture To keep things grounded, we’ll use a standard BERT model as our running example. Transformers like BERT are highly parallelizable but notoriously memory-hungry, making them excellent candidates for profiling.\nBERT Model Flowchart flowchart TD Tokens[\"Input Tokens(Text Context)\"] --\u003e Embed[\"Embedding Layer(Token/Positional/Segment)\"] subgraph Layers [\"Deep Stack (Layers 1 to N)\"] Embed --\u003e L1[\"Layer 1\"] L1 --\u003e L2[\"Layer 2\"] L2 --\u003e Dots[\"...\"] Dots --\u003e LN[\"Layer N\"] end LN --\u003e Head[\"Output Head(Softmax)\"] Head --\u003e Loss([\"Loss Function\"]) subgraph Unit [\"Detailed BERT Layer Structure\"] MHA[\"Multi-Head Attention\"] --\u003e Add1[\"Add \u0026 Norm\"] Add1 --\u003e FFN[\"Feed Forward\"] FFN --\u003e Add2[\"Add \u0026 Norm\"] end style Tokens fill:#f9f,stroke:#333 style Embed fill:#bbf,stroke:#333 style Layers fill:#fcf,stroke:#333,stroke-dasharray: 5 5 style GPU fill:#76b900,stroke:#333,color:#000 style Unit fill:#fff,stroke:#333 How BERT Works (Simply):\nEmbeddings: Converts words into numbers that represent their meaning. Attention Layers: Allows the model to look at every word in a sentence simultaneously to understand context (e.g., “bank” in “river bank” vs “bank account”). Feed Forward: Processes the context-aware information from the attention layers. The Stack: BERT repeats this process many times (Layers 1 to N) to build a deep understanding of language. The Three Levels of Profiling Before diving into the tools, it helps to understand the “stack” we are interrogating. Profiling generally falls into three levels:\nflowchart TD App[\"1. Application LevelPython Logic \u0026 Data Loading\"] Frame[\"2. Framework LevelPyTorch / ATen Operators\"] Hard[\"3. Hardware LevelCUDA Kernels \u0026 Drivers\"] GPU{{\"H100/A100 GPU\"}} App --\u003e|Data Flow| Frame Frame --\u003e|Dispatch| Hard Hard --\u003e|Execution| GPU %% Styles style App fill:#FFD6FF,stroke:#333,stroke-width:2px style Frame fill:#E7C6FF,stroke:#333,stroke-width:2px style Hard fill:#C8E7FF,stroke:#333,stroke-width:2px style GPU fill:#76b900,stroke:#333,stroke-width:2px,color:#000 Application Level: How long does data loading take? Is the CPU keeping the GPU fed? Framework Level (PyTorch): Which specific math operations (like matrix multiplies) are taking the most time? Hardware Level (CUDA): What is happening at the OS and driver level? Are there gaps in GPU execution because the hardware is waiting for data? Level 1 \u0026 2: The PyTorch Profiler The PyTorch Profiler is built for the Application and Framework levels. It correlates Python code with underlying PyTorch math (ATen) operators and CUDA calls.\nImplementing the Profiler Wrapping your training loop with the profiler is straightforward. We use a schedule to avoid profiling the entire run, which would generate unmanageably large files.\nimport torch from transformers import BertModel, BertConfig from torch.profiler import profile, record_function, ProfilerActivity, schedule # Setup dummy BERT and data device = torch.device(\"cuda\" if torch.cuda.is_available() else \"cpu\") model = BertModel(BertConfig()).to(device) inputs = torch.randint(0, 2000, (16, 128)).to(device) # Define schedule: Wait 1 step, Warmup 1, Profile 2 prof_schedule = schedule(skip_first=2, wait=1, warmup=1, active=2, repeat=1) with profile( activities=[ProfilerActivity.CPU, ProfilerActivity.CUDA], schedule=prof_schedule, on_trace_ready=torch.profiler.tensorboard_trace_handler('./log/bert_profile'), record_shapes=True, profile_memory=True, with_stack=True ) as prof: for step in range(7): with record_function(\"forward_pass\"): outputs = model(inputs) loss = outputs.last_hidden_state.sum() with record_function(\"backward_pass\"): loss.backward() prof.step() Analyzing the Results Once you generate the logs, you can view them in TensorBoard. Look for:\nGPU Time Summary: If you see “DataLoader” taking high time, your CPU is too slow for your GPU. Operator Breakdown: See which mathematical operations (like aten::bmm) are the bottlenecks. Trace View: Look for “white space” in the timeline—these are moments your GPU is idle and doing nothing! Level 3: Nsight Systems (The Ground Truth) When you need to see exactly what the hardware is doing, you use NVIDIA Nsight Systems (nsys).\nInstrumenting with NVTX To get the most out of Nsight, you should instrument your code with NVTX (NVIDIA Tools Extension). This creates labels in the Nsight timeline that correlate with your Python logic.\nimport torch # Inside your training loop for step in range(7): # Use context managers to mark specific regions with torch.cuda.nvtx.range(\"forward_pass\"): outputs = model(inputs) loss = outputs.last_hidden_state.sum() with torch.cuda.nvtx.range(\"backward_pass\"): loss.backward() torch.cuda.synchronize() # Optional: help isolate kernel timing Running the Profile You’ll use the nsys CLI to capture the trace:\nnsys profile -w true -t cuda,nvtx,osrt -s cpu -o bert_sys_profile python train_bert.py Finding Bottlenecks in the Trace In Nsight, you are looking at the bare metal.\nThe CUDA Hardware Row: This shows exactly what the GPU is executing. If you see gaps between blocks, your GPU is sitting idle, waiting for the CPU. The Autograd Engine: If you see cudaDeviceSynchronize calls, you’ve found a performance killer. It means the CPU is being forced to stop and wait for the GPU unnecessarily. Background Workers: These show your data loading threads. If they aren’t busy, your data pipeline might be the bottleneck. The Takeaway Optimization is an iterative loop. Start with the PyTorch Profiler to find framework-level fixes—like unpinned tensors or .item() calls that slow things down. Once the Python-side code is clean, drop down into Nsight Systems to keep your compute clusters fully fed.\nSqueeze every FLOP. Don’t leave performance on the table.\n",
+  "wordCount" : "842",
+  "inLanguage": "en",
+  "datePublished": "2026-03-29T08:29:10+05:30",
+  "dateModified": "2026-03-29T08:29:10+05:30",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://vectorsandverbs.com/posts/profiling-deep-learning-models/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Vectors \u0026 Verbs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://vectorsandverbs.com/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <a href="https://vectorsandverbs.com/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -124,17 +193,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://vectorsandverbs.com/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About Me">
+                <a href="https://vectorsandverbs.com/about/" title="About Me">
                     <span>About Me</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://vectorsandverbs.com/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -145,7 +214,7 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://vectorsandverbs.com/">Home</a>&nbsp;»&nbsp;<a href="https://vectorsandverbs.com/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Squeeze every FLOP: Profiling AI models
     </h1>
@@ -294,20 +363,20 @@
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
-      <li><a href="http://localhost:1313/tags/gpu/">Gpu</a></li>
-      <li><a href="http://localhost:1313/tags/pytorch/">Pytorch</a></li>
-      <li><a href="http://localhost:1313/tags/profiling/">Profiling</a></li>
-      <li><a href="http://localhost:1313/tags/bert/">Bert</a></li>
-      <li><a href="http://localhost:1313/tags/cuda/">Cuda</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/gpu/">Gpu</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/pytorch/">Pytorch</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/profiling/">Profiling</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/bert/">Bert</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/cuda/">Cuda</a></li>
     </ul>
 <nav class="paginav">
-    <a class="prev" href="http://localhost:1313/posts/evaluation-metrics/">
+    <a class="prev" href="https://vectorsandverbs.com/posts/evaluation-metrics/">
         <span class="title">« Prev</span>
         <br>
         <span>Probabilistic Report Cards: LLM Evaluation Metrics</span>
     </a>
-    <a class="next" href="http://localhost:1313/posts/gemma-triton-optimization/">
+    <a class="next" href="https://vectorsandverbs.com/posts/gemma-triton-optimization/">
         <span class="title">Next »</span>
         <br>
         <span>Speed of Thought: Optimizing Gemma 27B with Custom Triton Kernels</span>
@@ -360,7 +429,7 @@
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+        <span>&copy; 2026 <a href="https://vectorsandverbs.com/">Vectors &amp; Verbs</a></span> · 
 
     <span>
         Powered by

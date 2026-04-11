@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<head><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="index, follow">
 <title>Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs | Vectors &amp; Verbs</title>
 <meta name="keywords" content="artificial-intelligence, llm, hardware, optimization, gpu">
 <meta name="description" content="An introduction to optimizations for Large Language Models, covering GPU utilization, precision control, and memory management.">
 <meta name="author" content="">
-<link rel="canonical" href="http://localhost:1313/posts/llm-hardware-optimization/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.6e08a867ed9f4aac96600166f644e24c654e0ff59c4b361af3ddbb5e45b15f76.css" integrity="sha256-bgioZ&#43;2fSqyWYAFm9kTiTGVOD/WcSzYa8927XkWxX3Y=" rel="preload stylesheet" as="style">
-<link rel="icon" href="http://localhost:1313/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
-<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
-<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<link rel="canonical" href="https://vectorsandverbs.com/posts/llm-hardware-optimization/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.5e242e78b8a6116b995763faf8a4603e8105633124ba846b519904ec6782cc0e.css" integrity="sha256-XiQueLimEWuZV2P6&#43;KRgPoEFYzEkuoRrUZkE7GeCzA4=" rel="preload stylesheet" as="style">
+<link rel="icon" href="https://vectorsandverbs.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="https://vectorsandverbs.com/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://vectorsandverbs.com/favicon-32x32.png">
+<link rel="apple-touch-icon" href="https://vectorsandverbs.com/apple-touch-icon.png">
+<link rel="mask-icon" href="https://vectorsandverbs.com/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/llm-hardware-optimization/">
+<link rel="alternate" hreflang="en" href="https://vectorsandverbs.com/posts/llm-hardware-optimization/">
 <noscript>
     <style>
         #theme-toggle,
@@ -87,13 +87,81 @@
 
 
 
+<meta property="og:url" content="https://vectorsandverbs.com/posts/llm-hardware-optimization/">
+  <meta property="og:site_name" content="Vectors &amp; Verbs">
+  <meta property="og:title" content="Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs">
+  <meta property="og:description" content="An introduction to optimizations for Large Language Models, covering GPU utilization, precision control, and memory management.">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2026-01-11T20:21:30+05:30">
+    <meta property="article:modified_time" content="2026-01-11T20:21:30+05:30">
+    <meta property="article:tag" content="Artificial-Intelligence">
+    <meta property="article:tag" content="Llm">
+    <meta property="article:tag" content="Hardware">
+    <meta property="article:tag" content="Optimization">
+    <meta property="article:tag" content="Gpu">
 
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs">
+  <meta name="twitter:description" content="An introduction to optimizations for Large Language Models, covering GPU utilization, precision control, and memory management.">
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position":  1 ,
+      "name": "Posts",
+      "item": "https://vectorsandverbs.com/posts/"
+    }, 
+    {
+      "@type": "ListItem",
+      "position":  2 ,
+      "name": "Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs",
+      "item": "https://vectorsandverbs.com/posts/llm-hardware-optimization/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs",
+  "name": "Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs",
+  "description": "An introduction to optimizations for Large Language Models, covering GPU utilization, precision control, and memory management.",
+  "keywords": [
+    "artificial-intelligence", "llm", "hardware", "optimization", "gpu"
+  ],
+  "articleBody": "According to the laws of hardware physics, training a Large Language Model (LLM) should be practically impossible. Still, we see these behemoths adopting new names and functions every day. The landscape of LLMs is defined by a singular overarching principle: the exponential scaling of model parameters and training datasets. The transition from models with hundreds of millions of parameters to those boasting trillions—such as GPT-4, Llama 3, and DeepSeek-V3—has fundamentally altered machine learning, from algorithmic design to massive-scale systems engineering. Training an LLM now requires an orchestration of thousands of accelerators, functioning as a unified supercomputer.\nThe Anatomy of a Parameter: The memory consumption of an LLM is not a storage tool for model weights only. It is a standard mixed-precision training environment that is dominated by these components: Model Parameters (Weights): The raw matrices that define the model’s intelligence. In 16-bit precision (2 bytes per parameter), a 1-trillion parameter model requires 2 Terabytes (TB) of storage just to load. For a 1T parameter model with FP16 precision, this is terabytes $2 \\times 10^{12} = 2 T$ parameters.\nGradient Accumulation: During the backward pass, the gradient of the loss function with respect to every parameter must be calculated and stored. This mirrors the size of the parameters, adding another 2 TB for a 1T model. For a 1T parameter model will have 1T gradients with FP16 precision, this is terabytes $2 \\times 10^{12} = 2 T$.\nOptimizer States: This is often the largest consumer of memory. Modern optimizers like Adam require maintaining the momentum (first moment) and variance (second moment) for every parameter to guide the gradient descent. These are typically stored in high precision (FP32). For a model with $\\Psi$ parameters, Adam requires 12 bytes per parameter (4 bytes for the master weight copy, 4 bytes for momentum, 4 bytes for variance). For a 1T model, this is 12 TB. The reason for storing high precision values is to help the gradient change even for the very small increments in the parameters. For a 1T model, this is terabytes $12 \\times 10^{12} = 12 T$.\nActivation Cache: Activations are the intermediate outputs stashed during the forward pass to be used later in the backward pass (backpropagation). Unlike static memory, this scales with Batch Size and Sequence Length (Context Window). The Scaling Law: Activation memory is often defined by:$$\\text{Memory}_{act} = \\text{Batch Size} \\times \\text{Sequence Length} \\times \\text{Hidden Dimension} \\times \\text{Num Layers}$$ For Compute: 2 FLOPS for Forward Pass (for tokens), 4 FLOPs for backward pass (for tokens and weights), with model size of 1T parameters and training dataset of 10T tokens, $$FLOPs = 6 \\times 10T \\times 1T$$ A single H100 GPU offers 4000 TFLOPS per second as a theoretical maximum capacity. With this, it would take a single GPU over 400 years to train a 1T parameter model. That is why clusters of thousands of GPUs (10,000+) are used to train LLMs in a few months.\nData Parallelism (DDP): The “Naive” Approach To understand this concept, let’s consider a simple example: the exam grading analogy. A professor (central model) is tasked with grading 1,000 students’ exams. He has 10 assistants (workers) to help him. He divides the exams into 10 batches of 100 exams each. He assigns each assistant to grade one batch of exams independently.\nThe process is as follows: 1. Replication: Each assistant has an identical copy of the answer key (model parameters). 2. Scatter (Partitioning): Each assistant gets a batch of exams to grade. 3. Compute: Each assistant grades their batch of exams independently. They mark errors, calculate scores, and make necessary score adjustments (gradients). During this process, there is no communication between the assistants. 4. Synchronization: A critical bottleneck. If assistant 1 and assistant 2 decide on different answers, there needs to be an aggregation process. At the end, all 10 assistants need to submit their answers to the professor, forming a long waiting queue before the next grading session begins.\nIn technical terms, this is called Data Parallelism. The model $M$ is replicated across $P$ devices. Each device $i$ processes a mini-batch of data $x_i \\in D$, performs a forward pass to compute loss $L$, and a backward pass to compute gradients $g_i = \\nabla L(x_i)$. The global gradient $G$ used to update the model is the average of all local gradients: $G = \\frac{1}{P} \\sum_{i=1}^{P} g_i$.\nThis replicates the traditional “Parameter Server” architecture. The next algorithm reduces the communication bottleneck by using “Ring All-Reduce”.\nSynchronization Algorithm: Ring All-Reduce This is a more P2P version of updating weights during training. Assume assistants are seated around the round table passing their batches to the next one all at once. Synchronization happens in two phases: Scatter-Reduce: The gradients (the updates) are chopped into chunks. Assistant 1 passes the first chunk of numbers to Assistant 2, and Assistant 2 does the same with others. This travels a full circle and contains the sum of everyone’s updates. Multiple chunks circulate simultaneously like a conveyor belt. All-Gather: Once the sums are computed they need to be broadcast to all the other assistants. The total sums continue to circulate the ring until every TA has a copy of the complete, aggregated gradient vector.\nMathematical Bandwidth Analysis: The Ring All-Reduce optimizes the communication by reducing the number of communication rounds (bandwidth optimality). Let $N$ be the number of model parameters (and gradient vectors). Let $P$ be the number of GPUs.\nIn a naive central server architecture, the communication bandwidth scales with $P$. In the ring topology, the data is split into $P$ chunks of size $\\frac{N}{P}$.\nScatter-Reduce: Each GPU sends chunks of size $\\frac{N}{P}$ to the next GPU exactly $P-1$ times. $$\\text{Data Transferred per GPU} = (P-1) \\times \\frac{N}{P}$$ All-Gather: Each GPU now aggregates with the received chunks for its $\\frac{N}{P}$ from all other GPUs and aggregates it. Now these aggregated weights are broadcast to $P-1$ neighbors. $$\\text{Data Transferred per GPU} = (P-1) \\times \\frac{N}{P}$$ Total Volume per communication round: $$V_{total} = 2 \\times \\frac{N(P-1)}{P}$$ As the number of GPUs $P$ tends to infinity, the Volume approaches $2N$. This is constant complexity. This property allows Data Parallelism to scale efficiently to massive clusters, limited only by the latency of the ring. Breaking the Memory Wall: ZeRO and FSDP Standard DDP requires each GPU to store the entire model’s parameters, gradients, and optimizer states. Standard H100 GPUs have 80 GB of HBM memory. This limitation led to the development of the Zero Redundancy Optimizer (ZeRO) by Microsoft DeepSpeed, and its PyTorch implementation, Fully Sharded Data Parallelism (FSDP).\nSharding vs Replication: In standard DDP, the model is replicated across all GPUs. In ZeRO, the model is sharded across GPUs. This means that while in DDP an encyclopedia is copied for all assistants, in ZeRO we tear it apart and distribute sections equally. Surprisingly, with respect to the compute-to-memory tradeoff, there is negligible loss. Collectively, the group possesses the full knowledge of the model, but no single individual carries the entire weight. When assistant 1 needs to grade a question requiring information from page 25, they request it from assistant 3. Assistant 3 broadcasts the page to everyone. Assistant 1 reads it, performs the calculation, and then immediately deletes it (freeing the memory). This allows the training of models far larger than individual GPU memory. ZeRO comes in three stages:\nZeRO Stage 1: In this stage, only the optimizer is sharded. The model parameters and gradients are replicated across all GPUs. During this process:\nA forward pass and backward pass are performed as in standard DDP. Then each model updates its section of weights from the sharded optimizer parameters locally. The update is then aggregated and broadcast to all GPUs. This is followed by all GPUs simultaneously. ZeRO Stage 2: In this stage, the model gradients are also sharded. The model parameters are replicated across all GPUs. During this process:\nA forward pass is calculated independently on each GPU. While the backward passes are also calculated on the same GPU, the gradients belonging to the layers allotted to other GPUs are sent immediately to those GPUs and deleted immediately, freeing memory. The model only holds onto the gradients for its allotted layers and aggregates them with gradients received from other GPUs. The optimizer is then updated locally on each GPU, resulting in new weights for those layers. Once the new weights for partial layers are calculated, all GPUs broadcast their new weights to each other. This is followed by all GPUs simultaneously. ZeRO Stage 3 (FSDP): This is the extreme case of model sharding, which increases compute time 1.5 times. In this stage, the model parameters are also sharded. During this process:\nIn the forward pass, for each layer, the model parameters are brought from another GPU and loaded for the computation, then deleted immediately after. Each GPU only keeps parameters, gradients, and optimizer states for its partial layers. In ZeRO-3, all these components are partitioned across $N_d$ devices. The memory consumption per device becomes:\n$$\\text{Memory}_{ZeRO-3} = \\frac{\\Psi_{parameters} + \\Psi_{gradients} + \\Psi_{optimizer}}{N_d} = \\frac{16\\Psi}{N_d}$$ For a 1-trillion parameter model ($\\Psi = 10^{12}$), the total state memory is roughly 16 TB. DDP requires 16 TB per GPU (impossible). ZeRO-3 with 1024 GPUs: $\\frac{16 \\text{ TB}}{1024} \\approx 16 \\text{ GB}$. This 16 GB easily fits within the 80 GB limit of an A100/H100 GPU, leaving ample room for activation memory. This linear scaling capability is what enables the training of trillion-parameter models today.\nThis “gather-compute-discard” cycle could introduce massive latency. To mitigate this, FSDP employs prefetching. While the GPU is busy computing Layer $K$, the network interface (NIC) is simultaneously downloading the shards for Layer $K+1$. If the computation is heavy enough (which it is for large batch sizes), the communication time is effectively hidden, or “overlapped,” behind the computation. This relies heavily on high-bandwidth interconnects like NVIDIA’s NVLink or InfiniBand.\nHere is a comparison of the memory requirements for ZeRO stages:\nZeRO Stage Optimization Target Memory Reduction Factor Communication Overhead Stage 1 ($P_{os}$) Optimizer States only $4\\times$ Negligible (Same as DDP) Stage 2 ($P_{os} + P_g$) Optimizer + Gradients $8\\times$ Negligible (Same as DDP) Stage 3 ($P_{os} + P_g + P_p$) Opt + Grad + Parameters Linear with $N_d$ (Number of GPUs) ~1.5x DDP ",
+  "wordCount" : "1699",
+  "inLanguage": "en",
+  "datePublished": "2026-01-11T20:21:30+05:30",
+  "dateModified": "2026-01-11T20:21:30+05:30",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://vectorsandverbs.com/posts/llm-hardware-optimization/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Vectors \u0026 Verbs",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://vectorsandverbs.com/favicon.ico"
+    }
+  }
+}
+</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <a href="https://vectorsandverbs.com/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -119,17 +187,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="http://localhost:1313/posts/" title="Posts">
+                <a href="https://vectorsandverbs.com/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/about/" title="About Me">
+                <a href="https://vectorsandverbs.com/about/" title="About Me">
                     <span>About Me</span>
                 </a>
             </li>
             <li>
-                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="https://vectorsandverbs.com/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -140,7 +208,7 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="https://vectorsandverbs.com/">Home</a>&nbsp;»&nbsp;<a href="https://vectorsandverbs.com/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs
     </h1>
@@ -213,34 +281,34 @@ $$\text{Memory}_{ZeRO-3} = \frac{\Psi_{parameters} + \Psi_{gradients} + \Psi_{op
 <p><img alt="ZeRO and FSDP Parallelism" loading="lazy" src="/images/zero-fsdp-parallelism.png"></p>
 <p>Here is a comparison of the memory requirements for ZeRO stages:</p>
 <table>
-  <thead>
-      <tr>
-          <th style="text-align: left">ZeRO Stage</th>
-          <th style="text-align: left">Optimization Target</th>
-          <th style="text-align: left">Memory Reduction Factor</th>
-          <th style="text-align: left">Communication Overhead</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td style="text-align: left">Stage 1 ($P_{os}$)</td>
-          <td style="text-align: left">Optimizer States only</td>
-          <td style="text-align: left">$4\times$</td>
-          <td style="text-align: left">Negligible (Same as DDP)</td>
-      </tr>
-      <tr>
-          <td style="text-align: left">Stage 2 ($P_{os} + P_g$)</td>
-          <td style="text-align: left">Optimizer + Gradients</td>
-          <td style="text-align: left">$8\times$</td>
-          <td style="text-align: left">Negligible (Same as DDP)</td>
-      </tr>
-      <tr>
-          <td style="text-align: left">Stage 3 ($P_{os} + P_g + P_p$)</td>
-          <td style="text-align: left">Opt + Grad + Parameters</td>
-          <td style="text-align: left">Linear with $N_d$ (Number of GPUs)</td>
-          <td style="text-align: left">~1.5x DDP</td>
-      </tr>
-  </tbody>
+<thead>
+<tr>
+<th style="text-align:left">ZeRO Stage</th>
+<th style="text-align:left">Optimization Target</th>
+<th style="text-align:left">Memory Reduction Factor</th>
+<th style="text-align:left">Communication Overhead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Stage 1 ($P_{os}$)</td>
+<td style="text-align:left">Optimizer States only</td>
+<td style="text-align:left">$4\times$</td>
+<td style="text-align:left">Negligible (Same as DDP)</td>
+</tr>
+<tr>
+<td style="text-align:left">Stage 2 ($P_{os} + P_g$)</td>
+<td style="text-align:left">Optimizer + Gradients</td>
+<td style="text-align:left">$8\times$</td>
+<td style="text-align:left">Negligible (Same as DDP)</td>
+</tr>
+<tr>
+<td style="text-align:left">Stage 3 ($P_{os} + P_g + P_p$)</td>
+<td style="text-align:left">Opt + Grad + Parameters</td>
+<td style="text-align:left">Linear with $N_d$ (Number of GPUs)</td>
+<td style="text-align:left">~1.5x DDP</td>
+</tr>
+</tbody>
 </table>
 
 
@@ -248,19 +316,19 @@ $$\text{Memory}_{ZeRO-3} = \frac{\Psi_{parameters} + \Psi_{gradients} + \Psi_{op
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
-      <li><a href="http://localhost:1313/tags/llm/">Llm</a></li>
-      <li><a href="http://localhost:1313/tags/hardware/">Hardware</a></li>
-      <li><a href="http://localhost:1313/tags/optimization/">Optimization</a></li>
-      <li><a href="http://localhost:1313/tags/gpu/">Gpu</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/llm/">Llm</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/hardware/">Hardware</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/optimization/">Optimization</a></li>
+      <li><a href="https://vectorsandverbs.com/tags/gpu/">Gpu</a></li>
     </ul>
 <nav class="paginav">
-    <a class="prev" href="http://localhost:1313/posts/feedforward-networks/">
+    <a class="prev" href="https://vectorsandverbs.com/posts/feedforward-networks/">
         <span class="title">« Prev</span>
         <br>
         <span>Anatomy of Trillion-Parameter Switchboards: Understanding Feedforward Blocks</span>
     </a>
-    <a class="next" href="http://localhost:1313/posts/parameter-efficient-fine-tuning/">
+    <a class="next" href="https://vectorsandverbs.com/posts/parameter-efficient-fine-tuning/">
         <span class="title">Next »</span>
         <br>
         <span>Crafty Patchwork: Parameter-Efficient Fine-Tuning</span>
@@ -313,7 +381,7 @@ $$\text{Memory}_{ZeRO-3} = \frac{\Psi_{parameters} + \Psi_{gradients} + \Psi_{op
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+        <span>&copy; 2026 <a href="https://vectorsandverbs.com/">Vectors &amp; Verbs</a></span> · 
 
     <span>
         Powered by

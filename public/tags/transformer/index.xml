@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Transformer on Vectors &amp; Verbs</title>
-    <link>http://localhost:1313/tags/transformer/</link>
+    <link>https://vectorsandverbs.com/tags/transformer/</link>
     <description>Recent content in Transformer on Vectors &amp; Verbs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 13 Jan 2026 10:52:41 +0530</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/transformer/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://vectorsandverbs.com/tags/transformer/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>The Need For Speed: KV Cache and memory optimization at Inference</title>
-      <link>http://localhost:1313/posts/kv-cache/</link>
+      <link>https://vectorsandverbs.com/posts/kv-cache/</link>
       <pubDate>Tue, 13 Jan 2026 10:52:41 +0530</pubDate>
-      <guid>http://localhost:1313/posts/kv-cache/</guid>
+      <guid>https://vectorsandverbs.com/posts/kv-cache/</guid>
       <description>An introduction to KV Caching and its role in optimizing Transformer inference.</description>
     </item>
     <item>
       <title>Attention Is All You Need, but exactly which one?: MHA, GQA and MLA</title>
-      <link>http://localhost:1313/posts/attention-mechanisms/</link>
+      <link>https://vectorsandverbs.com/posts/attention-mechanisms/</link>
       <pubDate>Sat, 10 Jan 2026 01:43:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/attention-mechanisms/</guid>
+      <guid>https://vectorsandverbs.com/posts/attention-mechanisms/</guid>
       <description>We are about to touch the holy grail of modern AI. From the original 2017 paper to DeepSeek&amp;rsquo;s MLA, how has the definition of &amp;lsquo;Attention&amp;rsquo; transformed?</description>
     </item>
   </channel>

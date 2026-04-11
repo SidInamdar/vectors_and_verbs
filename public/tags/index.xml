@@ -2,465 +2,465 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Tags on Vectors &amp; Verbs</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://vectorsandverbs.com/tags/</link>
     <description>Recent content in Tags on Vectors &amp; Verbs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 05 Apr 2026 15:19:00 +0530</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Apr 2026 15:19:00 +0530</lastBuildDate>
+    <atom:link href="https://vectorsandverbs.com/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Artificial-Intelligence</title>
-      <link>http://localhost:1313/tags/artificial-intelligence/</link>
-      <pubDate>Sun, 05 Apr 2026 15:19:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/artificial-intelligence/</guid>
+      <link>https://vectorsandverbs.com/tags/artificial-intelligence/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/artificial-intelligence/</guid>
       <description></description>
     </item>
     <item>
       <title>Gpu</title>
-      <link>http://localhost:1313/tags/gpu/</link>
-      <pubDate>Sun, 05 Apr 2026 15:19:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/gpu/</guid>
+      <link>https://vectorsandverbs.com/tags/gpu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/gpu/</guid>
       <description></description>
     </item>
     <item>
       <title>Hardware</title>
-      <link>http://localhost:1313/tags/hardware/</link>
-      <pubDate>Sun, 05 Apr 2026 15:19:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/hardware/</guid>
+      <link>https://vectorsandverbs.com/tags/hardware/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/hardware/</guid>
       <description></description>
     </item>
     <item>
       <title>Inference</title>
-      <link>http://localhost:1313/tags/inference/</link>
-      <pubDate>Sun, 05 Apr 2026 15:19:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/inference/</guid>
+      <link>https://vectorsandverbs.com/tags/inference/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/inference/</guid>
       <description></description>
     </item>
     <item>
       <title>Llm</title>
-      <link>http://localhost:1313/tags/llm/</link>
-      <pubDate>Sun, 05 Apr 2026 15:19:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/llm/</guid>
+      <link>https://vectorsandverbs.com/tags/llm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/llm/</guid>
       <description></description>
     </item>
     <item>
       <title>Optimization</title>
-      <link>http://localhost:1313/tags/optimization/</link>
-      <pubDate>Sun, 05 Apr 2026 15:19:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/optimization/</guid>
+      <link>https://vectorsandverbs.com/tags/optimization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/optimization/</guid>
       <description></description>
     </item>
     <item>
       <title>Precision</title>
-      <link>http://localhost:1313/tags/precision/</link>
-      <pubDate>Sun, 05 Apr 2026 15:19:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/precision/</guid>
+      <link>https://vectorsandverbs.com/tags/precision/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/precision/</guid>
       <description></description>
     </item>
     <item>
       <title>Quantization</title>
-      <link>http://localhost:1313/tags/quantization/</link>
-      <pubDate>Sun, 05 Apr 2026 15:19:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/quantization/</guid>
+      <link>https://vectorsandverbs.com/tags/quantization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/quantization/</guid>
       <description></description>
     </item>
     <item>
       <title>Blackwell</title>
-      <link>http://localhost:1313/tags/blackwell/</link>
-      <pubDate>Sun, 05 Apr 2026 10:14:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/blackwell/</guid>
+      <link>https://vectorsandverbs.com/tags/blackwell/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/blackwell/</guid>
       <description></description>
     </item>
     <item>
       <title>Cuda</title>
-      <link>http://localhost:1313/tags/cuda/</link>
-      <pubDate>Sun, 05 Apr 2026 10:14:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/cuda/</guid>
+      <link>https://vectorsandverbs.com/tags/cuda/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/cuda/</guid>
       <description></description>
     </item>
     <item>
       <title>Gemma</title>
-      <link>http://localhost:1313/tags/gemma/</link>
-      <pubDate>Sun, 05 Apr 2026 10:14:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/gemma/</guid>
+      <link>https://vectorsandverbs.com/tags/gemma/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/gemma/</guid>
       <description></description>
     </item>
     <item>
       <title>Kernels</title>
-      <link>http://localhost:1313/tags/kernels/</link>
-      <pubDate>Sun, 05 Apr 2026 10:14:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/kernels/</guid>
+      <link>https://vectorsandverbs.com/tags/kernels/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/kernels/</guid>
       <description></description>
     </item>
     <item>
       <title>Triton</title>
-      <link>http://localhost:1313/tags/triton/</link>
-      <pubDate>Sun, 05 Apr 2026 10:14:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/triton/</guid>
+      <link>https://vectorsandverbs.com/tags/triton/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/triton/</guid>
       <description></description>
     </item>
     <item>
       <title>Bert</title>
-      <link>http://localhost:1313/tags/bert/</link>
-      <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
-      <guid>http://localhost:1313/tags/bert/</guid>
+      <link>https://vectorsandverbs.com/tags/bert/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/bert/</guid>
       <description></description>
     </item>
     <item>
       <title>Profiling</title>
-      <link>http://localhost:1313/tags/profiling/</link>
-      <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
-      <guid>http://localhost:1313/tags/profiling/</guid>
+      <link>https://vectorsandverbs.com/tags/profiling/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/profiling/</guid>
       <description></description>
     </item>
     <item>
       <title>Pytorch</title>
-      <link>http://localhost:1313/tags/pytorch/</link>
-      <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
-      <guid>http://localhost:1313/tags/pytorch/</guid>
+      <link>https://vectorsandverbs.com/tags/pytorch/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/pytorch/</guid>
       <description></description>
     </item>
     <item>
       <title>BERTScore</title>
-      <link>http://localhost:1313/tags/bertscore/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/bertscore/</guid>
+      <link>https://vectorsandverbs.com/tags/bertscore/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/bertscore/</guid>
       <description></description>
     </item>
     <item>
       <title>BLEU</title>
-      <link>http://localhost:1313/tags/bleu/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/bleu/</guid>
+      <link>https://vectorsandverbs.com/tags/bleu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/bleu/</guid>
       <description></description>
     </item>
     <item>
       <title>COMET</title>
-      <link>http://localhost:1313/tags/comet/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/comet/</guid>
+      <link>https://vectorsandverbs.com/tags/comet/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/comet/</guid>
       <description></description>
     </item>
     <item>
       <title>Evaluation</title>
-      <link>http://localhost:1313/tags/evaluation/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/evaluation/</guid>
+      <link>https://vectorsandverbs.com/tags/evaluation/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/evaluation/</guid>
       <description></description>
     </item>
     <item>
       <title>G-Eval</title>
-      <link>http://localhost:1313/tags/g-eval/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/g-eval/</guid>
+      <link>https://vectorsandverbs.com/tags/g-eval/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/g-eval/</guid>
       <description></description>
     </item>
     <item>
       <title>Large-Language-Models</title>
-      <link>http://localhost:1313/tags/large-language-models/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/large-language-models/</guid>
+      <link>https://vectorsandverbs.com/tags/large-language-models/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/large-language-models/</guid>
       <description></description>
     </item>
     <item>
       <title>LLM-as-a-Judge</title>
-      <link>http://localhost:1313/tags/llm-as-a-judge/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/llm-as-a-judge/</guid>
+      <link>https://vectorsandverbs.com/tags/llm-as-a-judge/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/llm-as-a-judge/</guid>
       <description></description>
     </item>
     <item>
       <title>METEOR</title>
-      <link>http://localhost:1313/tags/meteor/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/meteor/</guid>
+      <link>https://vectorsandverbs.com/tags/meteor/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/meteor/</guid>
       <description></description>
     </item>
     <item>
       <title>Metrics</title>
-      <link>http://localhost:1313/tags/metrics/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/metrics/</guid>
+      <link>https://vectorsandverbs.com/tags/metrics/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/metrics/</guid>
       <description></description>
     </item>
     <item>
       <title>ROUGE</title>
-      <link>http://localhost:1313/tags/rouge/</link>
-      <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/rouge/</guid>
+      <link>https://vectorsandverbs.com/tags/rouge/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/rouge/</guid>
       <description></description>
     </item>
     <item>
       <title>Agentic-Workflows</title>
-      <link>http://localhost:1313/tags/agentic-workflows/</link>
-      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
-      <guid>http://localhost:1313/tags/agentic-workflows/</guid>
+      <link>https://vectorsandverbs.com/tags/agentic-workflows/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/agentic-workflows/</guid>
       <description></description>
     </item>
     <item>
       <title>Anthropic</title>
-      <link>http://localhost:1313/tags/anthropic/</link>
-      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
-      <guid>http://localhost:1313/tags/anthropic/</guid>
+      <link>https://vectorsandverbs.com/tags/anthropic/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/anthropic/</guid>
       <description></description>
     </item>
     <item>
       <title>Fastmcp</title>
-      <link>http://localhost:1313/tags/fastmcp/</link>
-      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
-      <guid>http://localhost:1313/tags/fastmcp/</guid>
+      <link>https://vectorsandverbs.com/tags/fastmcp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/fastmcp/</guid>
       <description></description>
     </item>
     <item>
       <title>JSON-RPC</title>
-      <link>http://localhost:1313/tags/json-rpc/</link>
-      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
-      <guid>http://localhost:1313/tags/json-rpc/</guid>
+      <link>https://vectorsandverbs.com/tags/json-rpc/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/json-rpc/</guid>
       <description></description>
     </item>
     <item>
       <title>LLM-Orchestration</title>
-      <link>http://localhost:1313/tags/llm-orchestration/</link>
-      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
-      <guid>http://localhost:1313/tags/llm-orchestration/</guid>
+      <link>https://vectorsandverbs.com/tags/llm-orchestration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/llm-orchestration/</guid>
       <description></description>
     </item>
     <item>
       <title>Mcp</title>
-      <link>http://localhost:1313/tags/mcp/</link>
-      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
-      <guid>http://localhost:1313/tags/mcp/</guid>
+      <link>https://vectorsandverbs.com/tags/mcp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/mcp/</guid>
       <description></description>
     </item>
     <item>
       <title>SSE</title>
-      <link>http://localhost:1313/tags/sse/</link>
-      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
-      <guid>http://localhost:1313/tags/sse/</guid>
+      <link>https://vectorsandverbs.com/tags/sse/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/sse/</guid>
       <description></description>
     </item>
     <item>
       <title>Standardization</title>
-      <link>http://localhost:1313/tags/standardization/</link>
-      <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
-      <guid>http://localhost:1313/tags/standardization/</guid>
+      <link>https://vectorsandverbs.com/tags/standardization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/standardization/</guid>
       <description></description>
     </item>
     <item>
       <title>Rag</title>
-      <link>http://localhost:1313/tags/rag/</link>
-      <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
-      <guid>http://localhost:1313/tags/rag/</guid>
+      <link>https://vectorsandverbs.com/tags/rag/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/rag/</guid>
       <description></description>
     </item>
     <item>
       <title>React-Pattern</title>
-      <link>http://localhost:1313/tags/react-pattern/</link>
-      <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
-      <guid>http://localhost:1313/tags/react-pattern/</guid>
+      <link>https://vectorsandverbs.com/tags/react-pattern/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/react-pattern/</guid>
       <description></description>
     </item>
     <item>
       <title>Kv-Cache</title>
-      <link>http://localhost:1313/tags/kv-cache/</link>
-      <pubDate>Tue, 13 Jan 2026 10:52:41 +0530</pubDate>
-      <guid>http://localhost:1313/tags/kv-cache/</guid>
+      <link>https://vectorsandverbs.com/tags/kv-cache/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/kv-cache/</guid>
       <description></description>
     </item>
     <item>
       <title>RadixAttention</title>
-      <link>http://localhost:1313/tags/radixattention/</link>
-      <pubDate>Tue, 13 Jan 2026 10:52:41 +0530</pubDate>
-      <guid>http://localhost:1313/tags/radixattention/</guid>
+      <link>https://vectorsandverbs.com/tags/radixattention/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/radixattention/</guid>
       <description></description>
     </item>
     <item>
       <title>SGLang</title>
-      <link>http://localhost:1313/tags/sglang/</link>
-      <pubDate>Tue, 13 Jan 2026 10:52:41 +0530</pubDate>
-      <guid>http://localhost:1313/tags/sglang/</guid>
+      <link>https://vectorsandverbs.com/tags/sglang/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/sglang/</guid>
       <description></description>
     </item>
     <item>
       <title>Transformer</title>
-      <link>http://localhost:1313/tags/transformer/</link>
-      <pubDate>Tue, 13 Jan 2026 10:52:41 +0530</pubDate>
-      <guid>http://localhost:1313/tags/transformer/</guid>
+      <link>https://vectorsandverbs.com/tags/transformer/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/transformer/</guid>
       <description></description>
     </item>
     <item>
       <title>VLLM</title>
-      <link>http://localhost:1313/tags/vllm/</link>
-      <pubDate>Tue, 13 Jan 2026 10:52:41 +0530</pubDate>
-      <guid>http://localhost:1313/tags/vllm/</guid>
+      <link>https://vectorsandverbs.com/tags/vllm/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/vllm/</guid>
       <description></description>
     </item>
     <item>
       <title>Fine-Tuning</title>
-      <link>http://localhost:1313/tags/fine-tuning/</link>
-      <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/fine-tuning/</guid>
+      <link>https://vectorsandverbs.com/tags/fine-tuning/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/fine-tuning/</guid>
       <description></description>
     </item>
     <item>
       <title>Lora</title>
-      <link>http://localhost:1313/tags/lora/</link>
-      <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/lora/</guid>
+      <link>https://vectorsandverbs.com/tags/lora/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/lora/</guid>
       <description></description>
     </item>
     <item>
       <title>Peft</title>
-      <link>http://localhost:1313/tags/peft/</link>
-      <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/peft/</guid>
+      <link>https://vectorsandverbs.com/tags/peft/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/peft/</guid>
       <description></description>
     </item>
     <item>
       <title>Qlora</title>
-      <link>http://localhost:1313/tags/qlora/</link>
-      <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
-      <guid>http://localhost:1313/tags/qlora/</guid>
+      <link>https://vectorsandverbs.com/tags/qlora/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/qlora/</guid>
       <description></description>
     </item>
     <item>
       <title>Deep-Learning</title>
-      <link>http://localhost:1313/tags/deep-learning/</link>
-      <pubDate>Sat, 10 Jan 2026 20:20:14 +0530</pubDate>
-      <guid>http://localhost:1313/tags/deep-learning/</guid>
+      <link>https://vectorsandverbs.com/tags/deep-learning/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/deep-learning/</guid>
       <description></description>
     </item>
     <item>
       <title>MoE</title>
-      <link>http://localhost:1313/tags/moe/</link>
-      <pubDate>Sat, 10 Jan 2026 20:20:14 +0530</pubDate>
-      <guid>http://localhost:1313/tags/moe/</guid>
+      <link>https://vectorsandverbs.com/tags/moe/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/moe/</guid>
       <description></description>
     </item>
     <item>
       <title>Neural-Networks</title>
-      <link>http://localhost:1313/tags/neural-networks/</link>
-      <pubDate>Sat, 10 Jan 2026 20:20:14 +0530</pubDate>
-      <guid>http://localhost:1313/tags/neural-networks/</guid>
+      <link>https://vectorsandverbs.com/tags/neural-networks/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/neural-networks/</guid>
       <description></description>
     </item>
     <item>
       <title>SWiGLU</title>
-      <link>http://localhost:1313/tags/swiglu/</link>
-      <pubDate>Sat, 10 Jan 2026 20:20:14 +0530</pubDate>
-      <guid>http://localhost:1313/tags/swiglu/</guid>
+      <link>https://vectorsandverbs.com/tags/swiglu/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/swiglu/</guid>
       <description></description>
     </item>
     <item>
       <title>Attention</title>
-      <link>http://localhost:1313/tags/attention/</link>
-      <pubDate>Sat, 10 Jan 2026 01:43:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/attention/</guid>
+      <link>https://vectorsandverbs.com/tags/attention/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/attention/</guid>
       <description></description>
     </item>
     <item>
       <title>Math</title>
-      <link>http://localhost:1313/tags/math/</link>
-      <pubDate>Fri, 09 Jan 2026 21:45:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/math/</guid>
+      <link>https://vectorsandverbs.com/tags/math/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/math/</guid>
       <description></description>
     </item>
     <item>
       <title>Nlp</title>
-      <link>http://localhost:1313/tags/nlp/</link>
-      <pubDate>Fri, 09 Jan 2026 21:45:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/nlp/</guid>
+      <link>https://vectorsandverbs.com/tags/nlp/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/nlp/</guid>
       <description></description>
     </item>
     <item>
       <title>Transformers</title>
-      <link>http://localhost:1313/tags/transformers/</link>
-      <pubDate>Fri, 09 Jan 2026 21:45:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/transformers/</guid>
+      <link>https://vectorsandverbs.com/tags/transformers/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/transformers/</guid>
       <description></description>
     </item>
     <item>
       <title>FastText</title>
-      <link>http://localhost:1313/tags/fasttext/</link>
-      <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/fasttext/</guid>
+      <link>https://vectorsandverbs.com/tags/fasttext/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/fasttext/</guid>
       <description></description>
     </item>
     <item>
       <title>GloVe</title>
-      <link>http://localhost:1313/tags/glove/</link>
-      <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/glove/</guid>
+      <link>https://vectorsandverbs.com/tags/glove/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/glove/</guid>
       <description></description>
     </item>
     <item>
       <title>Word-Embeddings</title>
-      <link>http://localhost:1313/tags/word-embeddings/</link>
-      <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/word-embeddings/</guid>
+      <link>https://vectorsandverbs.com/tags/word-embeddings/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/word-embeddings/</guid>
       <description></description>
     </item>
     <item>
       <title>Static-Embeddings</title>
-      <link>http://localhost:1313/tags/static-embeddings/</link>
-      <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/tags/static-embeddings/</guid>
+      <link>https://vectorsandverbs.com/tags/static-embeddings/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/static-embeddings/</guid>
       <description></description>
     </item>
     <item>
       <title>Word2Vec</title>
-      <link>http://localhost:1313/tags/word2vec/</link>
-      <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/tags/word2vec/</guid>
+      <link>https://vectorsandverbs.com/tags/word2vec/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/word2vec/</guid>
       <description></description>
     </item>
     <item>
       <title>Byte-Pair-Encoding</title>
-      <link>http://localhost:1313/tags/byte-pair-encoding/</link>
-      <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/tags/byte-pair-encoding/</guid>
+      <link>https://vectorsandverbs.com/tags/byte-pair-encoding/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/byte-pair-encoding/</guid>
       <description></description>
     </item>
     <item>
       <title>Sentencepiece</title>
-      <link>http://localhost:1313/tags/sentencepiece/</link>
-      <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/tags/sentencepiece/</guid>
+      <link>https://vectorsandverbs.com/tags/sentencepiece/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/sentencepiece/</guid>
       <description></description>
     </item>
     <item>
       <title>Tokenization</title>
-      <link>http://localhost:1313/tags/tokenization/</link>
-      <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/tags/tokenization/</guid>
+      <link>https://vectorsandverbs.com/tags/tokenization/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/tokenization/</guid>
       <description></description>
     </item>
     <item>
       <title>Unigram</title>
-      <link>http://localhost:1313/tags/unigram/</link>
-      <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/tags/unigram/</guid>
+      <link>https://vectorsandverbs.com/tags/unigram/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/unigram/</guid>
       <description></description>
     </item>
     <item>
       <title>Wordpiece</title>
-      <link>http://localhost:1313/tags/wordpiece/</link>
-      <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/tags/wordpiece/</guid>
+      <link>https://vectorsandverbs.com/tags/wordpiece/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/wordpiece/</guid>
       <description></description>
     </item>
     <item>
       <title>Demo</title>
-      <link>http://localhost:1313/tags/demo/</link>
-      <pubDate>Sun, 04 Jan 2026 09:00:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/demo/</guid>
+      <link>https://vectorsandverbs.com/tags/demo/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/demo/</guid>
       <description></description>
     </item>
     <item>
       <title>Hugo</title>
-      <link>http://localhost:1313/tags/hugo/</link>
-      <pubDate>Sun, 04 Jan 2026 09:00:00 +0530</pubDate>
-      <guid>http://localhost:1313/tags/hugo/</guid>
+      <link>https://vectorsandverbs.com/tags/hugo/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://vectorsandverbs.com/tags/hugo/</guid>
       <description></description>
     </item>
   </channel>

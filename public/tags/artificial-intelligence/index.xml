@@ -2,108 +2,108 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Artificial-Intelligence on Vectors &amp; Verbs</title>
-    <link>http://localhost:1313/tags/artificial-intelligence/</link>
+    <link>https://vectorsandverbs.com/tags/artificial-intelligence/</link>
     <description>Recent content in Artificial-Intelligence on Vectors &amp; Verbs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 05 Apr 2026 15:19:00 +0530</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/artificial-intelligence/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Apr 2026 15:19:00 +0530</lastBuildDate>
+    <atom:link href="https://vectorsandverbs.com/tags/artificial-intelligence/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>The Architecture of Precision: Why Quantization Defines the AI Era</title>
-      <link>http://localhost:1313/posts/quantization-and-precision/</link>
-      <pubDate>Sun, 05 Apr 2026 15:19:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/quantization-and-precision/</guid>
-      <description>From FP32 to NF4 — a deep dive into how quantization bridges the gap between trillion-parameter models and the hardware they run on, and why &amp;lsquo;smaller&amp;rsquo; is almost always &amp;lsquo;faster&amp;rsquo;.</description>
+      <title>The Architecture of Precision: Variations in model quantizations</title>
+      <link>https://vectorsandverbs.com/posts/quantization-and-precision/</link>
+      <pubDate>Mon, 06 Apr 2026 15:19:00 +0530</pubDate>
+      <guid>https://vectorsandverbs.com/posts/quantization-and-precision/</guid>
+      <description>Summary of how quantization bridges the gap between trillion-parameter models and the hardware they run on, and why &amp;lsquo;smaller&amp;rsquo; is almost always &amp;lsquo;faster&amp;rsquo;.</description>
     </item>
     <item>
       <title>Speed of Thought: Optimizing Gemma 27B with Custom Triton Kernels</title>
-      <link>http://localhost:1313/posts/gemma-triton-optimization/</link>
+      <link>https://vectorsandverbs.com/posts/gemma-triton-optimization/</link>
       <pubDate>Sun, 05 Apr 2026 10:14:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/gemma-triton-optimization/</guid>
+      <guid>https://vectorsandverbs.com/posts/gemma-triton-optimization/</guid>
       <description>Profiling Gemma 27B on dual RTX 5090 Blackwell GPUs, discovering a legacy CUDA path bottleneck, and building a custom Triton kernel that shaves 1.1 seconds off every inference batch.</description>
     </item>
     <item>
       <title>Squeeze every FLOP: Profiling AI models</title>
-      <link>http://localhost:1313/posts/profiling-deep-learning-models/</link>
+      <link>https://vectorsandverbs.com/posts/profiling-deep-learning-models/</link>
       <pubDate>Sun, 29 Mar 2026 08:29:10 +0530</pubDate>
-      <guid>http://localhost:1313/posts/profiling-deep-learning-models/</guid>
+      <guid>https://vectorsandverbs.com/posts/profiling-deep-learning-models/</guid>
       <description>This guide covers profiling at the code, framework, and hardware levels using PyTorch and Nsight Systems.</description>
     </item>
     <item>
       <title>Probabilistic Report Cards: LLM Evaluation Metrics</title>
-      <link>http://localhost:1313/posts/evaluation-metrics/</link>
+      <link>https://vectorsandverbs.com/posts/evaluation-metrics/</link>
       <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>http://localhost:1313/posts/evaluation-metrics/</guid>
+      <guid>https://vectorsandverbs.com/posts/evaluation-metrics/</guid>
       <description>From N-Grams to LLM-as-a-Judge: A deep dive into the evolution of evaluation metrics.</description>
     </item>
     <item>
       <title>USB-C of AI Space: The Model Context Protocol</title>
-      <link>http://localhost:1313/posts/model-context-protocol/</link>
+      <link>https://vectorsandverbs.com/posts/model-context-protocol/</link>
       <pubDate>Thu, 15 Jan 2026 20:58:53 +0530</pubDate>
-      <guid>http://localhost:1313/posts/model-context-protocol/</guid>
+      <guid>https://vectorsandverbs.com/posts/model-context-protocol/</guid>
       <description>MCP is the open standard for connecting AI models to data and tools. Discover how Anthropic&amp;rsquo;s new protocol solves the $N 	imes M$ integration problem, creating a plug-and-play ecosystem for AI agents.</description>
     </item>
     <item>
       <title>Electronic Executives: RAG, ReAct and MCP</title>
-      <link>http://localhost:1313/posts/agentic-workflows/</link>
+      <link>https://vectorsandverbs.com/posts/agentic-workflows/</link>
       <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
-      <guid>http://localhost:1313/posts/agentic-workflows/</guid>
+      <guid>https://vectorsandverbs.com/posts/agentic-workflows/</guid>
       <description>A deep dive into the cognitive architectures of modern AI agents, exploring Retrieval-Augmented Generation (RAG), the ReAct reasoning pattern, and the Model Context Protocol (MCP).</description>
     </item>
     <item>
       <title>The Need For Speed: KV Cache and memory optimization at Inference</title>
-      <link>http://localhost:1313/posts/kv-cache/</link>
+      <link>https://vectorsandverbs.com/posts/kv-cache/</link>
       <pubDate>Tue, 13 Jan 2026 10:52:41 +0530</pubDate>
-      <guid>http://localhost:1313/posts/kv-cache/</guid>
+      <guid>https://vectorsandverbs.com/posts/kv-cache/</guid>
       <description>An introduction to KV Caching and its role in optimizing Transformer inference.</description>
     </item>
     <item>
       <title>Crafty Patchwork: Parameter-Efficient Fine-Tuning</title>
-      <link>http://localhost:1313/posts/parameter-efficient-fine-tuning/</link>
+      <link>https://vectorsandverbs.com/posts/parameter-efficient-fine-tuning/</link>
       <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
-      <guid>http://localhost:1313/posts/parameter-efficient-fine-tuning/</guid>
+      <guid>https://vectorsandverbs.com/posts/parameter-efficient-fine-tuning/</guid>
       <description>An introduction to Parameter-Efficient Fine-Tuning (PEFT) techniques like LoRA, QLoRA, and more.</description>
     </item>
     <item>
       <title>Mission Impossible: Fitting Trillion-Parameter Giants into 80GB GPUs</title>
-      <link>http://localhost:1313/posts/llm-hardware-optimization/</link>
+      <link>https://vectorsandverbs.com/posts/llm-hardware-optimization/</link>
       <pubDate>Sun, 11 Jan 2026 20:21:30 +0530</pubDate>
-      <guid>http://localhost:1313/posts/llm-hardware-optimization/</guid>
+      <guid>https://vectorsandverbs.com/posts/llm-hardware-optimization/</guid>
       <description>An introduction to optimizations for Large Language Models, covering GPU utilization, precision control, and memory management.</description>
     </item>
     <item>
       <title>Anatomy of Trillion-Parameter Switchboards: Understanding Feedforward Blocks</title>
-      <link>http://localhost:1313/posts/feedforward-networks/</link>
+      <link>https://vectorsandverbs.com/posts/feedforward-networks/</link>
       <pubDate>Sat, 10 Jan 2026 20:20:14 +0530</pubDate>
-      <guid>http://localhost:1313/posts/feedforward-networks/</guid>
+      <guid>https://vectorsandverbs.com/posts/feedforward-networks/</guid>
       <description>Exploring the hidden layers of trillion-parameter switchboards: Feedforward Neural Networks and Activation Functions.</description>
     </item>
     <item>
       <title>Attention Is All You Need, but exactly which one?: MHA, GQA and MLA</title>
-      <link>http://localhost:1313/posts/attention-mechanisms/</link>
+      <link>https://vectorsandverbs.com/posts/attention-mechanisms/</link>
       <pubDate>Sat, 10 Jan 2026 01:43:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/attention-mechanisms/</guid>
+      <guid>https://vectorsandverbs.com/posts/attention-mechanisms/</guid>
       <description>We are about to touch the holy grail of modern AI. From the original 2017 paper to DeepSeek&amp;rsquo;s MLA, how has the definition of &amp;lsquo;Attention&amp;rsquo; transformed?</description>
     </item>
     <item>
       <title>The Global Accountant and the Subword Surgeon: Decoding GloVe and FastText</title>
-      <link>http://localhost:1313/posts/glove-and-fasttext/</link>
+      <link>https://vectorsandverbs.com/posts/glove-and-fasttext/</link>
       <pubDate>Thu, 08 Jan 2026 00:10:00 +0530</pubDate>
-      <guid>http://localhost:1313/posts/glove-and-fasttext/</guid>
+      <guid>https://vectorsandverbs.com/posts/glove-and-fasttext/</guid>
       <description>How subword units and global co-occurrence matrices allow GloVe and FastText to capture nuances that Word2Vec missed.</description>
     </item>
     <item>
       <title>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram</title>
-      <link>http://localhost:1313/posts/word-embeddings/</link>
+      <link>https://vectorsandverbs.com/posts/word-embeddings/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/posts/word-embeddings/</guid>
+      <guid>https://vectorsandverbs.com/posts/word-embeddings/</guid>
       <description>Understanding the mathematics behind Word2Vec, CBOW, and Skip-Gram and how they map language to vector space.</description>
     </item>
     <item>
       <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts</title>
-      <link>http://localhost:1313/posts/the-dna-of-language/</link>
+      <link>https://vectorsandverbs.com/posts/the-dna-of-language/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
+      <guid>https://vectorsandverbs.com/posts/the-dna-of-language/</guid>
       <description>A comprehensive guide to tokenization strategies: BPE, WordPiece, Unigram, and SentencePiece.</description>
     </item>
   </channel>
