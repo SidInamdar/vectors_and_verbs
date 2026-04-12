@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>Electronic Executives: RAG, ReAct and MCP | Vectors &amp; Verbs</title>
 <meta name="keywords" content="rag, react-pattern, mcp, anthropic, agentic-workflows, llm-orchestration, artificial-intelligence, large-language-models">
 <meta name="description" content="A deep dive into the cognitive architectures of modern AI agents, exploring Retrieval-Augmented Generation (RAG), the ReAct reasoning pattern, and the Model Context Protocol (MCP).">
 <meta name="author" content="">
-<link rel="canonical" href="https://vectorsandverbs.com/posts/agentic-workflows/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.5e242e78b8a6116b995763faf8a4603e8105633124ba846b519904ec6782cc0e.css" integrity="sha256-XiQueLimEWuZV2P6&#43;KRgPoEFYzEkuoRrUZkE7GeCzA4=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://vectorsandverbs.com/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://vectorsandverbs.com/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://vectorsandverbs.com/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://vectorsandverbs.com/apple-touch-icon.png">
-<link rel="mask-icon" href="https://vectorsandverbs.com/safari-pinned-tab.svg">
+<link rel="canonical" href="http://localhost:1313/posts/agentic-workflows/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6e08a867ed9f4aac96600166f644e24c654e0ff59c4b361af3ddbb5e45b15f76.css" integrity="sha256-bgioZ&#43;2fSqyWYAFm9kTiTGVOD/WcSzYa8927XkWxX3Y=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://vectorsandverbs.com/posts/agentic-workflows/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/agentic-workflows/">
 <noscript>
     <style>
         #theme-toggle,
@@ -87,82 +87,13 @@
 
 
 
-<meta property="og:url" content="https://vectorsandverbs.com/posts/agentic-workflows/">
-  <meta property="og:site_name" content="Vectors &amp; Verbs">
-  <meta property="og:title" content="Electronic Executives: RAG, ReAct and MCP">
-  <meta property="og:description" content="A deep dive into the cognitive architectures of modern AI agents, exploring Retrieval-Augmented Generation (RAG), the ReAct reasoning pattern, and the Model Context Protocol (MCP).">
-  <meta property="og:locale" content="en_us">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-01-15T17:59:29+05:30">
-    <meta property="article:modified_time" content="2026-01-15T17:59:29+05:30">
-    <meta property="article:tag" content="Rag">
-    <meta property="article:tag" content="React-Pattern">
-    <meta property="article:tag" content="Mcp">
-    <meta property="article:tag" content="Anthropic">
-    <meta property="article:tag" content="Agentic-Workflows">
-    <meta property="article:tag" content="LLM-Orchestration">
 
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Electronic Executives: RAG, ReAct and MCP">
-  <meta name="twitter:description" content="A deep dive into the cognitive architectures of modern AI agents, exploring Retrieval-Augmented Generation (RAG), the ReAct reasoning pattern, and the Model Context Protocol (MCP).">
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://vectorsandverbs.com/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Electronic Executives: RAG, ReAct and MCP",
-      "item": "https://vectorsandverbs.com/posts/agentic-workflows/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Electronic Executives: RAG, ReAct and MCP",
-  "name": "Electronic Executives: RAG, ReAct and MCP",
-  "description": "A deep dive into the cognitive architectures of modern AI agents, exploring Retrieval-Augmented Generation (RAG), the ReAct reasoning pattern, and the Model Context Protocol (MCP).",
-  "keywords": [
-    "rag", "react-pattern", "mcp", "anthropic", "agentic-workflows", "llm-orchestration", "artificial-intelligence", "large-language-models"
-  ],
-  "articleBody": "Researchers spent just under a decade perfecting the art of scaling Large Language Models (LLMs) to generate responses in real time. However, these tools were largely built and improved in isolation, simply iterating batches of tokens through the model. While some models developed exceptional reasoning capabilities, they were inherently limited by their architectural solitude.\nThis isolation created significant hurdles, particularly in accessing real-time or proprietary data and the inability to perform tasks requiring external tools. This has led to the emergence of advanced toolsets designed to augment reasoning models within agentic workflows. These tools envelop the model in sophisticated cognitive and operational architectures: Retrieval-Augmented Generation (RAG) solves memory constraints, ReAct addresses execution constraints, and the Model Context Protocol (MCP) bridges the connectivity gap.\nRetrieval-Augmented Generation (RAG) Retrieval-Augmented Generation (RAG) is often misunderstood as a simple pipeline: “Search Database $\\rightarrow$ Paste into Prompt $\\rightarrow$ Generate.” In reality, a more accurate description of RAG is probabilistic marginalization. RAG treats external information not as a mere preprocessing step, but as a latent variable in the generation process.\nThe Retriever and the Generator\nThe RAG architecture consists of two primary components:\nThe Retriever ($P_{\\eta}$): A dense bi-encoder that calculates the probability of a document $z$ being relevant to a query $x$.\n$$P_\\eta(z|x) = \\frac{\\exp(\\text{sim}(q(x), d(z)))}{\\sum_{z' \\in \\mathcal{Z}} \\exp(\\text{sim}(q(x), d(z')))}$$ Here, $q(x)$ and $d(z)$ are the dense vector representations of the query and document, respectively, typically produced by BERT-based encoders. The similarity function ($\\text{sim}$) is usually the dot product. The Generator ($P_{\\theta}$): An LLM that generates the target sequence $y$ based on the retrieved context.\nRAG Sequence-Level Marginalization This model assumes that each retrieved sequence $z$ contains sufficient information to generate the entire target sequence. The system retrieves the top-$K$ documents, generates complete sequences for each, and then aggregates the probabilities:\n$$P_{\\text{RAG-Sequence}}(y|x) \\approx \\sum_{z \\in \\text{top-k}(P(\\cdot|x))} P_{\\eta}(z|x) \\prod_{i=1}^{N} P_{\\theta}(y_i | x, z, y_{1:i-1})$$ In this approach, each document $z$ acts as a separate context for the duration of generation. This maintains consistency but limits the model’s ability to synthesize disparate facts from multiple sources.\nRAG Token-Level Marginalization This model is more flexible but computationally intensive. It allows the generator to consult different documents while generating each subsequent token, enabling the model to shift its focus “mid-thought”:\n$$P_{\\text{RAG-Token}}(y|x) \\approx \\prod_{i=1}^{N} \\sum_{z \\in \\text{top-k}(P(\\cdot|x))} P_{\\eta}(z|x) P_{\\theta}(y_i | x, z, y_{1:i-1})$$ Token-level RAG offers superior performance on multi-hop reasoning tasks but introduces a significant latency penalty. Calculating attention scores for $K$ documents for every token scales linearly with $K$. Most enterprise “Chat with Data” solutions currently favor RAG Sequence-Level Marginalization.\nDense Passage Retrieval (DPR) The effectiveness of the retrieval term $P_{\\eta}(z|x)$ is bounded by the quality of the vector space—specifically, the breadth and depth of the training corpus. Dense Passage Retrieval (DPR) utilizes a bi-encoder architecture where a model (like BERT) encodes an entire document into a single high-dimensional vector. Bi-encoders process documents independently, allowing for pre-computed document embeddings. (This technique is conceptually similar to Skip-Grams, replacing the feed-forward network with a BERT-like encoder and using entire sequences as input.)\nIn-Batch Negatives and Loss Function\nTraining a retriever Requires distinguishing between a correct document ($d^+$) and irrelevant ones ($d^-$). To avoid expensive negative mining for every training step, DPR uses in-batch negatives.\nIn a training batch of $B$ samples ${(q_i, d_i^+)}_{i=1}^B$, the document $d_i^+$ paired with query $q_i$ is the positive sample. Documents paired with other queries in the same batch ($d_j^+$ where $j \\neq i$) serve as the negative samples. This allows the model to train on $B(B-1)$ negative pairs efficiently. The loss function is the negative log-likelihood of the positive passage:\n$$\\mathcal{L}(q_i, d_i^+) = - \\log \\frac{e^{\\text{sim}(q_i, d_i^+) / \\tau}}{e^{\\text{sim}(q_i, d_i^+) / \\tau} + \\sum_{j \\neq i} e^{\\text{sim}(q_i, d_j^+) / \\tau}}$$ The temperature parameter $\\tau$ scales the dot product. As $\\tau \\rightarrow 0$, the model’s selection becomes sharper. Contrastive learning typically uses $\\tau$ values between 0.05 and 0.1.\nAdvanced RAG Strategies Self-RAG (Self-Reflective RAG) Self-RAG trains an LLM to generate special Reflection Tokens alongside standard text. These tokens act as internal control signals:\nRetrieve Token: Determines if retrieval is necessary. IsRel Token: Evaluates if the retrieved document is relevant. IsSup Token: Checks if the generated answer is supported by the document. IsUse Token: Assesses if the answer is useful for the query. Corrective RAG (CRAG) CRAG employs a lightweight, independent “Evaluator” component that assigns a confidence score to retrieved documents:\nHigh Confidence: Passed directly to the generator. Ambiguous Confidence: Triggers “Knowledge Refinement,” decomposing the document to isolate relevant sequences. Low Confidence: Triggers an external web search (in “Open World” agents) or falls back to standard generation. Adaptive RAG This approach adjusts its strategy based on query complexity. Simple queries require no retrieval; moderately complex queries use single-shot retrieval; highly complex queries trigger multi-hop or iterative retrieval processes.\nReAct Pattern: Reasoning and Acting The ReAct (Reason + Act) pattern provides a unified paradigm for LLMs to interact with external tools. While early models were often either “thinkers” (reasoning in isolation) or “doers” (following simple commands), ReAct allows for an interweaving of both.\nAddressing Semantic Drift A significant drawback of Chain of Thought (CoT) is “semantic drift”—if a model hallucinates at Step 1, every subsequent step treats that error as ground truth. ReAct mitigates this by forcing the model to interact with the external environment to ground its reasoning.\nWe define a trajectory $\\tau$: $$\\tau = (s_1, a_1, o_1, s_2, a_2, o_2, \\ldots, s_n, a_n, o_n)$$\nWhere:\n$s_t \\in \\mathcal{L}$ is the Thought (a reasoning trace in language space). $a_t \\in \\mathcal{A}$ is the Action (a specific tool invocation). $o_t \\in \\mathcal{O}$ is the Observation (feedback from the environment, e.g., an API result). The objective is to maximize the probability of a successful trajectory. The probability of an action $a_t$ is conditioned on the entire history: $$P(a_t | h_t) = P(a_t | s_1, a_1, o_1, \\dots, s_t)$$\nThe Chain Rule of Reasoning Unlike standard Reinforcement Learning, where a policy $\\pi$ maps states directly to actions ($\\pi: S \\rightarrow A$), ReAct decomposes the process:\nReasoning Step: $P(s_t | h_t)$ — The model analyzes the state and plans. Action Step: $P(a_t | h_t, s_t)$ — The model executes an action based on its reasoning. Observation Step: $P(o_t | h_t, a_t)$ — The environment returns feedback. Model Context Protocol (MCP) While we will cover this in depth in a future article, here is a brief summary. The Model Context Protocol (MCP) is an open-standard protocol designed to maintain consistent context across different generations. It solves the $N \\times M$ integration problem—where $N$ models need to work with $M$ tools—by standardizing the interface.\nIntroduced as a standardization effort by Anthropic, MCP is an application-layer protocol built on JSON-RPC 2.0. It is transport-agnostic and defines three distinct roles: Host, Client, and Server.\nRequest Object (Client $\\to$ Server):\n{ \"jsonrpc\": \"2.0\", \"id\": 42, \"method\": \"tools/call\", \"params\": { \"name\": \"get_customer_data\", \"arguments\": { \"customer_id\": \"C-12345\" } } } Response Object (Server $\\to$ Client):\n{ \"jsonrpc\": \"2.0\", \"id\": 42, \"result\": { \"content\": [ { \"type\": \"text\", \"text\": \"Customer data retrieved: ...\" } ] } } ",
-  "wordCount" : "1168",
-  "inLanguage": "en",
-  "datePublished": "2026-01-15T17:59:29+05:30",
-  "dateModified": "2026-01-15T17:59:29+05:30",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://vectorsandverbs.com/posts/agentic-workflows/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Vectors \u0026 Verbs",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://vectorsandverbs.com/favicon.ico"
-    }
-  }
-}
-</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://vectorsandverbs.com/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -188,17 +119,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://vectorsandverbs.com/posts/" title="Posts">
+                <a href="http://localhost:1313/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="https://vectorsandverbs.com/about/" title="About Me">
+                <a href="http://localhost:1313/about/" title="About Me">
                     <span>About Me</span>
                 </a>
             </li>
             <li>
-                <a href="https://vectorsandverbs.com/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -209,7 +140,7 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="https://vectorsandverbs.com/">Home</a>&nbsp;»&nbsp;<a href="https://vectorsandverbs.com/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Electronic Executives: RAG, ReAct and MCP
     </h1>
@@ -332,22 +263,22 @@ Unlike standard Reinforcement Learning, where a policy $\pi$ maps states directl
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://vectorsandverbs.com/tags/rag/">Rag</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/react-pattern/">React-Pattern</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/mcp/">Mcp</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/anthropic/">Anthropic</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/agentic-workflows/">Agentic-Workflows</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/llm-orchestration/">LLM-Orchestration</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/large-language-models/">Large-Language-Models</a></li>
+      <li><a href="http://localhost:1313/tags/rag/">Rag</a></li>
+      <li><a href="http://localhost:1313/tags/react-pattern/">React-Pattern</a></li>
+      <li><a href="http://localhost:1313/tags/mcp/">Mcp</a></li>
+      <li><a href="http://localhost:1313/tags/anthropic/">Anthropic</a></li>
+      <li><a href="http://localhost:1313/tags/agentic-workflows/">Agentic-Workflows</a></li>
+      <li><a href="http://localhost:1313/tags/llm-orchestration/">LLM-Orchestration</a></li>
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/large-language-models/">Large-Language-Models</a></li>
     </ul>
 <nav class="paginav">
-    <a class="prev" href="https://vectorsandverbs.com/posts/kv-cache/">
+    <a class="prev" href="http://localhost:1313/posts/kv-cache/">
         <span class="title">« Prev</span>
         <br>
         <span>The Need For Speed: KV Cache and memory optimization at Inference</span>
     </a>
-    <a class="next" href="https://vectorsandverbs.com/posts/model-context-protocol/">
+    <a class="next" href="http://localhost:1313/posts/model-context-protocol/">
         <span class="title">Next »</span>
         <br>
         <span>USB-C of AI Space: The Model Context Protocol</span>
@@ -400,7 +331,7 @@ Unlike standard Reinforcement Learning, where a policy $\pi$ maps states directl
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="https://vectorsandverbs.com/">Vectors &amp; Verbs</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
 
     <span>
         Powered by

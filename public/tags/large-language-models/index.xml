@@ -2,59 +2,59 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Large-Language-Models on Vectors &amp; Verbs</title>
-    <link>https://vectorsandverbs.com/tags/large-language-models/</link>
+    <link>http://localhost:1313/tags/large-language-models/</link>
     <description>Recent content in Large-Language-Models on Vectors &amp; Verbs</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 21 Jan 2026 23:40:56 +0530</lastBuildDate>
-    <atom:link href="https://vectorsandverbs.com/tags/large-language-models/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/large-language-models/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Probabilistic Report Cards: LLM Evaluation Metrics</title>
-      <link>https://vectorsandverbs.com/posts/evaluation-metrics/</link>
+      <link>http://localhost:1313/posts/evaluation-metrics/</link>
       <pubDate>Wed, 21 Jan 2026 23:40:56 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/evaluation-metrics/</guid>
+      <guid>http://localhost:1313/posts/evaluation-metrics/</guid>
       <description>From N-Grams to LLM-as-a-Judge: A deep dive into the evolution of evaluation metrics.</description>
     </item>
     <item>
       <title>Electronic Executives: RAG, ReAct and MCP</title>
-      <link>https://vectorsandverbs.com/posts/agentic-workflows/</link>
+      <link>http://localhost:1313/posts/agentic-workflows/</link>
       <pubDate>Thu, 15 Jan 2026 17:59:29 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/agentic-workflows/</guid>
+      <guid>http://localhost:1313/posts/agentic-workflows/</guid>
       <description>A deep dive into the cognitive architectures of modern AI agents, exploring Retrieval-Augmented Generation (RAG), the ReAct reasoning pattern, and the Model Context Protocol (MCP).</description>
     </item>
     <item>
       <title>The Need For Speed: KV Cache and memory optimization at Inference</title>
-      <link>https://vectorsandverbs.com/posts/kv-cache/</link>
+      <link>http://localhost:1313/posts/kv-cache/</link>
       <pubDate>Tue, 13 Jan 2026 10:52:41 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/kv-cache/</guid>
+      <guid>http://localhost:1313/posts/kv-cache/</guid>
       <description>An introduction to KV Caching and its role in optimizing Transformer inference.</description>
     </item>
     <item>
       <title>Crafty Patchwork: Parameter-Efficient Fine-Tuning</title>
-      <link>https://vectorsandverbs.com/posts/parameter-efficient-fine-tuning/</link>
+      <link>http://localhost:1313/posts/parameter-efficient-fine-tuning/</link>
       <pubDate>Mon, 12 Jan 2026 10:52:56 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/parameter-efficient-fine-tuning/</guid>
+      <guid>http://localhost:1313/posts/parameter-efficient-fine-tuning/</guid>
       <description>An introduction to Parameter-Efficient Fine-Tuning (PEFT) techniques like LoRA, QLoRA, and more.</description>
     </item>
     <item>
       <title>Attention Is All You Need, but exactly which one?: MHA, GQA and MLA</title>
-      <link>https://vectorsandverbs.com/posts/attention-mechanisms/</link>
+      <link>http://localhost:1313/posts/attention-mechanisms/</link>
       <pubDate>Sat, 10 Jan 2026 01:43:00 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/attention-mechanisms/</guid>
+      <guid>http://localhost:1313/posts/attention-mechanisms/</guid>
       <description>We are about to touch the holy grail of modern AI. From the original 2017 paper to DeepSeek&amp;rsquo;s MLA, how has the definition of &amp;lsquo;Attention&amp;rsquo; transformed?</description>
     </item>
     <item>
       <title>Semantic Alchemy: Cracking Word2Vec with CBOW and Skip-Gram</title>
-      <link>https://vectorsandverbs.com/posts/word-embeddings/</link>
+      <link>http://localhost:1313/posts/word-embeddings/</link>
       <pubDate>Wed, 07 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/word-embeddings/</guid>
+      <guid>http://localhost:1313/posts/word-embeddings/</guid>
       <description>Understanding the mathematics behind Word2Vec, CBOW, and Skip-Gram and how they map language to vector space.</description>
     </item>
     <item>
       <title>The DNA of Language: A Deep Dive into LLM Tokenization concepts</title>
-      <link>https://vectorsandverbs.com/posts/the-dna-of-language/</link>
+      <link>http://localhost:1313/posts/the-dna-of-language/</link>
       <pubDate>Mon, 05 Jan 2026 00:23:31 +0530</pubDate>
-      <guid>https://vectorsandverbs.com/posts/the-dna-of-language/</guid>
+      <guid>http://localhost:1313/posts/the-dna-of-language/</guid>
       <description>A comprehensive guide to tokenization strategies: BPE, WordPiece, Unigram, and SentencePiece.</description>
     </item>
   </channel>

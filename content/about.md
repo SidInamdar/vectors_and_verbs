@@ -5,28 +5,32 @@ summary: "Lead Data Scientist specializing in AI-driven optimization, anomaly de
 ---
 
 # Siddhesh Inamdar
-**Lead Data Scientist | M.Tech, IIT Madras | BITS Goa**
+**Lead Data Scientist | M.Tech, IIT Madras | BITS Pilani**
 
-I believe the most powerful data-driven solutions aren't just calculated—they’re crafted. To me, the magic happens at the intersection of algorithmic precision and creative intuition. I dedicate my time to deconstructing frameworks and exploring models, not just for their logic, but for the unique ingenuity they bring to the table. This is where I share my perspective on the technologies that are truly redefining our field.
+I believe the most powerful data-driven solutions aren't just calculated—they’re *crafted*. To me, the real magic happens at the bleeding edge where algorithmic precision meets high-performance engineering. I dedicate my time to deconstructing frameworks, optimizing low-level kernels, and bridging the critical gap between complex AI research and scalable, production-ready systems. 
 
-### Expertise & Domains
-* **Optimization & Predictive Maintenance:** Developed Monte Carlo Markov Chain (MCMC) optimizers and discrete programming workflows (CP-SAT) that have delivered tens of millions of dollars in annual value.
-* **Deep Learning & NLP:** Experienced in deploying Large Language Model (LLM) applications using **RAG (Retrieval-Augmented Generation)**, fine-tuned Llama models, and Langchain to automate complex business queries.
-* **Time-Series & Forecasting:** Leveraged Temporal Fusion Transformers and Variational Autoencoders for high-stakes uplift prediction and sensor anomaly detection across thousands of assets.
-* **MLOps & Engineering:** Specialized in building agile, production-ready stacks including **Docker, AWS Lambda, Snowflake,** and **Azure Databricks**.
+---
+
+## Expertise & Domains
+
+* **Generative AI & Agentic Workflows:** Specialized in architecting production-grade Model Context Protocol (MCP) agents leveraging tools like CrewAI and LangChain. I frequently implement Mixture of Experts (MoE) routing patterns to dynamically optimize and specialize model responses.
+* **Kernel & Inference Optimization:** Deeply experienced in squeezing out maximum performance using custom Triton GEMM kernels, Post-Training Quantization (PTQ), and TensorRT-LLM to achieve massive inference speedups for large-scale models.
+* **Computer Vision:** Proficient in fine-tuning state-of-the-art vision architectures, including adapting YOLOv11 on complex aerial imagery to accurately identify and predict dynamic fleet cluster movements.
+* **Optimization & Probabilistic Modeling:** Expert in formulating robust discrete programming optimizers (CP-SAT) for massive-scale fleet scheduling, alongside building highly-calibrated MCMC-based models for rigorous sensor data reconciliation.
 
 ---
 
 ## Professional Journey
 
-### Team Leadership & Strategy
-Currently, I lead a specialized data science team within the industrial machinery and energy sector. My focus is on defining deployment strategies and building agile-focused development stacks.
+### Lead Data Scientist | Caterpillar
+*Jul 2025 – Present*
 
-### Advanced Technology Development
-Previously, I spent several years developing high-impact AI solutions for global energy leaders. My work involved:
-* Building autonomous recommendation tools using **One-Class Support Vector Machines** to reduce human dependency in asset optimization.
-* Designing **Generative AI** chatbots that allow field specialists to interact with complex optimization logs via natural language.
-* Implementing **Computer Vision and Sensor Analytics** to improve production efficiency by filtering noise from thousands of industrial flowline sensors.
+Currently spearheading AI initiatives for the Marine Division, with a hyper-focus on leveraging computer vision to revolutionize maritime supply chain visibility and orchestrating complex agentic workflows. Beyond core model development, I architect and manage our team's cloud infrastructure. Recently, I engineered highly-scalable retrieval pipelines that seamlessly integrate Milvus Vector Databases with Snowflake, empowering operators with real-time insights for strategic data-driven decisions.
+
+### Data Scientist | ExxonMobil BTC
+*Aug 2021 – Jun 2025*
+
+Architected and deployed high-impact, enterprise-scale AI solutions. Key highlights include formulating a sophisticated CP-SAT optimizer to coordinate operations for over 900 autonomous vehicles, and building a robust RAG-based conversational interface powered by Llama 3 to drastically streamline maintenance log querying. My tenure also involved engineering Temporal Fusion Transformers (TFT) to deliver advanced, highly accurate oil production forecasting.
 
 ---
 
@@ -34,12 +38,16 @@ Previously, I spent several years developing high-impact AI solutions for global
 
 | Category | Tools & Technologies |
 | :--- | :--- |
-| **Languages** | Python (NumPy, Pandas, PyTorch), SQL, MATLAB |
-| **AI/ML** | Pattern Recognition, Constrained Optimization, NLP, LLMs |
-| **Engineering** | Docker, AWS (Lambda, ECR), Apache Airflow, Snowflake |
-| **Frameworks** | Langchain, LangGraph, SIMULINK, COMSOL |
+| **Languages & Core** | Python (PyTorch, NumPy), SQL, Snowflake |
+| **Generative AI** | LLMs, RAG Architectures, Agents (CrewAI, LangChain), Vector DBs (Milvus) |
+| **Deep Learning** | Computer Vision (YOLO), Triton Kernels, TensorRT, Hugging Face |
+| **Engineering Stack** | Docker, AWS (Lambda, ECR), Apache Airflow, Databricks |
+| **Math & Optimization**| CP-SAT, MCMC, Time-Series Modeling (TFT), Advanced Numerical Optimization |
 
 ---
 
 ## Let's Connect
-I am always open to discussing the future of AI, autonomous agents, and scalable data architecture. So do contact me on my social handles!
+
+I am always eager to discuss the frontiers of artificial intelligence, the evolution of autonomous agents, and the intricacies of high-performance data architecture. 
+
+Feel free to connect and reach out via my social handles!

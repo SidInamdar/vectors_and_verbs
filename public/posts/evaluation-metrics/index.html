@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto" data-theme="auto">
 
-<head><meta charset="utf-8">
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <title>Probabilistic Report Cards: LLM Evaluation Metrics | Vectors &amp; Verbs</title>
 <meta name="keywords" content="artificial-intelligence, large-language-models, evaluation, metrics, BLEU, ROUGE, METEOR, BERTScore, COMET, LLM-as-a-Judge, G-Eval">
 <meta name="description" content="From N-Grams to LLM-as-a-Judge: A deep dive into the evolution of evaluation metrics.">
 <meta name="author" content="">
-<link rel="canonical" href="https://vectorsandverbs.com/posts/evaluation-metrics/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.5e242e78b8a6116b995763faf8a4603e8105633124ba846b519904ec6782cc0e.css" integrity="sha256-XiQueLimEWuZV2P6&#43;KRgPoEFYzEkuoRrUZkE7GeCzA4=" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://vectorsandverbs.com/favicon.ico">
-<link rel="icon" type="image/png" sizes="16x16" href="https://vectorsandverbs.com/favicon-16x16.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://vectorsandverbs.com/favicon-32x32.png">
-<link rel="apple-touch-icon" href="https://vectorsandverbs.com/apple-touch-icon.png">
-<link rel="mask-icon" href="https://vectorsandverbs.com/safari-pinned-tab.svg">
+<link rel="canonical" href="http://localhost:1313/posts/evaluation-metrics/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6e08a867ed9f4aac96600166f644e24c654e0ff59c4b361af3ddbb5e45b15f76.css" integrity="sha256-bgioZ&#43;2fSqyWYAFm9kTiTGVOD/WcSzYa8927XkWxX3Y=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="en" href="https://vectorsandverbs.com/posts/evaluation-metrics/">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/evaluation-metrics/">
 <noscript>
     <style>
         #theme-toggle,
@@ -87,82 +87,13 @@
 
 
 
-<meta property="og:url" content="https://vectorsandverbs.com/posts/evaluation-metrics/">
-  <meta property="og:site_name" content="Vectors &amp; Verbs">
-  <meta property="og:title" content="Probabilistic Report Cards: LLM Evaluation Metrics">
-  <meta property="og:description" content="From N-Grams to LLM-as-a-Judge: A deep dive into the evolution of evaluation metrics.">
-  <meta property="og:locale" content="en_us">
-  <meta property="og:type" content="article">
-    <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2026-01-21T23:40:56+05:30">
-    <meta property="article:modified_time" content="2026-01-21T23:40:56+05:30">
-    <meta property="article:tag" content="Artificial-Intelligence">
-    <meta property="article:tag" content="Large-Language-Models">
-    <meta property="article:tag" content="Evaluation">
-    <meta property="article:tag" content="Metrics">
-    <meta property="article:tag" content="BLEU">
-    <meta property="article:tag" content="ROUGE">
 
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Probabilistic Report Cards: LLM Evaluation Metrics">
-  <meta name="twitter:description" content="From N-Grams to LLM-as-a-Judge: A deep dive into the evolution of evaluation metrics.">
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position":  1 ,
-      "name": "Posts",
-      "item": "https://vectorsandverbs.com/posts/"
-    }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "Probabilistic Report Cards: LLM Evaluation Metrics",
-      "item": "https://vectorsandverbs.com/posts/evaluation-metrics/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "Probabilistic Report Cards: LLM Evaluation Metrics",
-  "name": "Probabilistic Report Cards: LLM Evaluation Metrics",
-  "description": "From N-Grams to LLM-as-a-Judge: A deep dive into the evolution of evaluation metrics.",
-  "keywords": [
-    "artificial-intelligence", "large-language-models", "evaluation", "metrics", "BLEU", "ROUGE", "METEOR", "BERTScore", "COMET", "LLM-as-a-Judge", "G-Eval"
-  ],
-  "articleBody": "Evolution of Large Language models (LLMs) size and complexity of their responses has created challenges in evaluation and rating them. As we transition from predictive statistical models to generative reasoning engines, the very definition of “performance” has shifted from the objective reproduction of reference data to the subjective satisfaction of complex, often unspoken, user intent. We will look at the evolution of evaluation metrics themselves eventually leading to LLM as a judge with all of its risks.\nClassical N-Grams and Surface Metrics N-Grams remains the absolute popular strategy in judging the responses of LLMs purely due to interpretability, low cost and the inertia of historical benchmarking.\nBLEU (Bilingual Evaluation Understudy) Translates to portion of n-grams in the response that appear in the reference text.\n$$BLEU = BP \\cdot \\exp\\left(\\sum_{n=1}^{N} w_n \\log p_n\\right)$$ Precision ($p_n$): The ratio of matching n-grams to total n-grams in the candidate. Weights ($w_n$): Typically uniform ($1/N$) for $N=4$ (BLEU-4). Brevity Penalty ($BP$): A decay factor to punish overly short translations. BLEU can be easily gamed.\nReference: “The cat is on the mat.” Candidate: “The the the the the.” Naive Precision: 5/5 (100%). BLEU correction: Count of maximum frequency of N-Gram = 2. So, adjusted precision = 2/5 (40%). Since precision can be maxed using a single correct word, BLEU introduces a brevity penalty for candidates ($c$) shorter than the reference ($r$):\n$$BP = \\begin{cases} 1 \u0026 \\text{if } c \u003e r \\\\ e^{(1 - r/c)} \u0026 \\text{if } c \\leq r \\end{cases}$$ BLEU Fails catastrophically in LLM era as words “smart” and “intelligent” are treated as completely different. BLEU does not understand syntax, hence sentences that have completely opposite word placement will be considered the same. Hence, it should only be used in cases where output is expected to closely match the reference.\nROUGE (Recall-Oriented Understudy for Gisting Evaluation) While BLEU considers precision (correctness), ROUGE works using recall (completeness). This is standard for summarization tasks where the goal is to capture all information of the text.\nROUGE-N: Overlap of N-Grams. ROUGE-L: Overlap of Longest Common Subsequence (LCS) in same relative order, allowing for gaps. It captures structure better than rigid N-grams. In summarization, we prioritize Recall (ROUGE) because omitting a key fact is a graver error than including a few extra words. In translation, we prioritize Precision (BLEU) because fluency and correctness are paramount.\nMETEOR (Metric for Evaluation of Translation with Explicit Ordering) METEOR was designed to bridge the semantic gap left by BLEU. It acknowledges that “computer” and “PC” are effectively the same word.\nMETEOR is a multi-stage alignment process:\nExact Match: Check for identical surface forms (run == run). Stemming: Check for identical roots (running == ran). This uses the Porter Stemmer. Synonymy: Check for shared meaning (fast == quick). This uses WordNet or similar ontologies. METEOR accounts for chunk penalty. If the words in the sentence are jumbled, METEOR will match all the words but will penalize severely for fragmentation. It relies on external knowledge bases that help in stemming, hence making it language dependent and not purely statistical.\nPerplexity (PPL) Perplexity uses no reference and uses model’s own uncertainty. It is the exponential average negative log-likelihood of a sequence.\n$$PPL(X) = \\exp\\left( -\\frac{1}{t} \\sum_{i=1}^{t} \\log p_\\theta(x_i | x_{",
-  "wordCount" : "1591",
-  "inLanguage": "en",
-  "datePublished": "2026-01-21T23:40:56+05:30",
-  "dateModified": "2026-01-21T23:40:56+05:30",
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://vectorsandverbs.com/posts/evaluation-metrics/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "Vectors \u0026 Verbs",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://vectorsandverbs.com/favicon.ico"
-    }
-  }
-}
-</script>
 </head>
 <body id="top">
     <header class="header">
     <nav class="nav">
         <div class="logo">
-            <a href="https://vectorsandverbs.com/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
             <div class="logo-switches">
                 <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
                     <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
@@ -188,17 +119,17 @@
         </div>
         <ul id="menu">
             <li>
-                <a href="https://vectorsandverbs.com/posts/" title="Posts">
+                <a href="http://localhost:1313/posts/" title="Posts">
                     <span>Posts</span>
                 </a>
             </li>
             <li>
-                <a href="https://vectorsandverbs.com/about/" title="About Me">
+                <a href="http://localhost:1313/about/" title="About Me">
                     <span>About Me</span>
                 </a>
             </li>
             <li>
-                <a href="https://vectorsandverbs.com/search/" title="Search (Alt &#43; /)" accesskey=/>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
                     <span>Search</span>
                 </a>
             </li>
@@ -209,7 +140,7 @@
 
 <article class="post-single">
   <header class="post-header">
-    <div class="breadcrumbs"><a href="https://vectorsandverbs.com/">Home</a>&nbsp;»&nbsp;<a href="https://vectorsandverbs.com/posts/">Posts</a></div>
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
     <h1 class="post-title entry-hint-parent">
       Probabilistic Report Cards: LLM Evaluation Metrics
     </h1>
@@ -342,25 +273,25 @@ It looks at $T$ (&ldquo;50 Euro&rdquo;) and $R$ (&ldquo;15 Euro&rdquo;). It sees
 
   <footer class="post-footer">
     <ul class="post-tags">
-      <li><a href="https://vectorsandverbs.com/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/large-language-models/">Large-Language-Models</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/evaluation/">Evaluation</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/metrics/">Metrics</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/bleu/">BLEU</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/rouge/">ROUGE</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/meteor/">METEOR</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/bertscore/">BERTScore</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/comet/">COMET</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/llm-as-a-judge/">LLM-as-a-Judge</a></li>
-      <li><a href="https://vectorsandverbs.com/tags/g-eval/">G-Eval</a></li>
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/large-language-models/">Large-Language-Models</a></li>
+      <li><a href="http://localhost:1313/tags/evaluation/">Evaluation</a></li>
+      <li><a href="http://localhost:1313/tags/metrics/">Metrics</a></li>
+      <li><a href="http://localhost:1313/tags/bleu/">BLEU</a></li>
+      <li><a href="http://localhost:1313/tags/rouge/">ROUGE</a></li>
+      <li><a href="http://localhost:1313/tags/meteor/">METEOR</a></li>
+      <li><a href="http://localhost:1313/tags/bertscore/">BERTScore</a></li>
+      <li><a href="http://localhost:1313/tags/comet/">COMET</a></li>
+      <li><a href="http://localhost:1313/tags/llm-as-a-judge/">LLM-as-a-Judge</a></li>
+      <li><a href="http://localhost:1313/tags/g-eval/">G-Eval</a></li>
     </ul>
 <nav class="paginav">
-    <a class="prev" href="https://vectorsandverbs.com/posts/model-context-protocol/">
+    <a class="prev" href="http://localhost:1313/posts/model-context-protocol/">
         <span class="title">« Prev</span>
         <br>
         <span>USB-C of AI Space: The Model Context Protocol</span>
     </a>
-    <a class="next" href="https://vectorsandverbs.com/posts/profiling-deep-learning-models/">
+    <a class="next" href="http://localhost:1313/posts/profiling-deep-learning-models/">
         <span class="title">Next »</span>
         <br>
         <span>Squeeze every FLOP: Profiling AI models</span>
@@ -413,7 +344,7 @@ It looks at $T$ (&ldquo;50 Euro&rdquo;) and $R$ (&ldquo;15 Euro&rdquo;). It sees
     </main>
     
 <footer class="footer">
-        <span>&copy; 2026 <a href="https://vectorsandverbs.com/">Vectors &amp; Verbs</a></span> · 
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
 
     <span>
         Powered by
