@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Llama on Vectors &amp; Verbs</title>
+    <link>https://vectorsandverbs.com/tags/llama/</link>
+    <description>Recent content in Llama on Vectors &amp; Verbs</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 05 Jun 2026 23:00:00 +0530</lastBuildDate>
+    <atom:link href="https://vectorsandverbs.com/tags/llama/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Taming the Bot: Supervised Instruction Fine-Tuning Llama 3</title>
+      <link>https://vectorsandverbs.com/posts/taming-the-llm-supervised-fine-tuning-llama3/</link>
+      <pubDate>Fri, 05 Jun 2026 23:00:00 +0530</pubDate>
+      <guid>https://vectorsandverbs.com/posts/taming-the-llm-supervised-fine-tuning-llama3/</guid>
+      <description>A deep, hands-on walkthrough of supervised fine-tuning Llama 3.1 8B for customer support and a full analysis of what the model actually learned.</description>
+    </item>
+  </channel>
+</rss>

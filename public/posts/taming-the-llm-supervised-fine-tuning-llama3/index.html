@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto" data-theme="auto">
+
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="noindex, nofollow">
+<title>Taming the Bot: Supervised Instruction Fine-Tuning Llama 3 | Vectors &amp; Verbs</title>
+<meta name="keywords" content="artificial-intelligence, large-language-models, fine-tuning, lora, llama, supervised-fine-tuning, deep-learning">
+<meta name="description" content="A deep, hands-on walkthrough of supervised fine-tuning Llama 3.1 8B for customer support and a full analysis of what the model actually learned.">
+<meta name="author" content="">
+<link rel="canonical" href="http://localhost:1313/posts/taming-the-llm-supervised-fine-tuning-llama3/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.6e08a867ed9f4aac96600166f644e24c654e0ff59c4b361af3ddbb5e45b15f76.css" integrity="sha256-bgioZ&#43;2fSqyWYAFm9kTiTGVOD/WcSzYa8927XkWxX3Y=" rel="preload stylesheet" as="style">
+<link rel="icon" href="http://localhost:1313/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="http://localhost:1313/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="http://localhost:1313/favicon-32x32.png">
+<link rel="apple-touch-icon" href="http://localhost:1313/apple-touch-icon.png">
+<link rel="mask-icon" href="http://localhost:1313/safari-pinned-tab.svg">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="en" href="http://localhost:1313/posts/taming-the-llm-supervised-fine-tuning-llama3/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --code-block-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+                color-scheme: dark;
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .toc {
+                background: var(--entry);
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .list::-webkit-scrollbar-thumb {
+                border-color: var(--code-bg);
+            }
+        }
+
+    </style>
+</noscript>
+<script>
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else if (localStorage.getItem("pref-theme") === "light") {
+       document.querySelector("html").dataset.theme = 'light';
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.querySelector("html").dataset.theme = 'dark';
+    } else {
+        document.querySelector("html").dataset.theme = 'light';
+    }
+
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false}
+            ]
+        });
+    });
+</script>
+
+
+
+
+</head>
+<body id="top">
+    <header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="http://localhost:1313/" accesskey="h" title="Vectors &amp; Verbs (Alt + H)">Vectors &amp; Verbs</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)" aria-label="Toggle theme">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="18" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="http://localhost:1313/posts/" title="Posts">
+                    <span>Posts</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/about/" title="About Me">
+                    <span>About Me</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:1313/search/" title="Search (Alt &#43; /)" accesskey=/>
+                    <span>Search</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main">
+
+<article class="post-single">
+  <header class="post-header">
+    <div class="breadcrumbs"><a href="http://localhost:1313/">Home</a>&nbsp;»&nbsp;<a href="http://localhost:1313/posts/">Posts</a></div>
+    <h1 class="post-title entry-hint-parent">
+      Taming the Bot: Supervised Instruction Fine-Tuning Llama 3
+    </h1>
+    <div class="post-meta"><span title='2026-06-05 23:00:00 +0530 IST'>June 5, 2026</span>&nbsp;·&nbsp;<span>18 min</span>
+
+</div>
+  </header> 
+  <div class="post-content"><p>Large language models arrive from pretraining with an extraordinary breadth of knowledge — language structure, facts, code, reasoning patterns — all learned from trillions of tokens of internet text. But this knowledge is <em>unaligned</em>. Ask a base model a question and you might get a continuation that reads like a Wikipedia paragraph, a Reddit comment, or a code snippet, with no coherent notion of &ldquo;I should help this person.&rdquo;</p>
+<p><strong>Supervised Fine-Tuning (SFT)</strong> is the stage that bridges that gap. By training on thousands of curated <code>(instruction, response)</code> pairs, we teach the model <em>what good responses look like</em> — turning a raw text-completion engine into something that follows instructions, holds conversations, and stays on task.</p>
+<p>This post is a complete walkthrough of fine-tuning <strong>Llama 3.1 8B Instruct</strong> for a customer support domain using <strong>LoRA adapters</strong> on a single <strong>NVIDIA RTX 5090</strong>. We cover everything: dataset construction, the mechanics of loss masking, LoRA mathematics, training configuration, and a deep analysis of what 6,642 training steps actually did to the model&rsquo;s internal representations.</p>
+<hr>
+<h3 id="the-full-llm-training-chain">The Full LLM Training Chain<a hidden class="anchor" aria-hidden="true" href="#the-full-llm-training-chain">#</a></h3>
+<p>Before diving in, it helps to understand where SFT sits in the broader training pipeline:</p>
+<p><img alt="LLM training chain" loading="lazy" src="/images/sft-llama3/llm-training-chain.png"></p>
+<p>Both pretraining and SFT use <strong>Causal Language Modeling</strong> — the model predicts the next token given all previous tokens. The difference is in <em>what</em> they train on and <em>where</em> the loss is applied.</p>
+<table>
+  <thead>
+      <tr>
+          <th>Property</th>
+          <th>CLM (Pretraining)</th>
+          <th>SFT (Fine-Tuning)</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Labels</strong></td>
+          <td>Auto-generated from data itself</td>
+          <td>Human-curated (input, output) pairs</td>
+      </tr>
+      <tr>
+          <td><strong>Supervision source</strong></td>
+          <td>The data IS the label</td>
+          <td>External annotators or curated datasets</td>
+      </tr>
+      <tr>
+          <td><strong>Data scale</strong></td>
+          <td>Trillions of tokens</td>
+          <td>Thousands to millions of samples</td>
+      </tr>
+      <tr>
+          <td><strong>Objective</strong></td>
+          <td>Next token prediction</td>
+          <td>Produce desired output given input</td>
+      </tr>
+      <tr>
+          <td><strong>Loss applied on</strong></td>
+          <td>Every token in the sequence</td>
+          <td>Only the response/output tokens</td>
+      </tr>
+      <tr>
+          <td><strong>Goal</strong></td>
+          <td>Build world knowledge + language</td>
+          <td>Align behaviour to a task or instruction style</td>
+      </tr>
+      <tr>
+          <td><strong>GPU cost</strong></td>
+          <td>Enormous (weeks on thousands of GPUs)</td>
+          <td>Manageable (hours to days on a single GPU)</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="part-1-the-dataset">Part 1: The Dataset<a hidden class="anchor" aria-hidden="true" href="#part-1-the-dataset">#</a></h3>
+<h4 id="source-data">Source Data<a hidden class="anchor" aria-hidden="true" href="#source-data">#</a></h4>
+<p>We combine two complementary datasets for the customer support domain:</p>
+<p><strong>Bitext Customer Support LLM Chatbot Training Dataset</strong> — 53,744 single-turn instruction-response pairs spanning 27 intents across 11 categories:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Category</th>
+          <th>Intents</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Account</strong></td>
+          <td>create_account, delete_account, edit_account, switch_account, recover_password</td>
+      </tr>
+      <tr>
+          <td><strong>Order</strong></td>
+          <td>cancel_order, change_order, place_order, track_order</td>
+      </tr>
+      <tr>
+          <td><strong>Refund</strong></td>
+          <td>track_refund, get_refund</td>
+      </tr>
+      <tr>
+          <td><strong>Shipping</strong></td>
+          <td>change_shipping_address, set_up_shipping_address, delivery_period</td>
+      </tr>
+      <tr>
+          <td><strong>Payment</strong></td>
+          <td>payment_issue, check_payment_methods</td>
+      </tr>
+      <tr>
+          <td><strong>Subscription</strong></td>
+          <td>newsletter_subscription</td>
+      </tr>
+      <tr>
+          <td><strong>Contact</strong></td>
+          <td>contact_customer_service, contact_human_agent</td>
+      </tr>
+      <tr>
+          <td><strong>Feedback</strong></td>
+          <td>complaint, review</td>
+      </tr>
+      <tr>
+          <td><strong>Invoice</strong></td>
+          <td>check_invoice, get_invoice</td>
+      </tr>
+      <tr>
+          <td><strong>Cancellation</strong></td>
+          <td>check_cancellation_fee</td>
+      </tr>
+      <tr>
+          <td><strong>Registration</strong></td>
+          <td>registration_problems</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>MultiWOZ v2.2</strong> — 8,437 multi-turn task-oriented dialogues across domains like restaurant booking, hotel search, taxi ordering, and train scheduling. Each dialogue contains multiple USER-SYSTEM turn pairs with rich slot-filling annotations.</p>
+<p>The key insight: Bitext provides <strong>breadth</strong> (27 distinct customer intents with direct answers), while MultiWOZ adds what Bitext lacks — <strong>multi-turn context handling</strong> and <strong>slot-filling</strong> (extracting structured information like dates, prices, and locations from natural language).</p>
+<h4 id="processing-pipeline">Processing Pipeline<a hidden class="anchor" aria-hidden="true" href="#processing-pipeline">#</a></h4>
+<p>Raw data is noisy. Our filtering pipeline applies five sequential filters:</p>
+<p><img alt="Dataset filtering pipeline" loading="lazy" src="/images/sft-llama3/dataset-funnel.png"></p>
+<h5 id="step-1-extract-instruction-response-pairs">Step 1: Extract Instruction-Response Pairs<a hidden class="anchor" aria-hidden="true" href="#step-1-extract-instruction-response-pairs">#</a></h5>
+<p>For MultiWOZ, we extract every consecutive USER→SYSTEM turn pair from each dialogue:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">multiwoz_to_instruction_response</span><span class="p">(</span><span class="n">dialogue_turns</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;Convert MultiWOZ dialogue turns to instruction-response pairs.&#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pairs</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">turn</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dialogue_turns</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">turn</span><span class="p">[</span><span class="s2">&#34;speaker&#34;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&#34;USER&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">dialogue_turns</span><span class="p">)</span> <span class="ow">and</span> <span class="n">dialogue_turns</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&#34;speaker&#34;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&#34;SYSTEM&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">pairs</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;instruction&#34;</span><span class="p">:</span> <span class="n">turn</span><span class="p">[</span><span class="s2">&#34;utterance&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">                    <span class="s2">&#34;response&#34;</span><span class="p">:</span> <span class="n">dialogue_turns</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">][</span><span class="s2">&#34;utterance&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                <span class="p">})</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">pairs</span>
+</span></span></code></pre></div><p>Bitext is already in <code>(instruction, response)</code> format, so it passes through directly.</p>
+<h5 id="step-2-word-count-filter">Step 2: Word Count Filter<a hidden class="anchor" aria-hidden="true" href="#step-2-word-count-filter">#</a></h5>
+<p>Trivially short samples (one or two-word queries like &ldquo;Help&rdquo; or &ldquo;OK&rdquo;) provide almost no learning signal and can actually hurt training by teaching the model that vague inputs deserve detailed responses:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">wc_filter_function</span><span class="p">(</span><span class="n">sample</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">query_wc</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s2">&#34;instruction&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="n">resp_wc</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s2">&#34;response&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">query_wc</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="ow">and</span> <span class="n">resp_wc</span> <span class="o">&gt;</span> <span class="mi">5</span>
+</span></span></code></pre></div><h5 id="step-3-token-limit-filter">Step 3: Token Limit Filter<a hidden class="anchor" aria-hidden="true" href="#step-3-token-limit-filter">#</a></h5>
+<p>We enforce a combined token limit of <strong>580 tokens</strong> for the instruction + response pair. This is set below our training <code>max_seq_length</code> of 512 because the chat template adds system prompt tokens and special formatting tokens:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">token_limit</span> <span class="o">=</span> <span class="mi">580</span>
+</span></span><span class="line"><span class="cl"><span class="n">tokenizer</span> <span class="o">=</span> <span class="n">AutoTokenizer</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="s2">&#34;meta-llama/Llama-3.1-8b&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">tokenizer_filter_function</span><span class="p">(</span><span class="n">sample</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">sample</span><span class="p">[</span><span class="s2">&#34;instruction&#34;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; &#34;</span> <span class="o">+</span> <span class="n">sample</span><span class="p">[</span><span class="s2">&#34;response&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="n">truncation</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_special_tokens</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="s2">&#34;input_ids&#34;</span><span class="p">])</span> <span class="o">&lt;=</span> <span class="n">token_limit</span>
+</span></span></code></pre></div><h5 id="step-4-english-language-filter">Step 4: English Language Filter<a hidden class="anchor" aria-hidden="true" href="#step-4-english-language-filter">#</a></h5>
+<p>MultiWOZ is English-only, but the Bitext dataset contains some multilingual noise. We use the <code>lingua</code> library for fast, accurate language detection:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">lingua</span> <span class="kn">import</span> <span class="n">Language</span><span class="p">,</span> <span class="n">LanguageDetectorBuilder</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">english_detect_algo</span> <span class="o">=</span> <span class="n">LanguageDetectorBuilder</span><span class="o">.</span><span class="n">from_languages</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">Language</span><span class="o">.</span><span class="n">ENGLISH</span><span class="p">,</span> <span class="n">Language</span><span class="o">.</span><span class="n">CHINESE</span><span class="p">,</span> <span class="n">Language</span><span class="o">.</span><span class="n">FRENCH</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">filter_english</span><span class="p">(</span><span class="n">sample</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">text</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s2">&#34;instruction&#34;</span><span class="p">]</span> <span class="o">+</span> <span class="n">sample</span><span class="p">[</span><span class="s2">&#34;response&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lang</span> <span class="o">=</span> <span class="n">english_detect_algo</span><span class="o">.</span><span class="n">detect_language_of</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&#34;</span><span class="se">\n</span><span class="s2">&#34;</span><span class="p">,</span> <span class="s2">&#34;&#34;</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">lang</span> <span class="o">==</span> <span class="n">Language</span><span class="o">.</span><span class="n">ENGLISH</span>
+</span></span></code></pre></div><h5 id="step-5-deduplication-jaccard--minhash-lsh">Step 5: Deduplication (Jaccard + MinHash LSH)<a hidden class="anchor" aria-hidden="true" href="#step-5-deduplication-jaccard--minhash-lsh">#</a></h5>
+<p>Customer support data is inherently repetitive — many variations of &ldquo;How do I cancel my order?&rdquo; map to nearly identical responses. We apply two deduplication stages:</p>
+<p>First, a <strong>Jaccard similarity filter</strong> removes samples where the instruction and response are too similar to each other (a sign of parroting or template artifacts):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">nltk.metrics</span> <span class="kn">import</span> <span class="n">jaccard_distance</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">filter_same_inst_resp_pairs</span><span class="p">(</span><span class="n">sample</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span> <span class="n">threshold</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.85</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">instruction</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s2">&#34;instruction&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="n">response</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s2">&#34;response&#34;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">    <span class="n">similarity</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">jaccard_distance</span><span class="p">(</span><span class="n">instruction</span><span class="p">,</span> <span class="n">response</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">similarity</span> <span class="o">&lt;</span> <span class="n">threshold</span>
+</span></span></code></pre></div><p>Then, <strong>MinHash LSH</strong> removes near-duplicate samples across the entire dataset:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">datasketch</span> <span class="kn">import</span> <span class="n">MinHash</span><span class="p">,</span> <span class="n">MinHashLSH</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">dedup_dataset</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">threshold</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">num_perm</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">n_gram</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lsh</span> <span class="o">=</span> <span class="n">MinHashLSH</span><span class="p">(</span><span class="n">threshold</span><span class="o">=</span><span class="n">threshold</span><span class="p">,</span> <span class="n">num_perm</span><span class="o">=</span><span class="n">num_perm</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">keep_indices</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">sample</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&#34;Deduplicating&#34;</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">combined</span> <span class="o">=</span> <span class="n">sample</span><span class="p">[</span><span class="s2">&#34;instruction&#34;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&#34; &#34;</span> <span class="o">+</span> <span class="n">sample</span><span class="p">[</span><span class="s2">&#34;response&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="n">m</span> <span class="o">=</span> <span class="n">get_minhash</span><span class="p">(</span><span class="n">combined</span><span class="p">,</span> <span class="n">num_perm</span><span class="p">,</span> <span class="n">n_gram</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="ow">not</span> <span class="n">lsh</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">m</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">lsh</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">),</span> <span class="n">m</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">keep_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">dataset</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">keep_indices</span><span class="p">)</span>
+</span></span></code></pre></div><p><strong>Result</strong>: ~95K raw pairs → <strong>~74K</strong> clean, deduplicated training samples (specifically 74,560 samples prior to the 95/5 train/validation split).</p>
+<hr>
+<h3 id="part-2-loss-masking--the-mechanism-that-makes-sft-work">Part 2: Loss Masking — The Mechanism That Makes SFT Work<a hidden class="anchor" aria-hidden="true" href="#part-2-loss-masking--the-mechanism-that-makes-sft-work">#</a></h3>
+<p>This is the single most important concept in SFT, and the one most commonly misunderstood.</p>
+<h4 id="the-problem">The Problem<a hidden class="anchor" aria-hidden="true" href="#the-problem">#</a></h4>
+<p>In SFT, each training sample is a single token sequence that looks like:</p>
+<pre tabindex="0"><code>[system prompt tokens] [user message tokens] [assistant response tokens]
+</code></pre><p>The model sees the <strong>entire sequence</strong> as input. During backpropagation, the default behavior is to compute loss on <strong>every token</strong> — meaning the model gets a training signal for predicting the system prompt and user message too.</p>
+<p><strong>Why that&rsquo;s wrong</strong>: The system prompt and user message are things <em>you</em> wrote. You&rsquo;re not trying to teach the model to reproduce them. You&rsquo;re trying to teach it to produce the <strong>assistant response</strong> given the prompt. Training on prompt tokens wastes capacity and actively hurts — the model starts &ldquo;learning&rdquo; to predict instructions, which degrades its ability to <em>follow</em> them.</p>
+<h4 id="what-loss-masking-does">What Loss Masking Does<a hidden class="anchor" aria-hidden="true" href="#what-loss-masking-does">#</a></h4>
+<p>It replaces all non-assistant token labels with <strong><code>-100</code></strong> before passing them to the loss function. PyTorch&rsquo;s <code>CrossEntropyLoss</code> ignores <code>-100</code> by convention — it&rsquo;s a built-in sentinel value.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Without masking — labels = input_ids (all tokens contribute to loss)</span>
+</span></span><span class="line"><span class="cl"><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4518</span><span class="p">,</span> <span class="mi">278</span><span class="p">,</span> <span class="mi">1404</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>   <span class="c1"># every token</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># With masking — -100 = ignore this token</span>
+</span></span><span class="line"><span class="cl"><span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="o">...</span><span class="p">,</span>   <span class="c1"># system + user tokens → ignored</span>
+</span></span><span class="line"><span class="cl">           <span class="mi">29739</span><span class="p">,</span> <span class="mi">338</span><span class="p">,</span> <span class="mi">263</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>    <span class="c1"># assistant tokens → loss computed here</span>
+</span></span></code></pre></div><p>The loss computation becomes:</p>
+<p>$$\text{Loss} = \frac{1}{|\mathcal{A}|} \sum_{i \in \mathcal{A}} -\log P(\text{token}_i \mid \text{context up to } i)$$</p>
+<p>where $\mathcal{A}$ is the set of positions where <code>labels[i] != -100</code> (assistant tokens only).</p>
+<h4 id="what-breaks-if-you-skip-it">What Breaks If You Skip It<a hidden class="anchor" aria-hidden="true" href="#what-breaks-if-you-skip-it">#</a></h4>
+<p>The model learns that after seeing a system prompt, it should predict the next system prompt token — because that&rsquo;s what the training signal said. The practical effect:</p>
+<ul>
+<li>The model starts <strong>parroting instructions back</strong></li>
+<li>Generates <strong>repetitive boilerplate</strong></li>
+<li><strong>Loses instruction-following capability</strong></li>
+</ul>
+<p>It&rsquo;s a subtle degradation that doesn&rsquo;t always show up in loss metrics but kills real-world output quality.</p>
+<h4 id="implementation">Implementation<a hidden class="anchor" aria-hidden="true" href="#implementation">#</a></h4>
+<p>We use the <code>DataCollatorForCompletionOnlyLM</code> from the <code>trl</code> library, which detects the assistant header token and masks everything before it:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">RESPONSE_TEMPLATE</span> <span class="o">=</span> <span class="s2">&#34;&lt;|start_header_id|&gt;assistant&lt;|end_header_id|&gt;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="n">collator</span> <span class="o">=</span> <span class="n">DataCollatorForCompletionOnlyLM</span><span class="p">(</span><span class="n">RESPONSE_TEMPLATE</span><span class="p">,</span> <span class="n">tokenizer</span><span class="o">=</span><span class="n">tokenizer</span><span class="p">)</span>
+</span></span></code></pre></div><p>We also instrument it to track <strong>token efficiency</strong> — the fraction of tokens in each batch that actually contribute to the loss:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">InstrumentedCollator</span><span class="p">(</span><span class="n">DataCollatorForCompletionOnlyLM</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">model_ref</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_model_ref</span> <span class="o">=</span> <span class="n">model_ref</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">batch</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__call__</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">labels</span> <span class="o">=</span> <span class="n">batch</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&#34;labels&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_model_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">total</span>    <span class="o">=</span> <span class="n">labels</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">unmasked</span> <span class="o">=</span> <span class="p">(</span><span class="n">labels</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">_model_ref</span><span class="o">.</span><span class="n">_last_token_efficiency</span> <span class="o">=</span> <span class="n">unmasked</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">batch</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="o">*</span><span class="p">(</span><span class="n">Note</span><span class="p">:</span> <span class="n">We</span> <span class="n">will</span> <span class="n">later</span> <span class="n">write</span> <span class="n">a</span> <span class="n">custom</span> <span class="err">`</span><span class="n">VisibilityCallback</span><span class="err">`</span> <span class="ow">in</span> <span class="n">Part</span> <span class="mi">5</span> <span class="n">that</span> <span class="n">retrieves</span> <span class="n">this</span> <span class="err">`</span><span class="n">_last_token_efficiency</span><span class="err">`</span> <span class="n">value</span> <span class="kn">from</span> <span class="nn">the</span> <span class="n">model</span> <span class="n">instance</span> <span class="ow">and</span> <span class="n">logs</span> <span class="n">it</span> <span class="n">to</span> <span class="n">TensorBoard</span><span class="o">/</span><span class="n">MLflow</span><span class="o">.</span><span class="p">)</span><span class="o">*</span>
+</span></span></code></pre></div><hr>
+<h3 id="part-3-lora--low-rank-adaptation">Part 3: LoRA — Low-Rank Adaptation<a hidden class="anchor" aria-hidden="true" href="#part-3-lora--low-rank-adaptation">#</a></h3>
+<p>Full fine-tuning of an 8B parameter model would require updating all 8 billion weights, their gradients, and optimizer states — easily exceeding 60 GB of VRAM. <strong>LoRA</strong> makes this tractable by decomposing the weight update into two small matrices.</p>
+<h4 id="the-mathematics">The Mathematics<a hidden class="anchor" aria-hidden="true" href="#the-mathematics">#</a></h4>
+<p>Instead of learning $\Delta W$ directly (same dimensions as the original weight matrix), LoRA decomposes it into:</p>
+<p>$$\Delta W = A \times B$$</p>
+<p>where $A$ is $(d \times r)$ and $B$ is $(r \times d)$. The rank $r$ controls the &ldquo;expressivity budget&rdquo; of the adapter.</p>
+<p>The effective weight during forward pass becomes:</p>
+<p>$$W_{\text{eff}} = W_{\text{frozen}} + \frac{\alpha}{r} \times (A \times B)$$</p>
+<p>The term $\frac{\alpha}{r}$ is the scaling factor. This normalisation matters because during training, the magnitude of $A \times B$ grows with $r$ — higher rank matrices produce larger updates by default. Standard values for the scaling factor are 1 or 2.</p>
+<h4 id="rank-and-parameter-budget">Rank and Parameter Budget<a hidden class="anchor" aria-hidden="true" href="#rank-and-parameter-budget">#</a></h4>
+<table>
+  <thead>
+      <tr>
+          <th>Rank $r$</th>
+          <th>% of Full Update Space</th>
+          <th>Trainable Params</th>
+          <th>VRAM for Adapters</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>4</td>
+          <td>~0.1%</td>
+          <td>~10.5M</td>
+          <td>~40 MB</td>
+      </tr>
+      <tr>
+          <td>16</td>
+          <td>~0.4%</td>
+          <td>~42M</td>
+          <td>~160 MB</td>
+      </tr>
+      <tr>
+          <td><strong>64</strong></td>
+          <td><strong>~1.6%</strong></td>
+          <td><strong>~168M</strong></td>
+          <td><strong>~640 MB</strong></td>
+      </tr>
+      <tr>
+          <td>256</td>
+          <td>~6.4%</td>
+          <td>~672M</td>
+          <td>~2.5 GB</td>
+      </tr>
+      <tr>
+          <td>Full FT</td>
+          <td>100%</td>
+          <td>8.2B</td>
+          <td>~32 GB</td>
+      </tr>
+  </tbody>
+</table>
+<h4 id="our-configuration">Our Configuration<a hidden class="anchor" aria-hidden="true" href="#our-configuration">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">lora_cfg</span> <span class="o">=</span> <span class="n">LoraConfig</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">r</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lora_alpha</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>           <span class="c1"># scaling factor = alpha/r = 2.0</span>
+</span></span><span class="line"><span class="cl">    <span class="n">target_modules</span><span class="o">=</span><span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;q_proj&#34;</span><span class="p">,</span> <span class="s2">&#34;k_proj&#34;</span><span class="p">,</span> <span class="s2">&#34;v_proj&#34;</span><span class="p">,</span> <span class="s2">&#34;o_proj&#34;</span><span class="p">,</span>     <span class="c1"># attention</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;gate_proj&#34;</span><span class="p">,</span> <span class="s2">&#34;up_proj&#34;</span><span class="p">,</span> <span class="s2">&#34;down_proj&#34;</span>           <span class="c1"># MLP</span>
+</span></span><span class="line"><span class="cl">    <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lora_dropout</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bias</span><span class="o">=</span><span class="s2">&#34;none&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">task_type</span><span class="o">=</span><span class="n">TaskType</span><span class="o">.</span><span class="n">CAUSAL_LM</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">model</span> <span class="o">=</span> <span class="n">get_peft_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">lora_cfg</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">model</span><span class="o">.</span><span class="n">print_trainable_parameters</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># trainable params: 167,772,160 || all params: 8,198,033,408 || trainable%: 2.0465</span>
+</span></span></code></pre></div><p>We target <strong>all seven linear projection matrices</strong> in every transformer layer — the four attention projections (Q, K, V, O) and the three MLP projections (gate, up, down). This is comprehensive for a domain-shift task.</p>
+<h4 id="the-merge-on-gpu-mistake">The Merge-on-GPU Mistake<a hidden class="anchor" aria-hidden="true" href="#the-merge-on-gpu-mistake">#</a></h4>
+<p>When you deploy a LoRA model, you eventually call <code>model.merge_and_unload()</code> to fuse the adapters into the base weights:</p>
+<p>$$W_{\text{merged}} = W_{\text{frozen}} + \frac{\alpha}{r} \times (A \times B)$$</p>
+<p>For every adapted layer, this materialises the full weight update $(A \times B)$ as a temporary buffer. The peak VRAM needed:</p>
+<pre tabindex="0"><code>VRAM ≈ base model (~14 GB for 8B in BF16)
+     + LoRA adapters (~0.5 GB)
+     + temporary A×B buffer per layer
+     + merged result (same size as base)
+     ≈ 2× model size at peak = ~28–30 GB
+</code></pre><p>On a 32 GB card, this is right at the edge. The fix is simple — merge on CPU:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># Wrong — loads on GPU, risks OOM during merge</span>
+</span></span><span class="line"><span class="cl"><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">device_map</span><span class="o">=</span><span class="s2">&#34;auto&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">merged</span> <span class="o">=</span> <span class="n">PeftModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">adapter_path</span><span class="p">)</span><span class="o">.</span><span class="n">merge_and_unload</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># Right — loads on CPU, merge happens in RAM</span>
+</span></span><span class="line"><span class="cl"><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">device_map</span><span class="o">=</span><span class="s2">&#34;cpu&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">merged</span> <span class="o">=</span> <span class="n">PeftModel</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">adapter_path</span><span class="p">)</span><span class="o">.</span><span class="n">merge_and_unload</span><span class="p">()</span>
+</span></span></code></pre></div><p>CPU merge is slower (~5–10 minutes) but always succeeds. It&rsquo;s also <strong>deterministic</strong> — GPU merging with <code>device_map=&quot;auto&quot;</code> can produce subtle numerical differences due to non-deterministic CUDA float operations.</p>
+<hr>
+<h3 id="part-4-training-configuration">Part 4: Training Configuration<a hidden class="anchor" aria-hidden="true" href="#part-4-training-configuration">#</a></h3>
+<h4 id="the-model">The Model<a hidden class="anchor" aria-hidden="true" href="#the-model">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">model</span> <span class="o">=</span> <span class="n">AutoModelForCausalLM</span><span class="o">.</span><span class="n">from_pretrained</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;meta-llama/Llama-3.1-8B-Instruct&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">torch_dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">bfloat16</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">attn_implementation</span><span class="o">=</span><span class="s2">&#34;flash_attention_2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">use_cache</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">device_map</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;&#34;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">model</span><span class="o">.</span><span class="n">gradient_checkpointing_enable</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">gradient_checkpointing_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s2">&#34;use_reentrant&#34;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></div><p><strong>Key choices</strong>:</p>
+<ul>
+<li><strong>BF16 for weights</strong>: BF16 has the same exponent range as FP32 (8 bits) but lower mantissa precision (7 bits vs 23). This is comfortable for weights because the range prevents overflow. FP16, with its narrower range, can cause gradient overflow → NaN loss → training collapse — requiring loss scaling hacks that add complexity.</li>
+<li><strong>Flash Attention 2</strong>: Fused attention kernel that reduces memory from $O(n^2)$ to $O(n)$ and improves throughput.</li>
+<li><strong>Gradient Checkpointing</strong>: Re-computes activations during backward pass instead of storing them, trading compute for ~40% VRAM reduction.</li>
+</ul>
+<h4 id="training-arguments">Training Arguments<a hidden class="anchor" aria-hidden="true" href="#training-arguments">#</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">args</span> <span class="o">=</span> <span class="n">TrainingArguments</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="n">output_dir</span><span class="o">=</span><span class="s2">&#34;./results&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">per_device_train_batch_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">gradient_accumulation_steps</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>       <span class="c1"># effective batch = 8 × 4 = 32</span>
+</span></span><span class="line"><span class="cl">    <span class="n">per_device_eval_batch_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">num_train_epochs</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">2e-4</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lr_scheduler_type</span><span class="o">=</span><span class="s2">&#34;cosine&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">warmup_ratio</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">bf16</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">tf32</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">optim</span><span class="o">=</span><span class="s2">&#34;adamw_torch_fused&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">max_grad_norm</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">evaluation_strategy</span><span class="o">=</span><span class="s2">&#34;steps&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">eval_steps</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">save_steps</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">save_total_limit</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">load_best_model_at_end</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">metric_for_best_model</span><span class="o">=</span><span class="s2">&#34;eval_loss&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="n">remove_unused_columns</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>         <span class="c1"># keep raw prompt/response fields for collator</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span></code></pre></div><h4 id="why-effective-batch-size-32">Why Effective Batch Size 32?<a hidden class="anchor" aria-hidden="true" href="#why-effective-batch-size-32">#</a></h4>
+<p>The GPU can hold <strong>8 samples</strong> in VRAM during a forward/backward pass. But research shows models train better with larger effective batch sizes — the gradient estimate is less noisy. So instead of updating weights every 8 samples, we accumulate gradients across <strong>4 such batches</strong> and then perform a single weight update. Mathematically identical to batch size 32, but fits in 32 GB VRAM.</p>
+<h4 id="learning-rate-schedule">Learning Rate Schedule<a hidden class="anchor" aria-hidden="true" href="#learning-rate-schedule">#</a></h4>
+<p><img alt="Cosine learning rate schedule with warmup" loading="lazy" src="/images/sft-llama3/lr-schedule.png"></p>
+<p>Peak learning rate of <strong>2e-4</strong>, with a <strong>3% linear warmup</strong> (steps 0→199) from 0 to peak. Then <strong>cosine decay</strong> back to ~0 over the remaining training. This allows aggressive learning early (when the model needs to adapt most) and fine-grained refinement later (when you don&rsquo;t want to overshoot learned representations).</p>
+<h4 id="chat-template-formatting">Chat Template Formatting<a hidden class="anchor" aria-hidden="true" href="#chat-template-formatting">#</a></h4>
+<p>Each sample is formatted using Llama 3&rsquo;s native chat template:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="n">SYSTEM_PROMPT</span> <span class="o">=</span> <span class="p">(</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;You are a professional customer support assistant. &#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;Be empathetic, concise, and resolution-focused. &#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;If unable to resolve, offer to escalate to a human agent.&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">fmt</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">msgs</span> <span class="o">=</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;system&#34;</span><span class="p">,</span>    <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="n">SYSTEM_PROMPT</span><span class="p">},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;user&#34;</span><span class="p">,</span>      <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="s2">&#34;instruction&#34;</span><span class="p">]},</span>
+</span></span><span class="line"><span class="cl">        <span class="p">{</span><span class="s2">&#34;role&#34;</span><span class="p">:</span> <span class="s2">&#34;assistant&#34;</span><span class="p">,</span> <span class="s2">&#34;content&#34;</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="s2">&#34;response&#34;</span><span class="p">]},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="p">{</span><span class="s2">&#34;text&#34;</span><span class="p">:</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">apply_chat_template</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="n">msgs</span><span class="p">,</span> <span class="n">tokenize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_generation_prompt</span><span class="o">=</span><span class="kc">False</span><span class="p">)}</span>
+</span></span></code></pre></div><hr>
+<h3 id="part-5-monitoring-infrastructure">Part 5: Monitoring Infrastructure<a hidden class="anchor" aria-hidden="true" href="#part-5-monitoring-infrastructure">#</a></h3>
+<p>To log the custom metrics (including the <code>token_efficiency</code> calculated by our <code>InstrumentedCollator</code> in Part 2, which stores it as a model attribute), we built a custom <code>VisibilityCallback</code> that hooks into the Trainer and logs deep diagnostics every N steps to both TensorBoard and MLflow:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">VisibilityCallback</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Tracks:
+</span></span></span><span class="line"><span class="cl"><span class="s2">      - token_efficiency      : fraction of batch tokens not masked
+</span></span></span><span class="line"><span class="cl"><span class="s2">      - lora_drift/</span><span class="si">{name}</span><span class="s2">     : L2 distance each LoRA matrix moved from init
+</span></span></span><span class="line"><span class="cl"><span class="s2">      - grad_norm/</span><span class="si">{module}</span><span class="s2">    : per-module gradient norms (q/k/v/o/gate/up/down)
+</span></span></span><span class="line"><span class="cl"><span class="s2">      - lora_eff_rank         : effective rank via SVD (nuclear/Frobenius ratio)
+</span></span></span><span class="line"><span class="cl"><span class="s2">      - activation_norm       : per-layer activation magnitudes
+</span></span></span><span class="line"><span class="cl"><span class="s2">      - gpu_mem_gb            : VRAM usage at log time
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tb_writer</span><span class="p">,</span> <span class="n">log_every</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">deep_every</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">tb</span> <span class="o">=</span> <span class="n">tb_writer</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">log_every</span> <span class="o">=</span> <span class="n">log_every</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">deep_every</span> <span class="o">=</span> <span class="n">deep_every</span>
+</span></span></code></pre></div><p>The effective rank computation is particularly revealing — it tells you how much of the LoRA adapter&rsquo;s capacity is actually being used:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">_log_rank_utilization</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;&#34;&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Effective rank = nuclear_norm / frobenius_norm.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    For a rank-r matrix: max value approaches r when all singular values equal.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    Low effective rank = adapter collapsed to fewer dims than r.
+</span></span></span><span class="line"><span class="cl"><span class="s2">    &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="s2">&#34;lora_B&#34;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">param</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">continue</span>
+</span></span><span class="line"><span class="cl">        <span class="n">W</span> <span class="o">=</span> <span class="n">param</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">S</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">svdvals</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">nuclear_norm</span>   <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">frobenius_norm</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">eff_rank</span> <span class="o">=</span> <span class="n">nuclear_norm</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">frobenius_norm</span><span class="p">,</span> <span class="mf">1e-8</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">tb</span><span class="o">.</span><span class="n">add_scalar</span><span class="p">(</span><span class="sa">f</span><span class="s2">&#34;lora_eff_rank/</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#34;</span><span class="p">,</span> <span class="n">eff_rank</span><span class="p">,</span> <span class="n">step</span><span class="p">)</span>
+</span></span></code></pre></div><hr>
+<h3 id="part-6-training-results--what-actually-happened">Part 6: Training Results — What Actually Happened<a hidden class="anchor" aria-hidden="true" href="#part-6-training-results--what-actually-happened">#</a></h3>
+<p>Training ran for <strong>3 epochs</strong> (6,642 steps) in <strong>~6.6 hours</strong> on a single RTX 5090. Let&rsquo;s dissect every signal.</p>
+<h4 id="loss-convergence">Loss Convergence<a hidden class="anchor" aria-hidden="true" href="#loss-convergence">#</a></h4>
+<p><img alt="Training and evaluation loss over 3 epochs" loading="lazy" src="/images/sft-llama3/loss-convergence.png"></p>
+<p><strong>Train loss</strong> descended smoothly from ~1.99 → ~0.51. The shape is well-behaved with one notable feature: a <strong>sharp drop around step 4,000</strong>. This is a <em>phase transition</em> — the model crossed a threshold in learning a recurring pattern (likely the MultiWOZ multi-turn structure or a dominant Bitext intent cluster). The model didn&rsquo;t learn uniformly; there was an inflection point where something &ldquo;clicked.&rdquo;</p>
+<p><strong>Eval loss</strong> tells a more nuanced story:</p>
+<ul>
+<li><strong>Epoch 1</strong> (steps 0–2,214): Rapid descent from 0.97 → 0.81. The model is absorbing domain knowledge fast.</li>
+<li><strong>Epoch 2</strong> (steps 2,214–4,428): Continued improvement, reaching <strong>0.76</strong> — the best eval loss of the run.</li>
+<li><strong>Epoch 3</strong> (steps 4,428–6,642): Eval loss <strong>jumps back up to ~0.81</strong> and plateaus. The model is now fitting training data tighter than it can generalise.</li>
+</ul>
+<p><img alt="Overfitting diagnostic" loading="lazy" src="/images/sft-llama3/overfitting-diagnostic.png"></p>
+<p>The <strong>train-eval gap of ~0.30</strong> at the end is larger than ideal. It&rsquo;s not catastrophic overfitting (eval loss stabilised rather than spiraling), but the best model checkpoint is from <strong>epoch ~2.0</strong>, not epoch 3.0. This is exactly why <code>load_best_model_at_end=True</code> and <code>metric_for_best_model=&quot;eval_loss&quot;</code> were configured — the trainer automatically selects the epoch-2 checkpoint.</p>
+<h4 id="gradient-health">Gradient Health<a hidden class="anchor" aria-hidden="true" href="#gradient-health">#</a></h4>
+<p><img alt="Gradient norm over training" loading="lazy" src="/images/sft-llama3/gradient-norm.png"></p>
+<p>Two patterns worth noting:</p>
+<ol>
+<li>
+<p><strong>The rise after step 4,000.</strong> Grad norm settled around 0.5 for the first half, then climbed to 0.7–0.9 and stayed elevated. This coincides with the loss phase transition — the model entered a new learning regime with larger gradients. At 0.93 it&rsquo;s not catastrophic, but it&rsquo;s the wrong direction. Normally grad norm should decrease or stay flat as training matures.</p>
+</li>
+<li>
+<p><strong>Periodic spikes</strong> throughout, especially after step 4,000. These are individual bad batches — likely longer MultiWOZ samples or outlier Bitext responses that weren&rsquo;t fully filtered. The <code>max_grad_norm=1.0</code> clipping catches them before they damage weights, which is why loss stayed smooth despite the spikes.</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>Practical note</strong>: If grad norm crosses 1.5 consistently in a future run, reduce LR to 1e-4 for the second half. The cosine scheduler should handle this, but may not decay fast enough given the higher-than-expected step count.</p></blockquote>
+<h4 id="per-module-gradient-norms">Per-Module Gradient Norms<a hidden class="anchor" aria-hidden="true" href="#per-module-gradient-norms">#</a></h4>
+<p><img alt="Per-module gradient norms" loading="lazy" src="/images/sft-llama3/module-grad-norms.png"></p>
+<p>This reveals which parts of the model are doing the heavy lifting:</p>
+<ul>
+<li><strong><code>down_proj</code></strong> (MLP) consistently receives the <strong>strongest gradient signal</strong> — peaking at 0.027. The MLP projection layers are where domain vocabulary and response style live.</li>
+<li><strong><code>v_proj</code></strong> (attention) receives moderate signal at ~0.018.</li>
+<li><strong><code>q_proj</code></strong> (attention) receives the weakest at ~0.011. Query projections are doing subtler intent-routing work.</li>
+</ul>
+<p>The ordering <code>down_proj &gt; v_proj &gt; q_proj</code> makes sense for a customer support task — domain-specific <strong>content generation</strong> (MLP) requires more adaptation than <strong>attention routing</strong> (Q/K/V).</p>
+<p>All three modules show the same rise after step 4,000, confirming the phase transition was global across the architecture.</p>
+<h4 id="lora-weight-drift">LoRA Weight Drift<a hidden class="anchor" aria-hidden="true" href="#lora-weight-drift">#</a></h4>
+<p><img alt="LoRA weight drift analysis" loading="lazy" src="/images/sft-llama3/lora-drift.png"></p>
+<p>Weight drift measures how far each LoRA matrix has moved from its initialisation:</p>
+<ul>
+<li><strong><code>up_proj lora_B</code></strong>: Drifted to 7.97×10⁸ (L2 norm) — the highest of any module. The MLP up projection drove the most adaptation.</li>
+<li><strong><code>o_proj lora_B</code></strong>: 3.65×10⁸ — about half of <code>up_proj</code>, still significant.</li>
+<li><strong><code>gate_proj lora_A</code></strong>: 0.983 <em>relative</em> drift — meaning this matrix has moved <strong>98%</strong> away from initialisation. It&rsquo;s effectively a completely different matrix. The gating mechanism controlling information flow through the MLP needed heavy domain adaptation.</li>
+</ul>
+<blockquote>
+<p><strong>Concern</strong>: <code>gate_proj</code> doing this much heavy lifting means it could overfit before other modules catch up. Running another epoch would likely worsen this.</p></blockquote>
+<h4 id="the-star-finding-effective-rank-collapse">The Star Finding: Effective Rank Collapse<a hidden class="anchor" aria-hidden="true" href="#the-star-finding-effective-rank-collapse">#</a></h4>
+<p><img alt="LoRA effective rank collapse" loading="lazy" src="/images/sft-llama3/effective-rank.png"></p>
+<p>This is the most important result of the entire run. All three examined modules converged to very low effective ranks:</p>
+<table>
+  <thead>
+      <tr>
+          <th>Module</th>
+          <th>Effective Rank</th>
+          <th>Configured Rank</th>
+          <th>Utilisation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>k_proj lora_B</code></td>
+          <td><strong>~5.27</strong></td>
+          <td>64</td>
+          <td>8.2%</td>
+      </tr>
+      <tr>
+          <td><code>q_proj lora_B</code></td>
+          <td><strong>~5.72</strong></td>
+          <td>64</td>
+          <td>8.9%</td>
+      </tr>
+      <tr>
+          <td><code>gate_proj lora_B</code></td>
+          <td><strong>~7.66</strong></td>
+          <td>64</td>
+          <td>12.0%</td>
+      </tr>
+  </tbody>
+</table>
+<p><strong>Our rank-64 adapters are operating at effective rank ~5–8.</strong> We paid for 64 dimensions of expressivity but the task only needed ~8. This is the classic <em>LoRA collapse pattern</em>: early training finds a low-dimensional solution quickly and the adapter specialises into a narrow subspace, then gradually expands but never recovers to full rank.</p>
+<p><strong>Practical implication</strong>: $r = 64$ was overkill for this task. Equivalent results could be achieved with $r = 8$ or $r = 16$, which would train faster, use less VRAM, and generalise better (lower rank = stronger implicit regularisation).</p>
+<p><strong>How to validate</strong>: Run the same training at $r = 16, 32, 64, 128$ and compare eval loss. If $r = 16$ and $r = 64$ give the same eval loss, $r = 16$ was sufficient.</p>
+<blockquote>
+<p>This observation — that LoRA adapters for dialogue tasks collapse to very low effective rank regardless of configured $r$ — is reproducible across architectures and worth investigating further.</p></blockquote>
+<h4 id="activation-norms">Activation Norms<a hidden class="anchor" aria-hidden="true" href="#activation-norms">#</a></h4>
+<p><img alt="Layer activation norms" loading="lazy" src="/images/sft-llama3/activation-norms.png"></p>
+<p>Activation norms across layers 12, 20, and 28 show:</p>
+<ul>
+<li><strong>Identical shape across all layers</strong> — the whole network moves together. No individual layer is dying or running away independently. This is a good sign.</li>
+<li><strong>A dip around steps 1,500–2,500</strong> followed by recovery — the model briefly &ldquo;compressed&rdquo; its representations during the warmup-to-cosine transition, then expanded again as it consolidated domain patterns.</li>
+<li><strong>Recovery back to near-original norms</strong> (~549–565) means the model isn&rsquo;t catastrophically forgetting base capabilities. The values are well within healthy range — no saturation, no dead layers.</li>
+</ul>
+<hr>
+<h3 id="part-7-catastrophic-forgetting-or-lack-thereof">Part 7: Catastrophic Forgetting (Or Lack Thereof)<a hidden class="anchor" aria-hidden="true" href="#part-7-catastrophic-forgetting-or-lack-thereof">#</a></h3>
+<p>A common concern with fine-tuning is <strong>catastrophic forgetting</strong> — the model losing previously learned capabilities while acquiring new ones. This is a real problem with full fine-tuning, where every weight is updated.</p>
+<p>LoRA sidesteps this entirely. The <strong>original model weights remain frozen</strong>. The adapter learns a small delta that&rsquo;s added on top. If you remove the adapter, you get the original model back, unchanged. The activation norm analysis above confirms this — norms recovered to near-baseline values, indicating the base model&rsquo;s representations are intact.</p>
+<hr>
+<h3 id="part-8-summary-scalars-and-resource-usage">Part 8: Summary Scalars and Resource Usage<a hidden class="anchor" aria-hidden="true" href="#part-8-summary-scalars-and-resource-usage">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th>Metric</th>
+          <th>Value</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>Final train loss</strong></td>
+          <td>0.6945 (epoch-averaged)</td>
+      </tr>
+      <tr>
+          <td><strong>Best eval loss</strong></td>
+          <td>0.7614 (epoch ~2.0)</td>
+      </tr>
+      <tr>
+          <td><strong>Final eval loss</strong></td>
+          <td>0.8128 (epoch 3.0)</td>
+      </tr>
+      <tr>
+          <td><strong>Training runtime</strong></td>
+          <td>23,991 seconds (~6.6 hours)</td>
+      </tr>
+      <tr>
+          <td><strong>Steps/second</strong></td>
+          <td>0.277 (~3.6s per step)</td>
+      </tr>
+      <tr>
+          <td><strong>Samples/second</strong></td>
+          <td>8.857</td>
+      </tr>
+      <tr>
+          <td><strong>Total FLOPs</strong></td>
+          <td>2.4 × 10¹⁸</td>
+      </tr>
+      <tr>
+          <td><strong>Stable VRAM</strong></td>
+          <td>~18.1 GB</td>
+      </tr>
+      <tr>
+          <td><strong>GPU</strong></td>
+          <td>NVIDIA GeForce RTX 5090 (32 GB)</td>
+      </tr>
+      <tr>
+          <td><strong>Trainable parameters</strong></td>
+          <td>167,772,160 (2.05% of 8.2B)</td>
+      </tr>
+      <tr>
+          <td><strong>Train samples</strong></td>
+          <td>70,832</td>
+      </tr>
+      <tr>
+          <td><strong>Validation samples</strong></td>
+          <td>3,728</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="part-9-lessons-and-next-steps">Part 9: Lessons and Next Steps<a hidden class="anchor" aria-hidden="true" href="#part-9-lessons-and-next-steps">#</a></h3>
+<h4 id="what-worked">What Worked<a hidden class="anchor" aria-hidden="true" href="#what-worked">#</a></h4>
+<ol>
+<li><strong>Loss masking via <code>DataCollatorForCompletionOnlyLM</code></strong> — essential for clean SFT. Without it, the model would learn to predict system prompts.</li>
+<li><strong>Comprehensive monitoring</strong> — per-module gradient norms and effective rank tracking revealed insights (rank collapse, MLP dominance) that per-step loss alone would have hidden.</li>
+<li><strong>Cosine LR with warmup</strong> — produced smooth convergence without manual LR tuning.</li>
+<li><strong><code>load_best_model_at_end</code></strong> — automatically selected the epoch-2 checkpoint, avoiding the epoch-3 overfitting.</li>
+<li><strong>LoRA&rsquo;s catastrophic forgetting immunity</strong> — activation norms confirmed the base model remains intact.</li>
+</ol>
+<h4 id="what-to-fix-next">What to Fix Next<a hidden class="anchor" aria-hidden="true" href="#what-to-fix-next">#</a></h4>
+<ol>
+<li><strong>Reduce LoRA rank to $r = 8$ or $r = 16$</strong> — the effective rank analysis showed $r = 64$ was overkill. This alone would cut adapter VRAM by 4–8× and likely improve generalisation via implicit regularisation.</li>
+<li><strong>Address the train-eval gap</strong> — the 0.30 gap at epoch 3 suggests the model could benefit from either more data, more aggressive dropout, or stopping at 2 epochs.</li>
+<li><strong>Investigate the phase transition at step 4,000</strong> — the coincident loss drop and grad norm rise suggest a structural change worth understanding. Logging per-intent accuracy would reveal whether this was one intent cluster &ldquo;clicking.&rdquo;</li>
+<li><strong>Grade the grad norm rise</strong> — if future runs show sustained grad norm above 1.0, halving the LR for the second half would stabilise training.</li>
+</ol>
+<h4 id="the-hard-truth-about-rank">The Hard Truth About Rank<a hidden class="anchor" aria-hidden="true" href="#the-hard-truth-about-rank">#</a></h4>
+<p>The effective rank finding (~5–8 out of 64) is genuinely interesting and reproducible across architectures. For customer support dialogue — a task with relatively constrained vocabulary and response patterns — the model only needs a handful of independent directions to shift its behaviour. This suggests that for production SFT on similar tasks, starting with $r = 8$ and validating empirically is the right approach. Spending compute on $r = 64$ doesn&rsquo;t hurt outputs, but it wastes ~85% of the adapter parameter budget.</p>
+<hr>
+<p><em>All code is available in the <a href="https://github.com/SidInamdar/llm-and-vlm-projects/tree/main/projects/llama-sft">llama-sft project</a> repository. Training logs were captured with TensorBoard and MLflow.</em></p>
+
+
+  </div>
+
+  <footer class="post-footer">
+    <ul class="post-tags">
+      <li><a href="http://localhost:1313/tags/artificial-intelligence/">Artificial-Intelligence</a></li>
+      <li><a href="http://localhost:1313/tags/large-language-models/">Large-Language-Models</a></li>
+      <li><a href="http://localhost:1313/tags/fine-tuning/">Fine-Tuning</a></li>
+      <li><a href="http://localhost:1313/tags/lora/">Lora</a></li>
+      <li><a href="http://localhost:1313/tags/llama/">Llama</a></li>
+      <li><a href="http://localhost:1313/tags/supervised-fine-tuning/">Supervised-Fine-Tuning</a></li>
+      <li><a href="http://localhost:1313/tags/deep-learning/">Deep-Learning</a></li>
+    </ul>
+<nav class="paginav">
+    <a class="prev" href="http://localhost:1313/posts/quantization-and-precision/">
+        <span class="title">« Prev</span>
+        <br>
+        <span>The Architecture of Precision: Variations in model quantizations</span>
+    </a>
+</nav><div class="social-icons" align="left">
+    <a href="https://x.com/siddheshinamdar" target="_blank" rel="noopener noreferrer me"
+        title="X">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <path
+        d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z">
+    </path>
+</svg>
+    </a>
+    <a href="https://www.linkedin.com/in/siddhesh-inamdar-24634694/" target="_blank" rel="noopener noreferrer me"
+        title="Linkedin">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+    <rect x="2" y="9" width="4" height="12"></rect>
+    <circle cx="4" cy="4" r="2"></circle>
+</svg>
+    </a>
+    <a href="https://medium.com/@siddheshnmdr" target="_blank" rel="noopener noreferrer me"
+        title="Medium">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 76.000000 76.000000" fill="currentColor" stroke-width="2"
+    preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(0.000000,76.000000) scale(0.100000,-0.100000)">
+        <path
+            d="M0 380 l0 -380 380 0 380 0 0 380 0 380 -380 0 -380 0 0 -380z m334 85 c30 -63 57 -115 59 -115 2 0 16 30 31 68 15 37 37 88 49 115 l20 47 76 0 76 -1 -27 -20 -28 -21 0 -151 c0 -150 0 -151 27 -179 l27 -28 -109 0 -109 0 27 28 c26 27 27 32 26 143 0 131 3 134 -71 -58 -24 -62 -48 -113 -53 -113 -6 0 -17 16 -24 35 -7 19 -36 83 -64 142 l-52 108 -3 -98 c-3 -97 -2 -99 28 -133 16 -19 30 -39 30 -44 0 -6 -31 -10 -70 -10 -45 0 -70 4 -70 11 0 6 14 27 30 46 30 33 30 35 30 151 0 116 0 118 -31 155 l-30 37 75 0 76 0 54 -115z" />
+    </g>
+</svg>
+    </a>
+    <a href="https://github.com/SidInamdar" target="_blank" rel="noopener noreferrer me"
+        title="Github">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round">
+    <path
+        d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+    </path>
+</svg>
+    </a>
+</div>
+</footer>
+
+  <script async src="https://subscribe-forms.beehiiv.com/embed.js"></script><iframe
+    src="https://subscribe-forms.beehiiv.com/cb315fa7-29d0-46fa-ae1f-a34a59e9d3b0" class="beehiiv-embed"
+    data-test-id="beehiiv-embed" frameborder="0" scrolling="no"
+    style="width: 100%; height: 32px; margin: 0; border-radius: 0px 0px 0px 0px !important; background-color: transparent; box-shadow: 0 0 #0000; max-width: 100%;"></iframe>
+</article>
+    </main>
+    
+<footer class="footer">
+        <span>&copy; 2026 <a href="http://localhost:1313/">Vectors &amp; Verbs</a></span> · 
+
+    <span>
+        Powered by
+        <a href="https://gohugo.io/" rel="noopener noreferrer" target="_blank">Hugo</a> &
+        <a href="https://github.com/adityatelange/hugo-PaperMod/" rel="noopener" target="_blank">PaperMod</a>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+        <path d="M12 6H0l6-6z" />
+    </svg>
+</a>
+
+<script>
+    let menu = document.getElementById('menu');
+    if (menu) {
+        
+        const scrollPosition = localStorage.getItem("menu-scroll-position");
+        if (scrollPosition) {
+            menu.scrollLeft = parseInt(scrollPosition, 10);
+        }
+        
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+
+</script>
+<script>
+    var mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 800 || document.documentElement.scrollTop > 800) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        const html = document.querySelector("html");
+        if (html.dataset.theme === "dark") {
+            html.dataset.theme = 'light';
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            html.dataset.theme = 'dark';
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    })
+
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerHTML = 'copy';
+
+        function copyingDone() {
+            copybutton.innerHTML = 'copied!';
+            setTimeout(() => {
+                copybutton.innerHTML = 'copy';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                navigator.clipboard.writeText(codeblock.textContent);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) { };
+            selection.removeRange(range);
+        });
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+        }
+    });
+</script>
+</body>
+
+</html>
